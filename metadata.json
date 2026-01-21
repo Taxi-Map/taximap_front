@@ -1,0 +1,7 @@
+{
+  "name": "Taxi Map - Luanda",
+  "description": "Uma landing page moderna para o Taxi Map, facilitando a mobilidade em Luanda através de rotas inteligentes para candongueiros.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
