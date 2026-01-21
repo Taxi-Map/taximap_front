@@ -35,6 +35,8 @@ interface MapComponentProps {
   interactive?: boolean;
   routePoints?: [number, number][];
   userRoutePoints?: [number, number][];
+  isTripStarted?: boolean;
+  onStartTrip?: () => void;
 }
 
 // Component to handle map view updates
@@ -56,11 +58,13 @@ import { TaxiPhysics } from '../utils/TaxiPhysics';
 const TaxiAnimator: React.FC<{
   startPos: [number, number];
   path: [number, number][];
-  icon: L.Icon
-}> = ({ startPos, path, icon }) => {
+  icon: L.Icon;
+  isStarted: boolean;
+  onStart?: () => void;
+}> = ({ startPos, path, icon, isStarted, onStart }) => {
   const [position, setPosition] = useState(startPos);
   const [rotation, setRotation] = useState(0);
-  const taxiRef = React.useRef(new TaxiPhysics(0.00002)); // Tune scale here
+  const taxiRef = React.useRef(new TaxiPhysics(0.000005));
   const requestRef = React.useRef<number>();
   const currentTargetIndex = React.useRef(0);
 
@@ -68,43 +72,38 @@ const TaxiAnimator: React.FC<{
     const taxi = taxiRef.current;
     taxi.setPosition(startPos[0], startPos[1]);
 
+    if (!isStarted) {
+      setPosition(startPos);
+      return;
+    }
+
     const animate = () => {
       if (!path || path.length === 0) return;
 
-      // Determine Target
       let target = path[currentTargetIndex.current];
       const targetLat = target[0];
       const targetLng = target[1];
 
-      // Calculate distance to target (taxi.x = Lng, taxi.y = Lat)
       const dist = Math.sqrt(
         Math.pow(targetLng - taxi.x, 2) +
         Math.pow(targetLat - taxi.y, 2)
       );
 
-      // If close enough, switch to next waypoint (larger threshold to prevent orbiting)
       if (dist < 0.0005) {
         if (currentTargetIndex.current < path.length - 1) {
           currentTargetIndex.current++;
         } else {
-          // Arrived at destination - STOP animation
           taxi.controls.forward = false;
           taxi.speed = 0;
-          setPosition([taxi.y, taxi.x]); // Final position
-          return; // Stop the animation loop
+          setPosition([taxi.y, taxi.x]);
+          return;
         }
       } else {
         taxi.driveTowards(targetLat, targetLng);
       }
 
       taxi.update();
-
-      // Position output: [Lat, Lng] for Leaflet (taxi.y = Lat, taxi.x = Lng)
       setPosition([taxi.y, taxi.x]);
-
-      // Rotation: Physics angle 0 = East, PI/2 = North
-      // CSS rotate: 0 = Up. So North (PI/2) -> 0deg, East (0) -> 90deg
-      // Formula: 90 - angleDeg
       const angleDeg = taxi.angle * 180 / Math.PI;
       setRotation(90 - angleDeg);
 
@@ -116,11 +115,35 @@ const TaxiAnimator: React.FC<{
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [path]);
+  }, [path, isStarted, startPos]);
 
-  // Create a custom DivIcon to handle rotation easily or use Marker with rotation plugin?
-  // React-Leaflet Marker doesn't support rotationAngle prop natively without plugin.
-  // We can use a DivIcon with a rotated image inside.
+  if (!isStarted) {
+    const startButtonIcon = L.divIcon({
+      className: 'taxi-start-button',
+      html: `<div style="position: relative; cursor: pointer;">
+                <img src="${icon.options.iconUrl}" style="width:35px; height:35px; object-fit: contain;" />
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                            background: #EAB308; border-radius: 50%; width: 24px; height: 24px; 
+                            display: flex; align-items: center; justify-content: center;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid white;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+             </div>`,
+      iconSize: [35, 35],
+      iconAnchor: [17, 17]
+    });
+
+    return (
+      <Marker
+        position={startPos}
+        icon={startButtonIcon}
+        eventHandlers={{ click: () => onStart && onStart() }}
+      >
+        <Popup>Clique para iniciar viagem</Popup>
+      </Marker>
+    );
+  }
+
   const rotatedIcon = L.divIcon({
     className: 'taxi-marker-icon',
     html: `<div style="transform: rotate(${rotation}deg); transition: transform 0.05s linear; transform-origin: center;">
@@ -139,7 +162,9 @@ export const MapComponent: React.FC<MapComponentProps> = ({
   zoom,
   interactive = false,
   routePoints,
-  userRoutePoints
+  userRoutePoints,
+  isTripStarted = false,
+  onStartTrip
 }) => {
   // Logic: If center is provided (user location found), use it and zoom in (16).
   // If not provided (loading/landing), use Luanda center and zoom out (13).
@@ -226,6 +251,8 @@ export const MapComponent: React.FC<MapComponentProps> = ({
               startPos={routePoints[0]}
               path={routePoints}
               icon={taxiIcon}
+              isStarted={isTripStarted}
+              onStart={onStartTrip}
             />
             <Marker position={routePoints[routePoints.length - 1]} icon={destinationIcon}><Popup>Destino</Popup></Marker>
           </>

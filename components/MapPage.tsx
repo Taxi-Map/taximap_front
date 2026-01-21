@@ -22,6 +22,11 @@ export default function MapPage() {
 
     // UI State
     const [isPanelVisible, setIsPanelVisible] = useState(true);
+    const [isTripStarted, setIsTripStarted] = useState(false);
+
+    const handleStartTrip = () => {
+        setIsTripStarted(true);
+    };
 
     const requestLocation = () => {
         setLocationError(false);
@@ -124,6 +129,8 @@ export default function MapPage() {
                     routePoints={routePoints}
                     userRoutePoints={userToOriginPath || undefined}
                     zoom={routePoints ? 12 : undefined}
+                    isTripStarted={isTripStarted}
+                    onStartTrip={handleStartTrip}
                 />
             </div>
 
