@@ -29,5 +29,22 @@ export const routeService = {
             console.error('Error fetching route:', error);
             return null;
         }
+    },
+
+    async getAllStops(): Promise<Stop[] | null> {
+        try {
+            const response = await fetch('/rotas/paragens');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            if (data.sucesso) {
+                return data.dados;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching stops:', error);
+            return null;
+        }
     }
 };

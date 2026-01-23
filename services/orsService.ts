@@ -66,34 +66,44 @@ export const orsService = {
             // Directions API expects [long, lat]
             const coords = waypoints.map(point => [point[1], point[0]]);
 
-            const response = await fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': API_KEY
-                },
-                body: JSON.stringify({
-                    coordinates: coords,
-                    preference: 'recommended'
-                })
+            const response = await orsDirections.calculate({
+                coordinates: coords,
+                profile: 'driving-car', // Use HGV to prefer main roads/arterials
+                preference: 'recommended',
+                format: 'geojson'
             });
 
-            if (!response.ok) {
-                console.error(`ORS API Error: ${response.status} ${response.statusText}`);
-                return null;
-            }
-
-            const data = await response.json();
-
-            if (data && data.features && data.features.length > 0) {
+            if (response && response.features && response.features.length > 0) {
                 // Extract coordinates from the first feature
-                const geometry = data.features[0].geometry.coordinates;
+                const geometry = response.features[0].geometry.coordinates;
                 // Convert back to [lat, long] for Leaflet
                 return geometry.map((coord: number[]) => [coord[1], coord[0]] as [number, number]);
             }
             return null;
         } catch (error) {
             console.error('Error fetching ORS route:', error);
+            return null;
+        }
+    },
+
+    async getWalkingRoute(waypoints: [number, number][]): Promise<[number, number][] | null> {
+        try {
+            const coords = waypoints.map(point => [point[1], point[0]]);
+
+            const response = await orsDirections.calculate({
+                coordinates: coords,
+                profile: 'driving-car',
+                preference: 'recommended',
+                format: 'geojson'
+            });
+
+            if (response && response.features && response.features.length > 0) {
+                const geometry = response.features[0].geometry.coordinates;
+                return geometry.map((coord: number[]) => [coord[1], coord[0]] as [number, number]);
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching ORS walking route:', error);
             return null;
         }
     },

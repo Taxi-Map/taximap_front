@@ -35,6 +35,7 @@ interface MapComponentProps {
   interactive?: boolean;
   routePoints?: [number, number][];
   userRoutePoints?: [number, number][];
+  stops?: { nome: string; latitude: number; longitude: number }[]; // All stops with exact coordinates
   isTripStarted?: boolean;
   onStartTrip?: () => void;
 }
@@ -163,6 +164,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
   interactive = false,
   routePoints,
   userRoutePoints,
+  stops = [],
   isTripStarted = false,
   onStartTrip
 }) => {
@@ -193,6 +195,14 @@ export const MapComponent: React.FC<MapComponentProps> = ({
     iconSize: [35, 35],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
+  });
+
+  // Icon for intermediate stops (paragens)
+  const stopIcon = L.divIcon({
+    className: 'stop-marker-icon',
+    html: `<div style="width: 16px; height: 16px; background: #EAB308; border: 3px solid white; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8]
   });
 
   return (
@@ -254,7 +264,19 @@ export const MapComponent: React.FC<MapComponentProps> = ({
               isStarted={isTripStarted}
               onStart={onStartTrip}
             />
-            <Marker position={routePoints[routePoints.length - 1]} icon={destinationIcon}><Popup>Destino</Popup></Marker>
+            {/* Intermediate stop markers (all stops except first and last) - using EXACT coordinates */}
+            {stops.length > 2 && stops.slice(1, -1).map((stop, index) => (
+              <Marker
+                key={`stop-${index}`}
+                position={[stop.latitude, stop.longitude]}
+                icon={stopIcon}
+              >
+                <Popup>{stop.nome}</Popup>
+              </Marker>
+            ))}
+            <Marker position={routePoints[routePoints.length - 1]} icon={destinationIcon}>
+              <Popup>{stops.length > 0 ? stops[stops.length - 1].nome : 'Destino'}</Popup>
+            </Marker>
           </>
         )}
       </MapContainer>

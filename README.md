@@ -1,20 +1,70 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# backend rotas
 
-# Run and deploy your AI Studio app
+http://localhost:3000/rotas/paragens
 
-This contains everything you need to run your app locally.
+resposta:
 
-View your app in AI Studio: https://ai.studio/apps/drive/1m8D_JXxof6PW9FfIp_IGIVRPrl7lIObX
+{
+  "sucesso": true,
+  "dados": [
+    {
+      "id": 1,
+      "nome": "Gamek Nosso Centro",
+      "latitude": -8.884853960185831,
+      "longitude": 13.207005333521257
+    },
+    {
+      "id": 2,
+      "nome": "Aeroporto",
+      "latitude": -8.846019570873045,
+      "longitude": 13.233399825980307
+    },
+    {
+      "id": 3,
+      "nome": "Vila do Gamek",
+      "latitude": -8.89841681923556,
+      "longitude": 13.214259802237525
+    }
+  ]
+}
 
-## Run Locally
+http://localhost:3000/rotas/paragem?id=1
 
-**Prerequisites:**  Node.js
+resposta:
+{
+  "sucesso": true,
+  "dados": {
+    "id": 1,
+    "nome": "Gamek Nosso Centro",
+    "latitude": -8.884853960185831,
+    "longitude": 13.207005333521257
+  }
+}
 
+http://localhost:3000/rotas/caminho-mais-curto?origem=1&destino=2
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+resposta:
+{
+  "sucesso": true,
+  "dados": {
+    "paragens": [
+      {
+        "id": 1,
+        "nome": "Gamek Nosso Centro",
+        "latitude": -8.884853960185831,
+        "longitude": 13.207005333521257
+      },
+      {
+        "id": 2,
+        "nome": "Aeroporto",
+        "latitude": -8.846019570873045,
+        "longitude": 13.233399825980307
+      }
+    ],
+    "linhas": [
+      "Aeroporto-Gamek Nosso Centro"
+    ],
+    "distanciaTotal": 5.201536838829414,
+    "numeroParagens": 2
+  }
+}

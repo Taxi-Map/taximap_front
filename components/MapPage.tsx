@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { MapComponent } from './MapComponent';
 import { Header } from './Header';
-import { ArrowLeft, Navigation, Share2, Users, User, Eye, EyeOff } from 'lucide-react';
-import { routeService, RouteData } from '../services/routeService';
+import { ArrowLeft, Navigation, Share2, Users, User, Eye, EyeOff, Search } from 'lucide-react';
+import { routeService, RouteData, Stop } from '../services/routeService';
 import { orsService } from '../services/orsService';
+import { findNearestStop } from '../utils/geoUtils';
 
 export default function MapPage() {
     const [searchParams] = useSearchParams();
@@ -23,6 +24,12 @@ export default function MapPage() {
     // UI State
     const [isPanelVisible, setIsPanelVisible] = useState(true);
     const [isTripStarted, setIsTripStarted] = useState(false);
+
+    // Stops and destination selection
+    const [allStops, setAllStops] = useState<Stop[]>([]);
+    const [filteredStops, setFilteredStops] = useState<Stop[]>([]);
+    const [selectedDestination, setSelectedDestination] = useState<Stop | null>(null);
+    const [showDropdown, setShowDropdown] = useState(false);
 
     const handleStartTrip = () => {
         setIsTripStarted(true);
@@ -55,59 +62,98 @@ export default function MapPage() {
 
     useEffect(() => {
         requestLocation();
+        // Fetch all stops on mount
+        const fetchStops = async () => {
+            const stops = await routeService.getAllStops();
+            if (stops) {
+                setAllStops(stops);
+                setFilteredStops(stops);
+            }
+        };
+        fetchStops();
     }, []);
 
+    // Filter stops when destination input changes
+    const handleDestinationChange = (value: string) => {
+        setDestination(value);
+        setSelectedDestination(null);
+        if (value.trim() === '') {
+            setFilteredStops(allStops);
+            setShowDropdown(false);
+        } else {
+            const filtered = allStops.filter(stop =>
+                stop.nome.toLowerCase().includes(value.toLowerCase())
+            );
+            setFilteredStops(filtered);
+            setShowDropdown(true);
+        }
+    };
+
+    const handleSelectDestination = (stop: Stop) => {
+        setDestination(stop.nome);
+        setSelectedDestination(stop);
+        setShowDropdown(false);
+    };
+
     const handleStartRoute = async () => {
+        if (!selectedDestination) {
+            alert('Por favor, selecione um destino.');
+            return;
+        }
+        if (!userLocation) {
+            alert('A localização não foi obtida. Por favor, ative a localização.');
+            return;
+        }
+
         setIsLoadingRoute(true);
         setOrsPath(null);
         setRoute(null);
         setUserToOriginPath(null);
 
         try {
-            // New logic requested by user:
-            // 1. Call Backend to get stops (Hardcoded for testing: 1 -> 2)
-            console.log("Fetching route from backend...");
-            const backendData = await routeService.getShortestPath(1, 2);
+            // Find nearest stop to user location as origin
+            const nearestStop = findNearestStop(userLocation[0], userLocation[1], allStops);
+            if (!nearestStop) {
+                alert('Não foi possível encontrar uma paragem próxima.');
+                setIsLoadingRoute(false);
+                return;
+            }
+
+            setOrigin(nearestStop.nome);
+            console.log(`Origin: ${nearestStop.nome} (ID: ${nearestStop.id}), Destination: ${selectedDestination.nome} (ID: ${selectedDestination.id})`);
+
+            // Call backend with dynamic IDs
+            const backendData = await routeService.getShortestPath(nearestStop.id, selectedDestination.id);
 
             if (backendData && backendData.sucesso) {
                 setRoute(backendData.dados);
-                setIsPanelVisible(false); // Auto-hide panel on mobile/desktop to show map
+                setIsPanelVisible(false);
 
-                // 2. Extract coordinates from the stops (paragens)
-                // user requested: "ver os dados de retorno pegar a localizacao"
                 const stops = backendData.dados.paragens;
                 if (stops && stops.length > 0) {
                     const waypoints: [number, number][] = stops.map(stop => [stop.latitude, stop.longitude]);
 
-                    // 3. Call ORS with these points to draw the path
-                    // "fazer outra requisicao no openrouteservice-js para desenhar a rotas desses pontos"
-                    console.log("Fetching visual route from ORS with stops:", waypoints);
+                    // Get driving route for taxi
+                    console.log("Fetching driving route from ORS with stops:", waypoints);
                     const visualPath = await orsService.getRoute(waypoints);
-
                     if (visualPath) {
                         setOrsPath(visualPath);
-                    } else {
-                        console.warn("ORS could not calculate path between these stops.");
                     }
 
-                    // 4. Calculate route from User Location to Origin (stops[0])
+                    // Get WALKING route from user to origin
                     if (userLocation) {
-                        console.log("Fetching user to origin route...");
-                        const userOriginPath = await orsService.getRoute([userLocation, waypoints[0]]);
+                        console.log("Fetching walking route from user to origin...");
+                        const userOriginPath = await orsService.getWalkingRoute([userLocation, waypoints[0]]);
                         if (userOriginPath) {
                             setUserToOriginPath(userOriginPath);
                         }
                     }
-
                 } else {
                     alert("A rota retornada pelo backend não tem paragens.");
                 }
-
             } else {
-                console.warn("Rota falhou ou dados vazios do backend");
                 alert("Erro ao buscar rota no backend.");
             }
-
         } catch (e) {
             console.error("Exception in handleStartRoute:", e);
             alert("Erro ao buscar rota. Verifique o console.");
@@ -116,7 +162,7 @@ export default function MapPage() {
     };
 
     // Use ORS path if available, fallback to old service if needed (though we only use ORS now)
-    const routePoints: [number, number][] | undefined = orsPath || undefined;
+    const routePoints: [number, number][] | undefined = orsPath || route?.paragens.map(p => [p.latitude, p.longitude]);
 
     return (
         <div className="min-h-screen bg-slate-50 overflow-hidden relative">
@@ -128,6 +174,7 @@ export default function MapPage() {
                     interactive={!locationError}
                     routePoints={routePoints}
                     userRoutePoints={userToOriginPath || undefined}
+                    stops={route?.paragens || []}
                     zoom={routePoints ? 12 : undefined}
                     isTripStarted={isTripStarted}
                     onStartTrip={handleStartTrip}
@@ -155,23 +202,8 @@ export default function MapPage() {
                 </div>
             )}
 
-            {/* Floating Toggle Button (Visible when panel is hidden or always visible to toggle) */}
-            <button
-                onClick={() => setIsPanelVisible(!isPanelVisible)}
-                className="absolute top-4 right-4 z-20 p-3 bg-white rounded-full shadow-xl hover:bg-slate-50 transition-all active:scale-95 text-slate-900 lg:hidden"
-                aria-label={isPanelVisible ? "Ocultar painel" : "Mostrar painel"}
-            >
-                {isPanelVisible ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
-            </button>
-
             {/* Floating Panel (Mobile & Desktop) */}
-            <div
-                className={`absolute top-0 left-0 w-full z-10 p-4 md:p-6 lg:max-w-[400px] lg:h-full lg:bg-white/90 lg:backdrop-blur-md lg:shadow-2xl lg:border-r border-slate-200 transition-all duration-300 ease-in-out transform 
-                ${locationError ? 'opacity-20 pointer-events-none' : 'opacity-100'}
-                ${isPanelVisible ? 'translate-y-0' : '-translate-y-full opacity-0 pointer-events-none'}
-                lg:translate-x-0 lg:translate-y-0 lg:opacity-100 lg:pointer-events-auto
-                `}
-            >
+            <div className={`absolute top-0 left-0 w-full z-10 p-4 md:p-6 lg:max-w-[400px] lg:h-full lg:bg-white/90 lg:backdrop-blur-md lg:shadow-2xl lg:border-r border-slate-200 transition-opacity duration-300 ${locationError ? 'opacity-20 pointer-events-none' : 'opacity-100'}`}>
 
                 {/* Header: Back Button & Profile Button */}
                 <div className="flex items-center justify-between mb-6">
@@ -206,16 +238,36 @@ export default function MapPage() {
                         {/* Connector Line */}
                         <div className="absolute left-[29px] top-[90px] w-0.5 h-8 bg-slate-200 -z-10 hidden"></div>
 
-                        {/* Destination Input */}
+                        {/* Destination Input with Autocomplete */}
                         <div className="relative">
                             <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-yellow-400 rounded-full ring-4 ring-yellow-100"></div>
                             <input
                                 type="text"
                                 value={destination}
-                                onChange={(e) => setDestination(e.target.value)}
+                                onChange={(e) => handleDestinationChange(e.target.value)}
+                                onFocus={() => destination.trim() !== '' && setShowDropdown(true)}
                                 className="w-full pl-12 pr-4 py-3.5 bg-slate-50 rounded-2xl text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder:text-slate-400 shadow-inner"
                                 placeholder="Para onde vais?"
                             />
+                            {/* Autocomplete Dropdown */}
+                            {showDropdown && filteredStops.length > 0 && (
+                                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 max-h-48 overflow-y-auto z-50">
+                                    {filteredStops.map((stop) => (
+                                        <button
+                                            key={stop.id}
+                                            onClick={() => handleSelectDestination(stop)}
+                                            className="w-full text-left px-4 py-3 hover:bg-yellow-50 transition-colors border-b border-slate-50 last:border-b-0"
+                                        >
+                                            <span className="font-semibold text-slate-900">{stop.nome}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                            {showDropdown && filteredStops.length === 0 && destination.trim() !== '' && (
+                                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 p-4 z-50">
+                                    <span className="text-slate-500">Nenhuma paragem encontrada</span>
+                                </div>
+                            )}
                         </div>
                     </div>
 
