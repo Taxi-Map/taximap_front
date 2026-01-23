@@ -39,3 +39,23 @@ export function findNearestStop(userLat: number, userLng: number, stops: Stop[])
 
     return nearestStop;
 }
+
+/**
+ * Find the two nearest stops to a given location
+ * Returns [nearestStop, secondNearestStop] or null if not enough stops
+ */
+export function findTwoNearestStops(userLat: number, userLng: number, stops: Stop[]): [Stop, Stop] | null {
+    if (!stops || stops.length < 2) return null;
+
+    // Calculate distances for all stops
+    const stopsWithDistance = stops.map(stop => ({
+        stop,
+        distance: calculateDistance(userLat, userLng, stop.latitude, stop.longitude)
+    }));
+
+    // Sort by distance
+    stopsWithDistance.sort((a, b) => a.distance - b.distance);
+
+    // Return the two nearest
+    return [stopsWithDistance[0].stop, stopsWithDistance[1].stop];
+}

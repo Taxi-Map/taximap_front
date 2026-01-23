@@ -5,7 +5,7 @@ import { Header } from './Header';
 import { ArrowLeft, Navigation, Share2, Users, User, Eye, EyeOff, Search } from 'lucide-react';
 import { routeService, RouteData, Stop } from '../services/routeService';
 import { orsService } from '../services/orsService';
-import { findNearestStop } from '../utils/geoUtils';
+import { findNearestStop, findTwoNearestStops } from '../utils/geoUtils';
 
 export default function MapPage() {
     const [searchParams] = useSearchParams();
@@ -17,13 +17,17 @@ export default function MapPage() {
 
     // New state for route
     const [route, setRoute] = useState<RouteData | null>(null);
+    const [alternativeRoute, setAlternativeRoute] = useState<RouteData | null>(null);
     const [orsPath, setOrsPath] = useState<[number, number][] | null>(null);
+    const [alternativeOrsPath, setAlternativeOrsPath] = useState<[number, number][] | null>(null);
     const [userToOriginPath, setUserToOriginPath] = useState<[number, number][] | null>(null);
+    const [userToAltOriginPath, setUserToAltOriginPath] = useState<[number, number][] | null>(null);
     const [isLoadingRoute, setIsLoadingRoute] = useState(false);
 
     // UI State
     const [isPanelVisible, setIsPanelVisible] = useState(true);
     const [isTripStarted, setIsTripStarted] = useState(false);
+    const [selectedRouteType, setSelectedRouteType] = useState<'primary' | 'alternative' | 'both'>('both');
 
     // Stops and destination selection
     const [allStops, setAllStops] = useState<Stop[]>([]);
@@ -107,53 +111,91 @@ export default function MapPage() {
 
         setIsLoadingRoute(true);
         setOrsPath(null);
+        setAlternativeOrsPath(null);
         setRoute(null);
+        setAlternativeRoute(null);
         setUserToOriginPath(null);
+        setUserToAltOriginPath(null);
 
         try {
-            // Find nearest stop to user location as origin
-            const nearestStop = findNearestStop(userLocation[0], userLocation[1], allStops);
-            if (!nearestStop) {
-                alert('Não foi possível encontrar uma paragem próxima.');
+            // Find TWO nearest stops to user location
+            const twoNearestStops = findTwoNearestStops(userLocation[0], userLocation[1], allStops);
+            if (!twoNearestStops) {
+                alert('Não foi possível encontrar paragens próximas.');
                 setIsLoadingRoute(false);
                 return;
             }
 
-            setOrigin(nearestStop.nome);
-            console.log(`Origin: ${nearestStop.nome} (ID: ${nearestStop.id}), Destination: ${selectedDestination.nome} (ID: ${selectedDestination.id})`);
+            const [primaryStop, alternativeStop] = twoNearestStops;
+            setOrigin(primaryStop.nome);
+            console.log(`Stop 1: ${primaryStop.nome}, Stop 2: ${alternativeStop.nome}, Destination: ${selectedDestination.nome}`);
 
-            // Call backend with dynamic IDs
-            const backendData = await routeService.getShortestPath(nearestStop.id, selectedDestination.id);
+            // Fetch both routes first
+            const route1Data = await routeService.getShortestPath(primaryStop.id, selectedDestination.id);
+            const route2Data = await routeService.getShortestPath(alternativeStop.id, selectedDestination.id);
 
-            if (backendData && backendData.sucesso) {
-                setRoute(backendData.dados);
-                setIsPanelVisible(false);
+            // Determine which route is shorter (better)
+            let bestRoute = route1Data?.dados;
+            let altRoute = route2Data?.dados;
+            let bestStop = primaryStop;
+            let altStop = alternativeStop;
 
-                const stops = backendData.dados.paragens;
+            // Swap if route2 is shorter
+            if (route1Data?.sucesso && route2Data?.sucesso) {
+                if (route2Data.dados.distanciaTotal < route1Data.dados.distanciaTotal) {
+                    bestRoute = route2Data.dados;
+                    altRoute = route1Data.dados;
+                    bestStop = alternativeStop;
+                    altStop = primaryStop;
+                    console.log("Swapped: Route 2 is shorter");
+                }
+            } else if (route2Data?.sucesso && !route1Data?.sucesso) {
+                bestRoute = route2Data.dados;
+                altRoute = null;
+                bestStop = alternativeStop;
+            }
+
+            setIsPanelVisible(false);
+
+            // Set PRIMARY route (GREEN - shortest)
+            if (bestRoute) {
+                setRoute(bestRoute);
+                setOrigin(bestStop.nome);
+
+                const stops = bestRoute.paragens;
                 if (stops && stops.length > 0) {
                     const waypoints: [number, number][] = stops.map(stop => [stop.latitude, stop.longitude]);
-
-                    // Get driving route for taxi
-                    console.log("Fetching driving route from ORS with stops:", waypoints);
                     const visualPath = await orsService.getRoute(waypoints);
                     if (visualPath) {
                         setOrsPath(visualPath);
                     }
 
-                    // Get WALKING route from user to origin
-                    if (userLocation) {
-                        console.log("Fetching walking route from user to origin...");
-                        const userOriginPath = await orsService.getWalkingRoute([userLocation, waypoints[0]]);
-                        if (userOriginPath) {
-                            setUserToOriginPath(userOriginPath);
-                        }
+                    const userOriginPath = await orsService.getWalkingRoute([userLocation, waypoints[0]]);
+                    if (userOriginPath) {
+                        setUserToOriginPath(userOriginPath);
                     }
-                } else {
-                    alert("A rota retornada pelo backend não tem paragens.");
                 }
-            } else {
-                alert("Erro ao buscar rota no backend.");
             }
+
+            // Set ALTERNATIVE route (BLUE - second shortest)
+            if (altRoute) {
+                setAlternativeRoute(altRoute);
+
+                const stops = altRoute.paragens;
+                if (stops && stops.length > 0) {
+                    const waypoints: [number, number][] = stops.map(stop => [stop.latitude, stop.longitude]);
+                    const visualPath = await orsService.getRoute(waypoints);
+                    if (visualPath) {
+                        setAlternativeOrsPath(visualPath);
+                    }
+
+                    const userAltOriginPath = await orsService.getWalkingRoute([userLocation, waypoints[0]]);
+                    if (userAltOriginPath) {
+                        setUserToAltOriginPath(userAltOriginPath);
+                    }
+                }
+            }
+
         } catch (e) {
             console.error("Exception in handleStartRoute:", e);
             alert("Erro ao buscar rota. Verifique o console.");
@@ -174,7 +216,11 @@ export default function MapPage() {
                     interactive={!locationError}
                     routePoints={routePoints}
                     userRoutePoints={userToOriginPath || undefined}
+                    alternativeRoutePoints={alternativeOrsPath || undefined}
+                    alternativeUserRoutePoints={userToAltOriginPath || undefined}
                     stops={route?.paragens || []}
+                    alternativeStops={alternativeRoute?.paragens || []}
+                    selectedRouteType={selectedRouteType}
                     zoom={routePoints ? 12 : undefined}
                     isTripStarted={isTripStarted}
                     onStartTrip={handleStartTrip}
@@ -297,23 +343,64 @@ export default function MapPage() {
                     </button>
                 </div>
 
-                {/* Route Details Card */}
-                {route && (
+                {/* Route Options List */}
+                {(route || alternativeRoute) && (
                     <div className="mt-6 bg-white rounded-3xl p-6 shadow-xl border border-slate-100 animate-in slide-in-from-bottom-4">
-                        <h3 className="font-bold text-slate-900 mb-4 text-lg">Melhor Rota Encontrada</h3>
-                        <div className="p-4 rounded-2xl border border-yellow-400 bg-yellow-50 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                                    <img src="/img/taxi.png" className="w-8 h-8 object-contain" alt="Taxi" />
+                        <h3 className="font-bold text-slate-900 mb-4 text-lg">Melhores Rotas Encontradas</h3>
+                        <div className="space-y-3">
+                            {/* Primary Route (GREEN - Best) */}
+                            {route && (
+                                <div
+                                    onClick={() => setSelectedRouteType(selectedRouteType === 'primary' ? 'both' : 'primary')}
+                                    className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${selectedRouteType === 'primary' || selectedRouteType === 'both'
+                                            ? 'border-green-400 bg-green-50'
+                                            : 'border-gray-200 bg-gray-50 opacity-50'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                                            <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">MELHOR</span>
+                                            </div>
+                                            <p className="font-bold text-slate-900 mt-1">{route.linhas.join(', ')}</p>
+                                            <p className="text-xs text-slate-500 font-medium">
+                                                {route.distanciaTotal.toFixed(1)} km • {route.numeroParagens} paragens
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="w-4 h-4 bg-green-500 rounded-full ring-4 ring-green-200"></div>
                                 </div>
-                                <div>
-                                    <p className="font-bold text-slate-900">{route.linhas.join(', ')}</p>
-                                    <p className="text-xs text-slate-500 font-medium">
-                                        {route.distanciaTotal.toFixed(1)} km • {route.numeroParagens} paragens
-                                    </p>
+                            )}
+
+                            {/* Alternative Route (BLUE) */}
+                            {alternativeRoute && (
+                                <div
+                                    onClick={() => setSelectedRouteType(selectedRouteType === 'alternative' ? 'both' : 'alternative')}
+                                    className={`p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${selectedRouteType === 'alternative' || selectedRouteType === 'both'
+                                            ? 'border-blue-300 bg-blue-50'
+                                            : 'border-gray-200 bg-gray-50 opacity-50'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                                            <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">ALTERNATIVA</span>
+                                            </div>
+                                            <p className="font-bold text-slate-900 mt-1">{alternativeRoute.linhas.join(', ')}</p>
+                                            <p className="text-xs text-slate-500 font-medium">
+                                                {alternativeRoute.distanciaTotal.toFixed(1)} km • {alternativeRoute.numeroParagens} paragens
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="w-4 h-4 bg-blue-500 rounded-full ring-4 ring-blue-200"></div>
                                 </div>
-                            </div>
-                            <div className="w-4 h-4 bg-yellow-400 rounded-full ring-4 ring-yellow-200"></div>
+                            )}
                         </div>
                     </div>
                 )}

@@ -35,7 +35,11 @@ interface MapComponentProps {
   interactive?: boolean;
   routePoints?: [number, number][];
   userRoutePoints?: [number, number][];
-  stops?: { nome: string; latitude: number; longitude: number }[]; // All stops with exact coordinates
+  alternativeRoutePoints?: [number, number][];
+  alternativeUserRoutePoints?: [number, number][];
+  stops?: { nome: string; latitude: number; longitude: number }[];
+  alternativeStops?: { nome: string; latitude: number; longitude: number }[];
+  selectedRouteType?: 'primary' | 'alternative' | 'both';
   isTripStarted?: boolean;
   onStartTrip?: () => void;
 }
@@ -164,7 +168,11 @@ export const MapComponent: React.FC<MapComponentProps> = ({
   interactive = false,
   routePoints,
   userRoutePoints,
+  alternativeRoutePoints,
+  alternativeUserRoutePoints,
   stops = [],
+  alternativeStops = [],
+  selectedRouteType = 'both',
   isTripStarted = false,
   onStartTrip
 }) => {
@@ -234,28 +242,40 @@ export const MapComponent: React.FC<MapComponentProps> = ({
           </Marker>
         )}
 
-        {/* Draw user to origin route line (Blue) */}
-        {userRoutePoints && (
+        {/* Draw ALTERNATIVE route line (BLUE) - only if 'both' or 'alternative' selected */}
+        {alternativeRoutePoints && (selectedRouteType === 'both' || selectedRouteType === 'alternative') && (
+          <Polyline
+            positions={alternativeRoutePoints}
+            pathOptions={{ color: '#3B82F6', weight: selectedRouteType === 'alternative' ? 5 : 4, opacity: selectedRouteType === 'alternative' ? 0.9 : 0.6 }}
+          />
+        )}
+
+        {/* Draw ALTERNATIVE walking route (dashed blue) */}
+        {alternativeUserRoutePoints && (selectedRouteType === 'both' || selectedRouteType === 'alternative') && (
+          <Polyline
+            positions={alternativeUserRoutePoints}
+            pathOptions={{ color: '#3B82F6', weight: 3, opacity: 0.5, dashArray: '8, 8' }}
+          />
+        )}
+
+        {/* Draw PRIMARY walking route (dashed gray) */}
+        {userRoutePoints && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
           <Polyline
             positions={userRoutePoints}
-            pathOptions={{ color: '#3B82F6', weight: 4, opacity: 0.7, dashArray: '10, 10' }}
+            pathOptions={{ color: '#6B7280', weight: 4, opacity: 0.7, dashArray: '10, 10' }}
           />
         )}
 
-        {/* Draw main route line (Amber) */}
-        {routePoints && (
+        {/* Draw PRIMARY route line (GREEN - best option) */}
+        {routePoints && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
           <Polyline
             positions={routePoints}
-            pathOptions={{ color: '#EAB308', weight: 5, opacity: 0.8 }}
+            pathOptions={{ color: '#22C55E', weight: 5, opacity: 0.9 }}
           />
         )}
 
-        {/* Route Markers: Destination (Destino) only? 
-            Original logic: Origin (Taxi) and Destination. 
-            New logic: If we have routePoints, the Taxi IS the origin moving. 
-            So we should hide the static Origin marker and show TaxiAnimator. 
-        */}
-        {routePoints && routePoints.length > 0 && (
+        {/* PRIMARY Route Markers - only if primary or both selected */}
+        {routePoints && routePoints.length > 0 && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
           <>
             <TaxiAnimator
               startPos={routePoints[0]}
@@ -264,7 +284,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
               isStarted={isTripStarted}
               onStart={onStartTrip}
             />
-            {/* Intermediate stop markers (all stops except first and last) - using EXACT coordinates */}
+            {/* Intermediate stop markers for primary route */}
             {stops.length > 2 && stops.slice(1, -1).map((stop, index) => (
               <Marker
                 key={`stop-${index}`}
@@ -276,6 +296,45 @@ export const MapComponent: React.FC<MapComponentProps> = ({
             ))}
             <Marker position={routePoints[routePoints.length - 1]} icon={destinationIcon}>
               <Popup>{stops.length > 0 ? stops[stops.length - 1].nome : 'Destino'}</Popup>
+            </Marker>
+          </>
+        )}
+
+        {/* ALTERNATIVE Route Markers - only if alternative or both selected */}
+        {alternativeRoutePoints && alternativeRoutePoints.length > 0 && (selectedRouteType === 'both' || selectedRouteType === 'alternative') && (
+          <>
+            {/* Alternative origin marker (blue circle) */}
+            <Marker position={alternativeRoutePoints[0]} icon={L.divIcon({
+              className: 'alt-origin-marker',
+              html: `<div style="width: 20px; height: 20px; background: #3B82F6; border: 3px solid white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>`,
+              iconSize: [20, 20],
+              iconAnchor: [10, 10]
+            })}>
+              <Popup>{alternativeStops.length > 0 ? alternativeStops[0].nome : 'Origem Alternativa'}</Popup>
+            </Marker>
+            {/* Intermediate stop markers for alternative route */}
+            {alternativeStops.length > 2 && alternativeStops.slice(1, -1).map((stop, index) => (
+              <Marker
+                key={`alt-stop-${index}`}
+                position={[stop.latitude, stop.longitude]}
+                icon={L.divIcon({
+                  className: 'alt-stop-marker',
+                  html: `<div style="width: 14px; height: 14px; background: #3B82F6; border: 2px solid white; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>`,
+                  iconSize: [14, 14],
+                  iconAnchor: [7, 7]
+                })}
+              >
+                <Popup>{stop.nome}</Popup>
+              </Marker>
+            ))}
+            {/* Alternative destination marker */}
+            <Marker position={alternativeRoutePoints[alternativeRoutePoints.length - 1]} icon={L.divIcon({
+              className: 'alt-dest-marker',
+              html: `<div style="width: 24px; height: 24px; background: #3B82F6; border: 3px solid white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;"><div style="width: 8px; height: 8px; background: white; border-radius: 50%;"></div></div>`,
+              iconSize: [24, 24],
+              iconAnchor: [12, 12]
+            })}>
+              <Popup>{alternativeStops.length > 0 ? alternativeStops[alternativeStops.length - 1].nome : 'Destino Alternativo'}</Popup>
             </Marker>
           </>
         )}
