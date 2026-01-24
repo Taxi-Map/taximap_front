@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Mapcn, MapcnRoute, MapcnMarker, MapcnControls, MapcnTaxiAnimator } from './Mapcn';
-import { ArrowLeft, Navigation, User, Play } from 'lucide-react';
+import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin } from 'lucide-react';
 import { routeService, RouteData, Stop } from '../services/routeService';
 import { orsService } from '../services/orsService';
 import { findTwoNearestStops } from '../utils/geoUtils';
@@ -32,6 +32,9 @@ export default function MapcnTestPage() {
     const [selectedRouteType, setSelectedRouteType] = useState<'primary' | 'alternative' | 'both'>('both');
     const [isTripStarted, setIsTripStarted] = useState(false);
     const [isAltTripStarted, setIsAltTripStarted] = useState(false);
+    const [showArrivalPopup, setShowArrivalPopup] = useState(false);
+    const [arrivalDestination, setArrivalDestination] = useState('');
+    const [isMenuOpen, setIsMenuOpen] = useState(true);
 
     const handleStartTrip = () => {
         setIsTripStarted(true);
@@ -41,6 +44,22 @@ export default function MapcnTestPage() {
     const handleStartAltTrip = () => {
         setIsAltTripStarted(true);
         setSelectedRouteType('alternative');
+    };
+
+    const handlePrimaryArrival = () => {
+        console.log('[TestPage] handlePrimaryArrival called!');
+        console.log('[TestPage] Setting showArrivalPopup to true');
+        setShowArrivalPopup(true);
+        setArrivalDestination(route?.paragens[route.paragens.length - 1]?.nome || 'Destino');
+        // Don't reset trip yet - wait for popup close
+    };
+
+    const handleAltArrival = () => {
+        console.log('[TestPage] handleAltArrival called!');
+        console.log('[TestPage] Setting showArrivalPopup to true');
+        setShowArrivalPopup(true);
+        setArrivalDestination(alternativeRoute?.paragens[alternativeRoute.paragens.length - 1]?.nome || 'Destino');
+        // Don't reset trip yet - wait for popup close
     };
 
     // Request location
@@ -115,8 +134,27 @@ export default function MapcnTestPage() {
             let bestRoute = route1Data?.dados;
             let altRoute = route2Data?.dados;
 
+            // Calculate combined score: walking distance to stop + route total distance
+            // This prioritizes routes that start closer to the user
             if (route1Data?.sucesso && route2Data?.sucesso) {
-                if (route2Data.dados.distanciaTotal < route1Data.dados.distanciaTotal) {
+                const walkDist1 = Math.sqrt(
+                    Math.pow(userLocation[0] - stop1.latitude, 2) +
+                    Math.pow(userLocation[1] - stop1.longitude, 2)
+                );
+                const walkDist2 = Math.sqrt(
+                    Math.pow(userLocation[0] - stop2.latitude, 2) +
+                    Math.pow(userLocation[1] - stop2.longitude, 2)
+                );
+
+                // Score = walking distance (weighted 2x) + route distance
+                // Walking is harder than riding, so we weight it more
+                const score1 = (walkDist1 * 2) + (route1Data.dados.distanciaTotal * 0.01);
+                const score2 = (walkDist2 * 2) + (route2Data.dados.distanciaTotal * 0.01);
+
+                console.log(`Route 1 (${stop1.nome}): walk=${walkDist1.toFixed(4)}, routeDist=${route1Data.dados.distanciaTotal}, score=${score1.toFixed(4)}`);
+                console.log(`Route 2 (${stop2.nome}): walk=${walkDist2.toFixed(4)}, routeDist=${route2Data.dados.distanciaTotal}, score=${score2.toFixed(4)}`);
+
+                if (score2 < score1) {
                     bestRoute = route2Data.dados;
                     altRoute = route1Data.dados;
                 }
@@ -218,6 +256,7 @@ export default function MapcnTestPage() {
                             path={primaryPath}
                             isStarted={isTripStarted}
                             onStart={handleStartTrip}
+                            onArrival={handlePrimaryArrival}
                         />
                     )}
 
@@ -228,6 +267,7 @@ export default function MapcnTestPage() {
                             path={alternativePath}
                             isStarted={isAltTripStarted}
                             onStart={handleStartAltTrip}
+                            onArrival={handleAltArrival}
                         />
                     )}
 
@@ -261,14 +301,42 @@ export default function MapcnTestPage() {
                 </Mapcn>
             </div>
 
+            {/* Arrival Popup - Modal Overlay */}
+            {showArrivalPopup && (
+                <div className="absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6">
+                    <div className="bg-white rounded-[2.5rem] p-8 max-w-sm w-full text-center shadow-2xl">
+                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h2 className="text-2xl font-black text-slate-900 mb-2">🎉 Chegou!</h2>
+                        <p className="text-slate-600 mb-6">
+                            Você chegou ao seu destino: <strong className="text-slate-900">{arrivalDestination}</strong>
+                        </p>
+                        <button
+                            onClick={() => {
+                                setShowArrivalPopup(false);
+                                setSelectedRouteType('both');
+                                setIsTripStarted(false);
+                                setIsAltTripStarted(false);
+                            }}
+                            className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl font-bold text-lg transition-all"
+                        >
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* UI Panel */}
-            <div className={`absolute top-0 left-0 w-full z-10 p-4 md:p-6 lg:max-w-[400px] lg:h-full lg:bg-white/90 lg:backdrop-blur-md lg:shadow-2xl ${locationError ? 'opacity-20 pointer-events-none' : ''}`}>
+            <div className={`absolute top-0 left-0 w-full z-10 p-4 md:p-6 lg:max-w-[400px] lg:h-full lg:bg-white/90 lg:backdrop-blur-md lg:shadow-2xl max-h-[100vh] overflow-y-auto pb-20 transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} ${locationError ? 'opacity-20 pointer-events-none' : ''}`}>
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
-                        <a href="/" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50">
-                            <ArrowLeft className="w-6 h-6 text-slate-900" />
-                        </a>
+                        <button onClick={() => setIsMenuOpen(false)} className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50">
+                            <X className="w-6 h-6 text-slate-900" />
+                        </button>
                     </div>
                     <button className="p-2 bg-white rounded-full shadow-md">
                         <User className="w-6 h-6 text-slate-900" />
@@ -331,11 +399,23 @@ export default function MapcnTestPage() {
                     </button>
                 </div>
 
+                {/* Action Buttons (Share, etc) */}
+                <div className="flex flex-wrap gap-2 mt-4">
+                    <button className="flex-1 min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 bg-white rounded-xl shadow-md font-bold text-sm text-slate-700 border border-slate-100">
+                        <Share2 className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">Partilhar</span>
+                    </button>
+                    <button className="flex-1 min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 bg-white rounded-xl shadow-md font-bold text-sm text-slate-700 border border-slate-100">
+                        <Users className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">Ver pessoas</span>
+                    </button>
+                </div>
+
                 {/* Route List */}
                 {(route || alternativeRoute) && (
                     <div className="mt-6 bg-white rounded-3xl p-6 shadow-xl border">
                         <h3 className="font-bold text-slate-900 mb-4">Melhores Rotas</h3>
-                        <div className="space-y-3">
+                        <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
                             {route && (
                                 <div
                                     onClick={() => setSelectedRouteType(selectedRouteType === 'primary' ? 'both' : 'primary')}
@@ -382,6 +462,54 @@ export default function MapcnTestPage() {
                     </div>
                 )}
             </div>
+
+            {/* Floating Open Menu Button - Mobile only */}
+            {!isMenuOpen && (
+                <button
+                    onClick={() => setIsMenuOpen(true)}
+                    className="fixed top-4 left-4 z-20 p-3 bg-white rounded-full shadow-lg hover:bg-slate-50 transition-all lg:hidden"
+                >
+                    <Menu className="w-6 h-6 text-slate-900" />
+                </button>
+            )}
+
+            {/* Collapsed Sidebar - Desktop only */}
+            {!isMenuOpen && (
+                <div className="hidden lg:flex fixed top-0 left-0 h-full w-16 bg-white/95 backdrop-blur-md shadow-xl flex-col items-center py-6 z-20 border-r border-slate-200">
+                    <button
+                        onClick={() => setIsMenuOpen(true)}
+                        className="p-3 hover:bg-slate-100 rounded-xl transition-all mb-6"
+                    >
+                        <Menu className="w-6 h-6 text-slate-700" />
+                    </button>
+
+                    <div className="flex-1 flex flex-col items-center gap-2">
+                        <button className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Perfil">
+                            <User className="w-5 h-5 text-slate-600" />
+                        </button>
+                        <button className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Partilhar">
+                            <Share2 className="w-5 h-5 text-slate-600" />
+                        </button>
+                        <button className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Ver pessoas">
+                            <Users className="w-5 h-5 text-slate-600" />
+                        </button>
+
+                        <div className="w-8 h-px bg-slate-200 my-2"></div>
+
+                        {/* Quick destination shortcuts */}
+                        {route && (
+                            <button className="p-2 hover:bg-green-50 rounded-xl transition-all flex flex-col items-center gap-1">
+                                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <MapPin className="w-4 h-4 text-green-600" />
+                                </div>
+                                <span className="text-[9px] text-slate-500 font-medium truncate max-w-[50px]">
+                                    {route.paragens[route.paragens.length - 1]?.nome.split(' ')[0] || 'Destino'}
+                                </span>
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
