@@ -121,53 +121,79 @@ export default function MapcnTestPage() {
         setIsLoadingRoute(true);
         setPrimaryPath(null);
         setAlternativePath(null);
+        setRoute(null);
+        setAlternativeRoute(null);
 
         try {
-            const twoNearest = findTwoNearestStops(userLocation[0], userLocation[1], allStops);
-            if (!twoNearest) return;
+            // Sort all stops by distance to user
+            const stopsWithDistance = allStops.map(stop => ({
+                ...stop,
+                distance: Math.sqrt(
+                    Math.pow(userLocation[0] - stop.latitude, 2) +
+                    Math.pow(userLocation[1] - stop.longitude, 2)
+                )
+            })).sort((a, b) => a.distance - b.distance);
 
-            const [stop1, stop2] = twoNearest;
+            console.log('[Debug] Stops sorted by distance:', stopsWithDistance.map(s => `${s.nome} (id=${s.id}, dist=${s.distance.toFixed(4)})`));
+            console.log('[Debug] Destination:', selectedDestination.nome, 'id=', selectedDestination.id);
 
-            const route1Data = await routeService.getShortestPath(stop1.id, selectedDestination.id);
-            const route2Data = await routeService.getShortestPath(stop2.id, selectedDestination.id);
+            // Try to find routes from nearest stops (try up to 5)
+            const routeResults: Array<{ stop: typeof stopsWithDistance[0], route: RouteData, walkDist: number }> = [];
 
-            let bestRoute = route1Data?.dados;
-            let altRoute = route2Data?.dados;
+            for (const stop of stopsWithDistance.slice(0, 5)) {
+                // Skip if same as destination
+                if (stop.id === selectedDestination.id) {
+                    console.log(`[Debug] Skipping ${stop.nome} (same as destination)`);
+                    continue;
+                }
 
-            // Calculate combined score: walking distance to stop + route total distance
-            // This prioritizes routes that start closer to the user
-            if (route1Data?.sucesso && route2Data?.sucesso) {
-                const walkDist1 = Math.sqrt(
-                    Math.pow(userLocation[0] - stop1.latitude, 2) +
-                    Math.pow(userLocation[1] - stop1.longitude, 2)
-                );
-                const walkDist2 = Math.sqrt(
-                    Math.pow(userLocation[0] - stop2.latitude, 2) +
-                    Math.pow(userLocation[1] - stop2.longitude, 2)
-                );
+                console.log(`[Debug] Trying route from ${stop.nome} (id=${stop.id}) to ${selectedDestination.nome} (id=${selectedDestination.id})`);
 
-                // Score = walking distance (weighted 2x) + route distance
-                // Walking is harder than riding, so we weight it more
-                const score1 = (walkDist1 * 2) + (route1Data.dados.distanciaTotal * 0.01);
-                const score2 = (walkDist2 * 2) + (route2Data.dados.distanciaTotal * 0.01);
+                const routeData = await routeService.getShortestPath(stop.id, selectedDestination.id);
 
-                console.log(`Route 1 (${stop1.nome}): walk=${walkDist1.toFixed(4)}, routeDist=${route1Data.dados.distanciaTotal}, score=${score1.toFixed(4)}`);
-                console.log(`Route 2 (${stop2.nome}): walk=${walkDist2.toFixed(4)}, routeDist=${route2Data.dados.distanciaTotal}, score=${score2.toFixed(4)}`);
+                if (routeData?.sucesso && routeData.dados) {
+                    console.log(`[Debug] ✅ Route found from ${stop.nome}: ${routeData.dados.distanciaTotal}km`);
+                    routeResults.push({
+                        stop,
+                        route: routeData.dados,
+                        walkDist: stop.distance
+                    });
 
-                if (score2 < score1) {
-                    bestRoute = route2Data.dados;
-                    altRoute = route1Data.dados;
+                    // Stop after finding 2 valid routes
+                    if (routeResults.length >= 2) break;
+                } else {
+                    console.log(`[Debug] ❌ No route from ${stop.nome} to ${selectedDestination.nome}`);
                 }
             }
 
-            if (bestRoute) {
-                setRoute(bestRoute);
-                setOrigin(bestRoute.paragens[0]?.nome || 'Origem');
+            if (routeResults.length === 0) {
+                console.log('[Debug] No routes found from any nearby stops');
+                alert('Não foi possível encontrar uma rota para este destino a partir das paragens próximas.');
+                setIsLoadingRoute(false);
+                return;
+            }
 
-                const waypoints: [number, number][] = bestRoute.paragens.map(s => [s.latitude, s.longitude]);
+            // Sort by combined score: walking distance (2x weight) + route distance
+            routeResults.sort((a, b) => {
+                const scoreA = (a.walkDist * 2) + (a.route.distanciaTotal * 0.01);
+                const scoreB = (b.walkDist * 2) + (b.route.distanciaTotal * 0.01);
+                return scoreA - scoreB;
+            });
+
+            console.log('[Debug] Route results sorted by score:', routeResults.map(r =>
+                `${r.stop.nome}: walk=${r.walkDist.toFixed(4)}, dist=${r.route.distanciaTotal}`
+            ));
+
+            const bestResult = routeResults[0];
+            const altResult = routeResults[1];
+
+            if (bestResult) {
+                setRoute(bestResult.route);
+                setOrigin(bestResult.route.paragens[0]?.nome || 'Origem');
+
+                const waypoints: [number, number][] = bestResult.route.paragens.map(s => [s.latitude, s.longitude]);
                 const path = await orsService.getRoute(waypoints);
                 if (path) {
-                    // Convert [lat, lng] to [lng, lat] for MapLibre
                     setPrimaryPath(path.map(([lat, lng]) => [lng, lat]));
                 }
 
@@ -178,9 +204,9 @@ export default function MapcnTestPage() {
                 }
             }
 
-            if (altRoute) {
-                setAlternativeRoute(altRoute);
-                const waypoints: [number, number][] = altRoute.paragens.map(s => [s.latitude, s.longitude]);
+            if (altResult) {
+                setAlternativeRoute(altResult.route);
+                const waypoints: [number, number][] = altResult.route.paragens.map(s => [s.latitude, s.longitude]);
                 const path = await orsService.getRoute(waypoints);
                 if (path) {
                     setAlternativePath(path.map(([lat, lng]) => [lng, lat]));
@@ -338,9 +364,9 @@ export default function MapcnTestPage() {
                             <X className="w-6 h-6 text-slate-900" />
                         </button>
                     </div>
-                    <button className="p-2 bg-white rounded-full shadow-md">
+                    <a href="/profile" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors">
                         <User className="w-6 h-6 text-slate-900" />
-                    </button>
+                    </a>
                 </div>
 
                 {/* Search Inputs */}
@@ -422,15 +448,25 @@ export default function MapcnTestPage() {
                                     className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${selectedRouteType === 'primary' || selectedRouteType === 'both' ? 'border-green-400 bg-green-50' : 'border-gray-200 opacity-50'}`}
                                 >
                                     <div className="flex items-center justify-between">
-                                        <div>
-                                            <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">MELHOR</span>
-                                            <p className="font-bold text-slate-900 mt-1">{route.linhas.join(', ')}</p>
-                                            <p className="text-xs text-slate-500">{route.distanciaTotal.toFixed(1)} km • {route.numeroParagens} paragens</p>
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">MELHOR</span>
+                                                {route.numeroTaxis && (
+                                                    <span className="text-xs font-bold text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded-full">
+                                                        🚖 {route.numeroTaxis} {route.numeroTaxis === 1 ? 'táxi' : 'táxis'}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p className="font-bold text-slate-900 mt-1">{route.linhas.join(' → ')}</p>
+                                            <p className="text-xs text-slate-500">{route.distanciaTotal.toFixed(1)} km • {route.numeroParagens || route.paragensTotal} paragens</p>
+                                            {route.descricaoPercurso && route.descricaoPercurso.length > 0 && (
+                                                <p className="text-xs text-slate-400 mt-1 truncate">{route.descricaoPercurso[0]}</p>
+                                            )}
                                         </div>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleStartTrip(); }}
                                             disabled={isTripStarted}
-                                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isTripStarted ? 'bg-green-200 text-green-600' : 'bg-green-500 hover:bg-green-600 text-white'}`}
+                                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ml-3 ${isTripStarted ? 'bg-green-200 text-green-600' : 'bg-green-500 hover:bg-green-600 text-white'}`}
                                         >
                                             <Play className="w-4 h-4" fill={isTripStarted ? 'currentColor' : 'white'} />
                                         </button>
@@ -443,15 +479,25 @@ export default function MapcnTestPage() {
                                     className={`p-4 rounded-2xl border cursor-pointer transition-all ${selectedRouteType === 'alternative' || selectedRouteType === 'both' ? 'border-blue-300 bg-blue-50' : 'border-gray-200 opacity-50'}`}
                                 >
                                     <div className="flex items-center justify-between">
-                                        <div>
-                                            <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">ALTERNATIVA</span>
-                                            <p className="font-bold text-slate-900 mt-1">{alternativeRoute.linhas.join(', ')}</p>
-                                            <p className="text-xs text-slate-500">{alternativeRoute.distanciaTotal.toFixed(1)} km • {alternativeRoute.numeroParagens} paragens</p>
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">ALTERNATIVA</span>
+                                                {alternativeRoute.numeroTaxis && (
+                                                    <span className="text-xs font-bold text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded-full">
+                                                        🚖 {alternativeRoute.numeroTaxis} {alternativeRoute.numeroTaxis === 1 ? 'táxi' : 'táxis'}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p className="font-bold text-slate-900 mt-1">{alternativeRoute.linhas.join(' → ')}</p>
+                                            <p className="text-xs text-slate-500">{alternativeRoute.distanciaTotal.toFixed(1)} km • {alternativeRoute.numeroParagens || alternativeRoute.paragensTotal} paragens</p>
+                                            {alternativeRoute.descricaoPercurso && alternativeRoute.descricaoPercurso.length > 0 && (
+                                                <p className="text-xs text-slate-400 mt-1 truncate">{alternativeRoute.descricaoPercurso[0]}</p>
+                                            )}
                                         </div>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleStartAltTrip(); }}
                                             disabled={isAltTripStarted}
-                                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isAltTripStarted ? 'bg-blue-200 text-blue-600' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+                                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ml-3 ${isAltTripStarted ? 'bg-blue-200 text-blue-600' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
                                         >
                                             <Play className="w-4 h-4" fill={isAltTripStarted ? 'currentColor' : 'white'} />
                                         </button>

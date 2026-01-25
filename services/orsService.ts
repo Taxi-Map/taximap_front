@@ -68,9 +68,13 @@ export const orsService = {
 
             const response = await orsDirections.calculate({
                 coordinates: coords,
-                profile: 'driving-car', // Use HGV to prefer main roads/arterials
-                preference: 'recommended',
-                format: 'geojson'
+                profile: 'driving-hgv', // Use HGV (Heavy Goods Vehicle) to prefer main roads/arterials
+                preference: 'fastest',   // Fastest route usually sticks to main roads
+                format: 'geojson',
+                options: {
+                    avoid_features: ['ferries'],
+                    vehicle_type: 'bus' // Bus routing prefers main roads
+                }
             });
 
             if (response && response.features && response.features.length > 0) {

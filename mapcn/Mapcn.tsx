@@ -92,21 +92,38 @@ export const MapcnControls: React.FC<MapcnControlsProps> = ({
     onLocate
 }) => {
     const { map, isLoaded } = useMap();
+    const navControlRef = useRef<maplibregl.NavigationControl | null>(null);
+    const geoControlRef = useRef<maplibregl.GeolocateControl | null>(null);
 
     useEffect(() => {
         if (!map || !isLoaded) return;
 
-        if (showZoom) {
-            map.addControl(new maplibregl.NavigationControl({ showCompass }), position);
+        // Add NavigationControl (zoom) only if not already added
+        if (showZoom && !navControlRef.current) {
+            navControlRef.current = new maplibregl.NavigationControl({ showCompass });
+            map.addControl(navControlRef.current, position);
         }
 
-        if (showLocate && navigator.geolocation) {
-            const geolocateControl = new maplibregl.GeolocateControl({
+        // Add GeolocateControl only if not already added
+        if (showLocate && navigator.geolocation && !geoControlRef.current) {
+            geoControlRef.current = new maplibregl.GeolocateControl({
                 positionOptions: { enableHighAccuracy: true },
                 trackUserLocation: true
             });
-            map.addControl(geolocateControl, position);
+            map.addControl(geoControlRef.current, position);
         }
+
+        // Cleanup on unmount
+        return () => {
+            if (navControlRef.current && map) {
+                try { map.removeControl(navControlRef.current); } catch (e) { }
+                navControlRef.current = null;
+            }
+            if (geoControlRef.current && map) {
+                try { map.removeControl(geoControlRef.current); } catch (e) { }
+                geoControlRef.current = null;
+            }
+        };
     }, [map, isLoaded, showZoom, showCompass, showLocate, position]);
 
     return null;

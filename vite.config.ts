@@ -10,7 +10,11 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       host: '0.0.0.0',
       proxy: {
-        '/rotas': 'http://localhost:3000'
+        '/rotas': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+          secure: false
+        }
       }
     },
     plugins: [react(), mkcert()],
