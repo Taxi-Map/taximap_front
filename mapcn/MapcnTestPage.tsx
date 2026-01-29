@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Mapcn, MapcnRoute, MapcnMarker, MapcnControls, MapcnTaxiAnimator } from './Mapcn';
-import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin } from 'lucide-react';
+import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints } from 'lucide-react';
 import { routeService, RouteData, Stop } from '../services/routeService';
 import { orsService } from '../services/orsService';
 import { findTwoNearestStops } from '../utils/geoUtils';
@@ -35,6 +35,8 @@ export default function MapcnTestPage() {
     const [showArrivalPopup, setShowArrivalPopup] = useState(false);
     const [arrivalDestination, setArrivalDestination] = useState('');
     const [isMenuOpen, setIsMenuOpen] = useState(true);
+    const [showWalkingPopup, setShowWalkingPopup] = useState(false);
+    const [walkingMessage, setWalkingMessage] = useState('');
 
     const handleStartTrip = () => {
         setIsTripStarted(true);
@@ -138,7 +140,13 @@ export default function MapcnTestPage() {
             console.log('[Debug] Destination:', selectedDestination.nome, 'id=', selectedDestination.id);
 
             // Try to find routes from nearest stops (try up to 5)
-            const routeResults: Array<{ stop: typeof stopsWithDistance[0], route: RouteData, walkDist: number }> = [];
+            const routeResults: Array<{
+                stop: typeof stopsWithDistance[0],
+                principal: RouteData | null,
+                alternativas: RouteData[],
+                analise: any,
+                walkDist: number
+            }> = [];
 
             for (const stop of stopsWithDistance.slice(0, 5)) {
                 // Skip if same as destination
@@ -151,16 +159,35 @@ export default function MapcnTestPage() {
 
                 const routeData = await routeService.getShortestPath(stop.id, selectedDestination.id);
 
-                if (routeData?.sucesso && routeData.dados) {
-                    console.log(`[Debug] ✅ Route found from ${stop.nome}: ${routeData.dados.distanciaTotal}km`);
-                    routeResults.push({
-                        stop,
-                        route: routeData.dados,
-                        walkDist: stop.distance
-                    });
+                if (routeData?.sucesso) {
+                    // Check if walking distance
+                    if (routeData.dados.analise?.podeIrAPe) {
+                        console.log(`[Debug] 🚶 Walking distance from ${stop.nome}: ${routeData.dados.analise.distanciaAPeMetros}m`);
+                        setWalkingMessage(routeData.dados.analise.avisos?.[0] || 'Esta rota é curta o suficiente para ir a pé!');
+                        setShowWalkingPopup(true);
 
-                    // Stop after finding 2 valid routes
-                    if (routeResults.length >= 2) break;
+                        // Draw direct walking path from user to destination
+                        const directWalk = await orsService.getWalkingRoute([userLocation, [selectedDestination.latitude, selectedDestination.longitude]]);
+                        if (directWalk) {
+                            setUserToOriginPath(directWalk.map(([lat, lng]) => [lng, lat]));
+                        }
+                        setIsLoadingRoute(false);
+                        return;
+                    }
+
+                    if (routeData.dados.principal) {
+                        console.log(`[Debug] ✅ Route found from ${stop.nome}: ${routeData.dados.principal.distanciaTotal}km`);
+                        routeResults.push({
+                            stop,
+                            principal: routeData.dados.principal,
+                            alternativas: routeData.dados.alternativas || [],
+                            analise: routeData.dados.analise,
+                            walkDist: stop.distance
+                        });
+
+                        // Stop after finding 2 valid routes to compare (choosing best start point)
+                        if (routeResults.length >= 2) break;
+                    }
                 } else {
                     console.log(`[Debug] ❌ No route from ${stop.nome} to ${selectedDestination.nome}`);
                 }
@@ -168,6 +195,7 @@ export default function MapcnTestPage() {
 
             if (routeResults.length === 0) {
                 console.log('[Debug] No routes found from any nearby stops');
+                // If it wasn't caught by "podeIrAPe" above, then it's a real failure
                 alert('Não foi possível encontrar uma rota para este destino a partir das paragens próximas.');
                 setIsLoadingRoute(false);
                 return;
@@ -175,23 +203,25 @@ export default function MapcnTestPage() {
 
             // Sort by combined score: walking distance (2x weight) + route distance
             routeResults.sort((a, b) => {
-                const scoreA = (a.walkDist * 2) + (a.route.distanciaTotal * 0.01);
-                const scoreB = (b.walkDist * 2) + (b.route.distanciaTotal * 0.01);
+                const distA = a.principal ? a.principal.distanciaTotal : 999;
+                const distB = b.principal ? b.principal.distanciaTotal : 999;
+                const scoreA = (a.walkDist * 2) + (distA * 0.01);
+                const scoreB = (b.walkDist * 2) + (distB * 0.01);
                 return scoreA - scoreB;
             });
 
             console.log('[Debug] Route results sorted by score:', routeResults.map(r =>
-                `${r.stop.nome}: walk=${r.walkDist.toFixed(4)}, dist=${r.route.distanciaTotal}`
+                `${r.stop.nome}: walk=${r.walkDist.toFixed(4)}, dist=${r.principal?.distanciaTotal}`
             ));
 
             const bestResult = routeResults[0];
-            const altResult = routeResults[1];
 
-            if (bestResult) {
-                setRoute(bestResult.route);
-                setOrigin(bestResult.route.paragens[0]?.nome || 'Origem');
+            if (bestResult && bestResult.principal) {
+                // Set Primary Route
+                setRoute(bestResult.principal);
+                setOrigin(bestResult.principal.paragens[0]?.nome || 'Origem');
 
-                const waypoints: [number, number][] = bestResult.route.paragens.map(s => [s.latitude, s.longitude]);
+                const waypoints: [number, number][] = bestResult.principal.paragens.map(s => [s.latitude, s.longitude]);
                 const path = await orsService.getRoute(waypoints);
                 if (path) {
                     setPrimaryPath(path.map(([lat, lng]) => [lng, lat]));
@@ -202,14 +232,31 @@ export default function MapcnTestPage() {
                 if (walkPath) {
                     setUserToOriginPath(walkPath.map(([lat, lng]) => [lng, lat]));
                 }
-            }
 
-            if (altResult) {
-                setAlternativeRoute(altResult.route);
-                const waypoints: [number, number][] = altResult.route.paragens.map(s => [s.latitude, s.longitude]);
-                const path = await orsService.getRoute(waypoints);
-                if (path) {
-                    setAlternativePath(path.map(([lat, lng]) => [lng, lat]));
+                // Set Alternative Route (from Backend)
+                // Filter out alternatives that are identical to the principal route
+                const principalSignature = bestResult.principal.segmentos?.map(s =>
+                    `${s.linha.id}-${s.paragensPercurso.map(p => p.id).join(',')}`
+                ).join('|');
+
+                const validAlternatives = (bestResult.alternativas || []).filter(alt => {
+                    const altSignature = alt.segmentos?.map(s =>
+                        `${s.linha.id}-${s.paragensPercurso.map(p => p.id).join(',')}`
+                    ).join('|');
+                    return altSignature !== principalSignature;
+                });
+
+                if (validAlternatives.length > 0) {
+                    const altRouteData = validAlternatives[0];
+                    setAlternativeRoute(altRouteData);
+
+                    if (altRouteData.paragens && altRouteData.paragens.length > 0) {
+                        const altWaypoints: [number, number][] = altRouteData.paragens.map(s => [s.latitude, s.longitude]);
+                        const altPath = await orsService.getRoute(altWaypoints);
+                        if (altPath) {
+                            setAlternativePath(altPath.map(([lat, lng]) => [lng, lat]));
+                        }
+                    }
                 }
             }
         } catch (e) {
@@ -263,6 +310,15 @@ export default function MapcnTestPage() {
                             width={5}
                             opacity={0.9}
                             onClick={() => setSelectedRouteType('primary')}
+                        />
+                    )}
+
+                    {/* Destination Marker */}
+                    {selectedDestination && (
+                        <MapcnMarker
+                            longitude={selectedDestination.longitude}
+                            latitude={selectedDestination.latitude}
+                            color="#EAB308"
                         />
                     )}
 
@@ -350,6 +406,27 @@ export default function MapcnTestPage() {
                             className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl font-bold text-lg transition-all"
                         >
                             Fechar
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Walking Suggestion Popup */}
+            {showWalkingPopup && (
+                <div className="absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6">
+                    <div className="bg-white rounded-[2.5rem] p-8 max-w-sm w-full text-center shadow-2xl animate-in zoom-in-95 duration-300">
+                        <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Footprints className="w-10 h-10 text-blue-500" />
+                        </div>
+                        <h2 className="text-2xl font-black text-slate-900 mb-2">Sugestão de Caminhada</h2>
+                        <p className="text-slate-600 mb-6">
+                            {walkingMessage}
+                        </p>
+                        <button
+                            onClick={() => setShowWalkingPopup(false)}
+                            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg transition-all"
+                        >
+                            Ver Caminho
                         </button>
                     </div>
                 </div>
