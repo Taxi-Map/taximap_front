@@ -429,12 +429,21 @@ export const MapcnTaxiAnimator: React.FC<MapcnTaxiAnimatorProps> = ({
     useEffect(() => {
         if (!map || !isLoaded) return;
 
+        // Calculate initial rotation based on first path segment
+        let initialRotation = 0;
+        if (path && path.length > 1) {
+            const dx = path[1][0] - path[0][0]; // lng
+            const dy = path[1][1] - path[0][1]; // lat
+            const angle = Math.atan2(dy, dx);
+            initialRotation = (-angle * 180 / Math.PI) + 90;
+        }
+
         // Create taxi element
         const el = document.createElement('div');
         el.className = 'mapcn-taxi-marker';
         el.style.cssText = 'cursor: pointer; transition: transform 0.1s linear;';
         el.innerHTML = `
-            <div style="width: 40px; height: 40px; transform: rotate(${rotation}deg); transition: transform 0.1s linear;">
+            <div style="width: 40px; height: 40px; transform: rotate(${initialRotation}deg); transition: transform 0.1s linear;">
                 <img src="/icon/taxi_icon.ico" style="width: 100%; height: 100%; object-fit: contain;" />
             </div>
         `;
@@ -454,7 +463,7 @@ export const MapcnTaxiAnimator: React.FC<MapcnTaxiAnimatorProps> = ({
         return () => {
             marker.remove();
         };
-    }, [map, isLoaded, startPos, onStart]);
+    }, [map, isLoaded, startPos, onStart, path]); // Added path dependency
 
     // Animation loop
     useEffect(() => {
