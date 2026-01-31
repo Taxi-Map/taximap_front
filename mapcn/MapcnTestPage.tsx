@@ -19,9 +19,13 @@ export default function MapcnTestPage() {
     // Route state
     const [route, setRoute] = useState<RouteData | null>(null);
     const [alternativeRoute, setAlternativeRoute] = useState<RouteData | null>(null);
-    const [primaryPath, setPrimaryPath] = useState<[number, number][] | null>(null);
-    const [alternativePath, setAlternativePath] = useState<[number, number][] | null>(null);
+    const [primarySegmentPaths, setPrimarySegmentPaths] = useState<[number, number][][]>([]);
+    const [alternativeSegmentPaths, setAlternativeSegmentPaths] = useState<[number, number][][]>([]);
     const [userToOriginPath, setUserToOriginPath] = useState<[number, number][] | null>(null);
+    const [initialWalkPath, setInitialWalkPath] = useState<[number, number][] | null>(null);
+    const [intermediateWalkPath, setIntermediateWalkPath] = useState<[number, number][] | null>(null);
+    const [altIntermediateWalkPath, setAltIntermediateWalkPath] = useState<[number, number][] | null>(null); // For alternative route
+    const [incluiCaminhada, setIncluiCaminhada] = useState(false);
     const [isLoadingRoute, setIsLoadingRoute] = useState(false);
 
     // Stops
@@ -121,146 +125,157 @@ export default function MapcnTestPage() {
         if (!selectedDestination || !userLocation) return;
 
         setIsLoadingRoute(true);
-        setPrimaryPath(null);
-        setAlternativePath(null);
+        setPrimarySegmentPaths([]);
+        setAlternativeSegmentPaths([]);
         setRoute(null);
         setAlternativeRoute(null);
+        setInitialWalkPath(null);
+        setIntermediateWalkPath(null);
+        setAltIntermediateWalkPath(null);
+        setIncluiCaminhada(false);
 
         try {
-            // Sort all stops by distance to user
-            const stopsWithDistance = allStops.map(stop => ({
-                ...stop,
-                distance: Math.sqrt(
-                    Math.pow(userLocation[0] - stop.latitude, 2) +
-                    Math.pow(userLocation[1] - stop.longitude, 2)
-                )
-            })).sort((a, b) => a.distance - b.distance);
+            console.log(`[MapcnTestPage] 📍 User location: [${userLocation[0]}, ${userLocation[1]}]`);
+            console.log(`[MapcnTestPage] 🎯 Destination: ${selectedDestination.nome} (id=${selectedDestination.id})`);
 
-            console.log('[Debug] Stops sorted by distance:', stopsWithDistance.map(s => `${s.nome} (id=${s.id}, dist=${s.distance.toFixed(4)})`));
-            console.log('[Debug] Destination:', selectedDestination.nome, 'id=', selectedDestination.id);
+            // Call backend with user coordinates - backend decides best origin
+            const routeData = await routeService.getRouteFromCoords(
+                userLocation[0],  // latitude
+                userLocation[1],  // longitude
+                selectedDestination.id
+            );
 
-            // Try to find routes from nearest stops (try up to 5)
-            const routeResults: Array<{
-                stop: typeof stopsWithDistance[0],
-                principal: RouteData | null,
-                alternativas: RouteData[],
-                analise: any,
-                walkDist: number
-            }> = [];
-
-            for (const stop of stopsWithDistance.slice(0, 5)) {
-                // Skip if same as destination
-                if (stop.id === selectedDestination.id) {
-                    console.log(`[Debug] Skipping ${stop.nome} (same as destination)`);
-                    continue;
-                }
-
-                console.log(`[Debug] Trying route from ${stop.nome} (id=${stop.id}) to ${selectedDestination.nome} (id=${selectedDestination.id})`);
-
-                const routeData = await routeService.getShortestPath(stop.id, selectedDestination.id);
-
-                if (routeData?.sucesso) {
-                    // Check if walking distance
-                    if (routeData.dados.analise?.podeIrAPe) {
-                        console.log(`[Debug] 🚶 Walking distance from ${stop.nome}: ${routeData.dados.analise.distanciaAPeMetros}m`);
-                        setWalkingMessage(routeData.dados.analise.avisos?.[0] || 'Esta rota é curta o suficiente para ir a pé!');
-                        setShowWalkingPopup(true);
-
-                        // Draw direct walking path from user to destination
-                        const directWalk = await orsService.getWalkingRoute([userLocation, [selectedDestination.latitude, selectedDestination.longitude]]);
-                        if (directWalk) {
-                            setUserToOriginPath(directWalk.map(([lat, lng]) => [lng, lat]));
-                        }
-                        setIsLoadingRoute(false);
-                        return;
-                    }
-
-                    if (routeData.dados.principal) {
-                        console.log(`[Debug] ✅ Route found from ${stop.nome}: ${routeData.dados.principal.distanciaTotal}km`);
-                        routeResults.push({
-                            stop,
-                            principal: routeData.dados.principal,
-                            alternativas: routeData.dados.alternativas || [],
-                            analise: routeData.dados.analise,
-                            walkDist: stop.distance
-                        });
-
-                        // Stop after finding 2 valid routes to compare (choosing best start point)
-                        if (routeResults.length >= 2) break;
-                    }
-                } else {
-                    console.log(`[Debug] ❌ No route from ${stop.nome} to ${selectedDestination.nome}`);
-                }
-            }
-
-            if (routeResults.length === 0) {
-                console.log('[Debug] No routes found from any nearby stops');
-                // If it wasn't caught by "podeIrAPe" above, then it's a real failure
-                alert('Não foi possível encontrar uma rota para este destino a partir das paragens próximas.');
+            if (!routeData?.sucesso) {
+                alert('Erro ao obter rota do servidor.');
                 setIsLoadingRoute(false);
                 return;
             }
 
-            // Sort by combined score: walking distance (2x weight) + route distance
-            routeResults.sort((a, b) => {
-                const distA = a.principal ? a.principal.distanciaTotal : 999;
-                const distB = b.principal ? b.principal.distanciaTotal : 999;
-                const scoreA = (a.walkDist * 2) + (distA * 0.01);
-                const scoreB = (b.walkDist * 2) + (distB * 0.01);
-                return scoreA - scoreB;
-            });
+            const { analise, principal, alternativas, paragemOrigemSugerida, distanciaAteParagem } = routeData.dados;
 
-            console.log('[Debug] Route results sorted by score:', routeResults.map(r =>
-                `${r.stop.nome}: walk=${r.walkDist.toFixed(4)}, dist=${r.principal?.distanciaTotal}`
-            ));
+            // Log suggested origin from backend
+            if (paragemOrigemSugerida) {
+                console.log(`[MapcnTestPage] ✅ Backend suggested origin: ${paragemOrigemSugerida.nome}`);
+                console.log(`[MapcnTestPage] 📏 Distance to origin: ${distanciaAteParagem}m`);
+            }
 
-            const bestResult = routeResults[0];
+            // Handle "can walk" case
+            if (analise?.podeIrAPe) {
+                setWalkingMessage(analise.avisos?.[0] || 'Esta rota é curta o suficiente para ir a pé!');
+                setShowWalkingPopup(true);
 
-            if (bestResult && bestResult.principal) {
-                // Set Primary Route
-                setRoute(bestResult.principal);
-                setOrigin(bestResult.principal.paragens[0]?.nome || 'Origem');
-
-                const waypoints: [number, number][] = bestResult.principal.paragens.map(s => [s.latitude, s.longitude]);
-                const path = await orsService.getRoute(waypoints);
-                if (path) {
-                    setPrimaryPath(path.map(([lat, lng]) => [lng, lat]));
+                const directWalk = await orsService.getWalkingRoute([
+                    userLocation,
+                    [selectedDestination.latitude, selectedDestination.longitude]
+                ]);
+                if (directWalk) {
+                    setUserToOriginPath(directWalk.map(([lat, lng]) => [lng, lat]));
                 }
+                setIsLoadingRoute(false);
+                return;
+            }
 
-                // Walking route
-                const walkPath = await orsService.getWalkingRoute([userLocation, waypoints[0]]);
-                if (walkPath) {
-                    setUserToOriginPath(walkPath.map(([lat, lng]) => [lng, lat]));
-                }
+            // Handle no route found
+            if (!principal) {
+                const errorMsg = analise?.avisos?.join('\n') || 'Não foi encontrada nenhuma rota.';
+                alert(errorMsg);
+                setIsLoadingRoute(false);
+                return;
+            }
 
-                // Set Alternative Route (from Backend)
-                // Filter out alternatives that are identical to the principal route
-                const principalSignature = bestResult.principal.segmentos?.map(s =>
-                    `${s.linha.id}-${s.paragensPercurso.map(p => p.id).join(',')}`
-                ).join('|');
+            // ===== PRIMARY ROUTE =====
+            setRoute(principal);
+            setOrigin(paragemOrigemSugerida?.nome || principal.segmentos[0]?.paragensPercurso[0]?.nome || 'Origem');
 
-                const validAlternatives = (bestResult.alternativas || []).filter(alt => {
-                    const altSignature = alt.segmentos?.map(s =>
-                        `${s.linha.id}-${s.paragensPercurso.map(p => p.id).join(',')}`
-                    ).join('|');
-                    return altSignature !== principalSignature;
-                });
-
-                if (validAlternatives.length > 0) {
-                    const altRouteData = validAlternatives[0];
-                    setAlternativeRoute(altRouteData);
-
-                    if (altRouteData.paragens && altRouteData.paragens.length > 0) {
-                        const altWaypoints: [number, number][] = altRouteData.paragens.map(s => [s.latitude, s.longitude]);
-                        const altPath = await orsService.getRoute(altWaypoints);
-                        if (altPath) {
-                            setAlternativePath(altPath.map(([lat, lng]) => [lng, lat]));
-                        }
+            // Process each taxi segment individually
+            const segmentPaths: [number, number][][] = [];
+            for (const segmento of principal.segmentos) {
+                if (segmento.paragensPercurso && segmento.paragensPercurso.length > 0) {
+                    const segmentWaypoints: [number, number][] = segmento.paragensPercurso.map(
+                        s => [s.latitude, s.longitude]
+                    );
+                    const segPath = await orsService.getRoute(segmentWaypoints);
+                    if (segPath) {
+                        segmentPaths.push(segPath.map(([lat, lng]) => [lng, lat]));
                     }
                 }
             }
+            setPrimarySegmentPaths(segmentPaths);
+
+            // Walking route from user to suggested origin (or first taxi stop)
+            const firstTaxiStop = principal.segmentos[0]?.paragensPercurso[0];
+            const originCoords: [number, number] = paragemOrigemSugerida
+                ? [paragemOrigemSugerida.latitude, paragemOrigemSugerida.longitude]
+                : firstTaxiStop ? [firstTaxiStop.latitude, firstTaxiStop.longitude] : userLocation;
+            const walkPath = await orsService.getWalkingRoute([userLocation, originCoords]);
+            if (walkPath) {
+                setUserToOriginPath(walkPath.map(([lat, lng]) => [lng, lat]));
+            }
+
+            // Process caminhadaInicial if present (walk from suggested origin to first taxi stop)
+            if (principal.caminhadaInicial) {
+                setIncluiCaminhada(true);
+                const { paragemOrigem, paragemDestino } = principal.caminhadaInicial;
+                const initWalk = await orsService.getWalkingRoute([
+                    [paragemOrigem.latitude, paragemOrigem.longitude],
+                    [paragemDestino.latitude, paragemDestino.longitude]
+                ]);
+                if (initWalk) {
+                    setInitialWalkPath(initWalk.map(([lat, lng]) => [lng, lat]));
+                }
+                console.log(`[MapcnTestPage] 🚶 Initial walk: ${principal.caminhadaInicial.distanciaMetros}m`);
+            }
+
+            // Process intermediate walking segment (caminhadaFinal) if present
+            if (principal.caminhadaFinal) {
+                setIncluiCaminhada(true);
+                const { paragemOrigem, paragemDestino } = principal.caminhadaFinal;
+                const intermediateWalk = await orsService.getWalkingRoute([
+                    [paragemOrigem.latitude, paragemOrigem.longitude],
+                    [paragemDestino.latitude, paragemDestino.longitude]
+                ]);
+                if (intermediateWalk) {
+                    setIntermediateWalkPath(intermediateWalk.map(([lat, lng]) => [lng, lat]));
+                }
+                console.log(`[MapcnTestPage] 🚶 Intermediate walk: ${principal.caminhadaFinal.distanciaMetros}m`);
+            }
+
+            // ===== ALTERNATIVE ROUTE (from backend only) =====
+            if (alternativas && alternativas.length > 0) {
+                const altRoute = alternativas[0];
+                setAlternativeRoute(altRoute);
+
+                // Process each alternative segment individually
+                const altSegmentPaths: [number, number][][] = [];
+                for (const segmento of altRoute.segmentos || []) {
+                    if (segmento.paragensPercurso && segmento.paragensPercurso.length > 0) {
+                        const segmentWaypoints: [number, number][] = segmento.paragensPercurso.map(
+                            s => [s.latitude, s.longitude]
+                        );
+                        const segPath = await orsService.getRoute(segmentWaypoints);
+                        if (segPath) {
+                            altSegmentPaths.push(segPath.map(([lat, lng]) => [lng, lat]));
+                        }
+                    }
+                }
+                setAlternativeSegmentPaths(altSegmentPaths);
+
+                // Process caminhadaFinal for alternative route (orange walking line)
+                if (altRoute.caminhadaFinal) {
+                    const { paragemOrigem, paragemDestino } = altRoute.caminhadaFinal;
+                    const altWalk = await orsService.getWalkingRoute([
+                        [paragemOrigem.latitude, paragemOrigem.longitude],
+                        [paragemDestino.latitude, paragemDestino.longitude]
+                    ]);
+                    if (altWalk) {
+                        setAltIntermediateWalkPath(altWalk.map(([lat, lng]) => [lng, lat]));
+                    }
+                }
+            }
+
         } catch (e) {
             console.error("Error:", e);
+            alert('Erro ao calcular rota.');
         }
         setIsLoadingRoute(false);
     };
@@ -277,7 +292,7 @@ export default function MapcnTestPage() {
                 <Mapcn center={mapCenter} zoom={14}>
                     <MapcnControls showZoom showLocate />
 
-                    {/* Walking route (dashed gray) */}
+                    {/* Walking route from user to first stop (dashed gray) */}
                     {userToOriginPath && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
                         <MapcnRoute
                             id="walking-route"
@@ -289,28 +304,70 @@ export default function MapcnTestPage() {
                         />
                     )}
 
-                    {/* Alternative Route (BLUE) */}
-                    {alternativePath && (selectedRouteType === 'both' || selectedRouteType === 'alternative') && (
+                    {/* ⭐ NEW: Intermediate walking route between taxi segments (dashed orange) */}
+                    {intermediateWalkPath && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
                         <MapcnRoute
-                            id="alt-route"
-                            coordinates={alternativePath}
-                            color="#3B82F6"
+                            id="intermediate-walking-route"
+                            coordinates={intermediateWalkPath}
+                            color="#F97316"
                             width={4}
-                            opacity={selectedRouteType === 'alternative' ? 0.9 : 0.6}
-                            onClick={() => setSelectedRouteType('alternative')}
+                            opacity={0.8}
+                            dashArray={[8, 8]}
                         />
                     )}
 
-                    {/* Primary Route (GREEN) */}
-                    {primaryPath && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
+                    {/* Initial walk from origin stop to first taxi stop (dashed orange) */}
+                    {initialWalkPath && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
                         <MapcnRoute
-                            id="primary-route"
-                            coordinates={primaryPath}
-                            color="#22C55E"
-                            width={5}
-                            opacity={0.9}
-                            onClick={() => setSelectedRouteType('primary')}
+                            id="initial-walking-route"
+                            coordinates={initialWalkPath}
+                            color="#F97316"
+                            width={4}
+                            opacity={0.8}
+                            dashArray={[8, 8]}
                         />
+                    )}
+
+                    {/* Alternative Route Segments (BLUE) */}
+                    {alternativeSegmentPaths.length > 0 && (selectedRouteType === 'both' || selectedRouteType === 'alternative') && (
+                        alternativeSegmentPaths.map((segPath, idx) => (
+                            <MapcnRoute
+                                key={`alt-seg-${idx}`}
+                                id={`alt-route-${idx}`}
+                                coordinates={segPath}
+                                color="#3B82F6"
+                                width={4}
+                                opacity={selectedRouteType === 'alternative' ? 0.9 : 0.6}
+                                onClick={() => setSelectedRouteType('alternative')}
+                            />
+                        ))
+                    )}
+
+                    {/* Alternative route intermediate walking (dashed orange) */}
+                    {altIntermediateWalkPath && (selectedRouteType === 'both' || selectedRouteType === 'alternative') && (
+                        <MapcnRoute
+                            id="alt-intermediate-walking-route"
+                            coordinates={altIntermediateWalkPath}
+                            color="#F97316"
+                            width={4}
+                            opacity={0.8}
+                            dashArray={[8, 8]}
+                        />
+                    )}
+
+                    {/* Primary Route Segments (GREEN) */}
+                    {primarySegmentPaths.length > 0 && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
+                        primarySegmentPaths.map((segPath, idx) => (
+                            <MapcnRoute
+                                key={`primary-seg-${idx}`}
+                                id={`primary-route-${idx}`}
+                                coordinates={segPath}
+                                color="#22C55E"
+                                width={5}
+                                opacity={0.9}
+                                onClick={() => setSelectedRouteType('primary')}
+                            />
+                        ))
                     )}
 
                     {/* Destination Marker */}
@@ -331,11 +388,11 @@ export default function MapcnTestPage() {
                         />
                     )}
 
-                    {/* Animated Taxi for Primary Route */}
-                    {primaryPath && primaryPath.length > 0 && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
+                    {/* Animated Taxi for Primary Route (uses combined path for animation) */}
+                    {primarySegmentPaths.length > 0 && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
                         <MapcnTaxiAnimator
-                            startPos={primaryPath[0]}
-                            path={primaryPath}
+                            startPos={primarySegmentPaths[0][0]}
+                            path={primarySegmentPaths.flat()}
                             isStarted={isTripStarted}
                             onStart={handleStartTrip}
                             onArrival={handlePrimaryArrival}
@@ -343,10 +400,10 @@ export default function MapcnTestPage() {
                     )}
 
                     {/* Animated Taxi for Alternative Route */}
-                    {alternativePath && alternativePath.length > 0 && (selectedRouteType === 'alternative') && (
+                    {alternativeSegmentPaths.length > 0 && (selectedRouteType === 'alternative') && (
                         <MapcnTaxiAnimator
-                            startPos={alternativePath[0]}
-                            path={alternativePath}
+                            startPos={alternativeSegmentPaths[0][0]}
+                            path={alternativeSegmentPaths.flat()}
                             isStarted={isAltTripStarted}
                             onStart={handleStartAltTrip}
                             onArrival={handleAltArrival}
