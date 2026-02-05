@@ -86,6 +86,19 @@ const StyledWrapper = styled.div`
     width: 100%;
   }
   
+  #poda {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+  }
+  
+  #main {
+    position: relative;
+    width: 100%;
+  }
+  
   .white,
   .border,
   .darkBorderBg,
@@ -127,13 +140,6 @@ const StyledWrapper = styled.div`
     }
   }
   
-  #poda {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    position: relative;
-  }
   .input::placeholder {
     color: #c0b9c0;
   }

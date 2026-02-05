@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { routeService } from '../services/routeService';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CircleNode from './CircleNode';
 
@@ -124,20 +124,24 @@ export default function RouteBuilderPage() {
 
     return (
         <div className="w-full h-screen bg-slate-50 flex flex-col">
-            <div className="bg-white border-b p-4 flex items-center justify-between z-10 shadow-sm">
-                <div className="flex items-center gap-4">
-                    <button onClick={() => navigate('/')} className="p-2 hover:bg-slate-100 rounded-full">
-                        <ArrowLeft className="w-6 h-6 text-slate-700" />
+            {/* Header - Responsive */}
+            <div className="bg-white border-b px-3 py-3 md:px-4 md:py-4 flex items-center justify-between z-10 shadow-sm">
+                <div className="flex items-center gap-2 md:gap-4 min-w-0">
+                    <button onClick={() => navigate('/')} className="p-2 hover:bg-slate-100 rounded-full flex-shrink-0">
+                        <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-slate-700" />
                     </button>
-                    <h1 className="text-xl font-bold text-slate-900">Route Builder Dashboard</h1>
+                    <h1 className="text-base md:text-xl font-bold text-slate-900 truncate">Route Builder</h1>
                 </div>
-                <div className="flex gap-2">
-                    <button onClick={fetchData} className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium">
-                        Refresh Data
-                    </button>
-                </div>
+                <button
+                    onClick={fetchData}
+                    className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium text-sm md:text-base flex-shrink-0"
+                >
+                    <RefreshCw className="w-4 h-4 md:w-5 md:h-5" />
+                    <span className="hidden sm:inline">Refresh</span>
+                </button>
             </div>
 
+            {/* ReactFlow Container */}
             <div className="flex-1 w-full h-full">
                 <ReactFlow
                     nodes={nodes}
@@ -148,14 +152,19 @@ export default function RouteBuilderPage() {
                     fitView
                     attributionPosition="bottom-right"
                 >
-                    <MiniMap />
+                    {/* MiniMap - Hidden on mobile */}
+                    <div className="hidden md:block">
+                        <MiniMap />
+                    </div>
                     <Controls />
                     <Background color="#f1f5f9" gap={16} />
                 </ReactFlow>
             </div>
+
+            {/* Loading Overlay */}
             {isLoading && (
                 <div className="absolute inset-0 bg-white/50 z-50 flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+                    <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-b-2 border-slate-900"></div>
                 </div>
             )}
         </div>

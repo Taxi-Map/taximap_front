@@ -273,9 +273,9 @@ export default function LandingPage() {
                             © {new Date().getFullYear()} TAXI MAP
                         </p>
                         <div className="flex gap-6 lg:gap-10">
-                            <a href="#" className="text-slate-400 hover:text-white transition-colors font-black uppercase text-xs lg:text-sm tracking-widest">Twitter</a>
-                            <a href="#" className="text-slate-400 hover:text-white transition-colors font-black uppercase text-xs lg:text-sm tracking-widest">Instagram</a>
+                            <a href="https://www.linkedin.com/company/taxi-map?trk=public_post_follow-view-profile" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors font-black uppercase text-xs lg:text-sm tracking-widest">LinkedIn</a>
                             <a href="#" className="text-slate-400 hover:text-white transition-colors font-black uppercase text-xs lg:text-sm tracking-widest">Facebook</a>
+                            <a href="#" className="text-slate-400 hover:text-white transition-colors font-black uppercase text-xs lg:text-sm tracking-widest">Instagram</a>
                         </div>
                     </div>
                 </div>

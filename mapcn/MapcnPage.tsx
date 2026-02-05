@@ -100,6 +100,22 @@ export default function MapcnPage() {
         fetchStops();
     }, []);
 
+    // Auto-filter stops when destination comes from URL params and stops are loaded
+    useEffect(() => {
+        if (allStops.length > 0 && destination.trim() !== '' && !selectedDestination) {
+            // Trigger fuzzy search for the pre-filled destination
+            const fuzzyResults = fuzzySearch<Stop>(
+                destination,
+                allStops,
+                (stop) => stop.nome,
+                0.3
+            );
+            const filtered = fuzzyResults.map(result => result.item);
+            setFilteredStops(filtered);
+            setShowDropdown(true);
+        }
+    }, [allStops, destination, selectedDestination]);
+
     // Filter stops with fuzzy search
     const handleDestinationChange = (value: string) => {
         setDestination(value);
@@ -710,9 +726,12 @@ export default function MapcnPage() {
                     </button>
 
                     <div className="flex-1 flex flex-col items-center gap-2">
-                        <button className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Perfil">
+                        <Link to="/builder" className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Route Builder">
+                            <Route className="w-5 h-5 text-slate-600" />
+                        </Link>
+                        <a href="/profile" className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Perfil">
                             <User className="w-5 h-5 text-slate-600" />
-                        </button>
+                        </a>
                         <button className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Partilhar">
                             <Share2 className="w-5 h-5 text-slate-600" />
                         </button>

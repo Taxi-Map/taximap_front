@@ -461,54 +461,62 @@ export default function MapRouteBuilder() {
 
     return (
         <div className="w-full h-screen bg-slate-50 flex flex-col relative">
-            {/* Header */}
-            <div className="absolute top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b p-4 flex items-center justify-between z-20 shadow-sm">
-                <div className="flex items-center gap-4">
-                    <button onClick={() => navigate('/map')} className="p-2 hover:bg-slate-100 rounded-full">
-                        <ArrowLeft className="w-6 h-6 text-slate-700" />
+            {/* Header - Responsive */}
+            <div className="absolute top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b px-2 py-2 md:px-4 md:py-3 flex items-center justify-between z-20 shadow-sm gap-2">
+                <div className="flex items-center gap-1 md:gap-3 min-w-0 flex-shrink-0">
+                    <button onClick={() => navigate('/map')} className="p-1.5 md:p-2 hover:bg-slate-100 rounded-full flex-shrink-0">
+                        <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-slate-700" />
                     </button>
-                    <h1 className="text-xl font-bold text-slate-900">Route Builder</h1>
+                    <h1 className="text-sm md:text-xl font-bold text-slate-900 whitespace-nowrap">Route Builder</h1>
                     {editMode !== 'view' && (
-                        <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full">
-                            {editMode === 'add-stop' ? '📍 Adicionar Paragem' : '🛤️ Criar Linha'}
+                        <span className="hidden sm:inline px-2 py-0.5 md:px-3 md:py-1 bg-green-100 text-green-700 text-xs md:text-sm font-medium rounded-full whitespace-nowrap">
+                            {editMode === 'add-stop' ? '📍 Paragem' : editMode === 'edit-line' ? '✏️ Editar' : '🛤️ Linha'}
                         </span>
                     )}
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1 md:gap-2 flex-shrink-0">
                     {editMode === 'view' ? (
                         <>
                             <button
                                 onClick={() => setEditMode('add-stop')}
-                                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium flex items-center gap-2"
+                                className="p-2 md:px-3 md:py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium flex items-center gap-1 md:gap-2"
+                                title="Adicionar Paragem"
                             >
-                                <Plus className="w-4 h-4" /> Paragem
+                                <Plus className="w-4 h-4" />
+                                <span className="hidden md:inline text-sm">Paragem</span>
                             </button>
                             <button
                                 onClick={() => setEditMode('create-route')}
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center gap-2"
+                                className="p-2 md:px-3 md:py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium flex items-center gap-1 md:gap-2"
+                                title="Nova Linha"
                             >
-                                <Route className="w-4 h-4" /> Nova Linha
+                                <Route className="w-4 h-4" />
+                                <span className="hidden md:inline text-sm">Nova Linha</span>
                             </button>
                             <button
                                 onClick={() => setShowLinesList(!showLinesList)}
-                                className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 ${showLinesList ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
-                                    }`}
+                                className={`p-2 md:px-3 md:py-2 rounded-lg font-medium flex items-center gap-1 md:gap-2 ${showLinesList ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}
+                                title="Lista de Linhas"
                             >
-                                <List className="w-4 h-4" /> Linhas
+                                <List className="w-4 h-4" />
+                                <span className="hidden md:inline text-sm">Linhas</span>
                             </button>
                         </>
                     ) : (
                         <button
                             onClick={cancelEdit}
-                            className="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium flex items-center gap-2"
+                            className="p-2 md:px-3 md:py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium flex items-center gap-1 md:gap-2"
+                            title="Cancelar"
                         >
-                            <X className="w-4 h-4" /> Cancelar
+                            <X className="w-4 h-4" />
+                            <span className="hidden md:inline text-sm">Cancelar</span>
                         </button>
                     )}
                     <button
                         onClick={fetchData}
                         disabled={isLoading}
-                        className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium flex items-center gap-2"
+                        className="p-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium flex items-center"
+                        title="Atualizar"
                     >
                         <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                     </button>
@@ -527,7 +535,7 @@ export default function MapRouteBuilder() {
 
             {/* Route Builder Panel */}
             {editMode === 'create-route' && (
-                <div className="absolute top-20 left-4 w-80 bg-white rounded-2xl shadow-xl p-4 z-20 max-h-[70vh] overflow-auto">
+                <div className="absolute top-14 md:top-20 left-2 right-2 md:left-4 md:right-auto md:w-80 bg-white rounded-2xl shadow-xl p-3 md:p-4 z-20 max-h-[50vh] md:max-h-[70vh] overflow-auto">
                     <h3 className="font-bold text-slate-900 text-lg mb-3 flex items-center gap-2">
                         <Route className="w-5 h-5 text-blue-500" /> Criar Nova Linha
                     </h3>
@@ -565,7 +573,7 @@ export default function MapRouteBuilder() {
 
             {/* Edit Line Panel (Interactive) */}
             {editMode === 'edit-line' && selectedLine && (
-                <div className="absolute top-20 left-4 w-96 bg-white rounded-2xl shadow-xl p-4 z-20 max-h-[80vh] overflow-auto">
+                <div className="absolute top-14 md:top-20 left-2 right-2 md:left-4 md:right-auto md:w-96 bg-white rounded-2xl shadow-xl p-3 md:p-4 z-20 max-h-[60vh] md:max-h-[80vh] overflow-auto">
                     <h3 className="font-bold text-slate-900 text-lg mb-3 flex items-center gap-2">
                         <Edit2 className="w-5 h-5 text-purple-500" /> Editar Linha
                     </h3>
@@ -764,28 +772,28 @@ export default function MapRouteBuilder() {
                 </div>
             )}
 
-            {/* Legend */}
-            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-3 z-20">
-                <p className="text-xs font-bold text-slate-700 mb-2">Legenda</p>
-                <div className="flex items-center gap-2 text-xs text-slate-600">
-                    <div className="w-4 h-4 bg-yellow-400 border-2 border-slate-900 rounded-full"></div>
+            {/* Legend - Smaller on mobile */}
+            <div className="absolute bottom-2 md:bottom-4 left-2 md:left-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-2 md:p-3 z-10">
+                <p className="text-[10px] md:text-xs font-bold text-slate-700 mb-1 md:mb-2">Legenda</p>
+                <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-slate-600">
+                    <div className="w-3 h-3 md:w-4 md:h-4 bg-yellow-400 border-2 border-slate-900 rounded-full"></div>
                     <span>Paragem</span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-600 mt-1">
-                    <div className="w-4 h-4 bg-green-500 border-2 border-green-800 rounded-full"></div>
+                <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-slate-600 mt-0.5 md:mt-1">
+                    <div className="w-3 h-3 md:w-4 md:h-4 bg-green-500 border-2 border-green-800 rounded-full"></div>
                     <span>Nova Linha</span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-600 mt-1">
-                    <div className="w-4 h-4 bg-purple-500 border-2 border-purple-800 rounded-full"></div>
+                <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-slate-600 mt-0.5 md:mt-1">
+                    <div className="w-3 h-3 md:w-4 md:h-4 bg-purple-500 border-2 border-purple-800 rounded-full"></div>
                     <span>A Editar</span>
                 </div>
             </div>
 
-            {/* Stats */}
-            <div className="absolute top-20 right-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-3 z-20">
-                <p className="text-xs font-bold text-slate-700">Estatísticas</p>
-                <p className="text-sm text-slate-600">{stops.length} paragens</p>
-                <p className="text-sm text-slate-600">{lines.length} linhas</p>
+            {/* Stats - Hidden on mobile when panels are open */}
+            <div className="absolute top-16 md:top-20 right-2 md:right-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-2 md:p-3 z-10">
+                <p className="text-[10px] md:text-xs font-bold text-slate-700">Estatísticas</p>
+                <p className="text-xs md:text-sm text-slate-600">{stops.length} paragens</p>
+                <p className="text-xs md:text-sm text-slate-600">{lines.length} linhas</p>
             </div>
 
             {/* Loading overlay */}
@@ -800,7 +808,7 @@ export default function MapRouteBuilder() {
 
             {/* Lines List Panel */}
             {showLinesList && editMode === 'view' && (
-                <div className="absolute top-20 left-4 w-80 bg-white rounded-2xl shadow-xl p-4 z-20 max-h-[70vh] overflow-auto">
+                <div className="absolute top-14 md:top-20 left-2 right-2 md:left-4 md:right-auto md:w-80 bg-white rounded-2xl shadow-xl p-3 md:p-4 z-20 max-h-[60vh] md:max-h-[70vh] overflow-auto">
                     <div className="flex items-center justify-between mb-3">
                         <h3 className="font-bold text-slate-900 text-lg flex items-center gap-2">
                             <Route className="w-5 h-5 text-purple-500" /> Linhas ({lines.length})
