@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Map as MapIcon, Menu, X } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -22,9 +23,12 @@ export const Header: React.FC = () => {
             <a href="#sobre" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">Sobre</a>
             <a href="#vantagens" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">Vantagens</a>
             <a href="#impacto" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">Impacto</a>
-            <button className="bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-black hover:bg-slate-800 hover:scale-105 active:scale-95 transition-all shadow-lg">
+            <Link
+              to="/map?login=true"
+              className="bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-black hover:bg-slate-800 hover:scale-105 active:scale-95 transition-all shadow-lg"
+            >
               Entrar
-            </button>
+            </Link>
           </div>
 
           <div className="md:hidden">
@@ -48,9 +52,13 @@ export const Header: React.FC = () => {
         <a onClick={() => setIsMenuOpen(false)} href="#sobre" className="text-xl font-bold text-slate-600 hover:text-slate-900 py-3 px-4 hover:bg-slate-50 rounded-2xl transition-colors">Sobre</a>
         <a onClick={() => setIsMenuOpen(false)} href="#vantagens" className="text-xl font-bold text-slate-600 hover:text-slate-900 py-3 px-4 hover:bg-slate-50 rounded-2xl transition-colors">Vantagens</a>
         <a onClick={() => setIsMenuOpen(false)} href="#impacto" className="text-xl font-bold text-slate-600 hover:text-slate-900 py-3 px-4 hover:bg-slate-50 rounded-2xl transition-colors">Impacto</a>
-        <button className="mt-2 bg-slate-900 text-white px-6 py-5 rounded-2xl text-xl font-black hover:bg-slate-800 active:scale-95 transition-all shadow-lg w-full">
+        <Link
+          to="/map?login=true"
+          onClick={() => setIsMenuOpen(false)}
+          className="mt-2 bg-slate-900 text-white px-6 py-5 rounded-2xl text-xl font-black hover:bg-slate-800 active:scale-95 transition-all shadow-lg w-full text-center"
+        >
           Entrar
-        </button>
+        </Link>
       </div>
     </nav>
   );

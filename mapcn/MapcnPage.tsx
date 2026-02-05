@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Mapcn, MapcnRoute, MapcnMarker, MapcnControls, MapcnTaxiAnimator } from './Mapcn';
 import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints, Route } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -9,14 +9,48 @@ import { routeService, RouteData, Stop } from '../services/routeService';
 import { orsService } from '../services/orsService';
 import { findTwoNearestStops } from '../utils/geoUtils';
 import { fuzzySearch } from '../utils/fuzzySearch';
+import { LoginModal } from '../components/LoginModal';
 
 export default function MapcnPage() {
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [destination, setDestination] = useState(searchParams.get('destination') || '');
     const [origin, setOrigin] = useState('Obtendo localização...');
 
     const [userLocation, setUserLocation] = useState<[number, number] | undefined>(undefined);
     const [locationError, setLocationError] = useState(false);
+
+    // Login modal state
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>(null);
+
+    // Check for login param on mount
+    useEffect(() => {
+        if (searchParams.get('login') === 'true' && !isLoggedIn) {
+            setShowLoginModal(true);
+            // Remove the login param from URL without page reload
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete('login');
+            setSearchParams(newParams, { replace: true });
+        }
+    }, [searchParams, isLoggedIn, setSearchParams]);
+
+    // Mock login handler
+    const handleLogin = (email: string, password: string) => {
+        console.log('Mock login:', email);
+        setIsLoggedIn(true);
+        setCurrentUser({ name: 'Utilizador', email });
+        setShowLoginModal(false);
+    };
+
+    // Mock register handler
+    const handleRegister = (name: string, email: string, password: string) => {
+        console.log('Mock register:', name, email);
+        setIsLoggedIn(true);
+        setCurrentUser({ name, email });
+        setShowLoginModal(false);
+    };
 
     // Route state
     const [route, setRoute] = useState<RouteData | null>(null);
@@ -755,6 +789,14 @@ export default function MapcnPage() {
                     </div>
                 </div>
             )}
+
+            {/* Login Modal */}
+            <LoginModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onLogin={handleLogin}
+                onRegister={handleRegister}
+            />
         </div>
     );
 }
