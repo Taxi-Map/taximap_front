@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import MapPageLeaflet from './components/MapPage';
-import MapPage from './mapcn/MapcnTestPage';
+import MapPage from './mapcn/MapcnPage';
 import ProfilePage from './components/ProfilePage';
 import RouteBuilderPage from './components/RouteBuilderPage';
 import MapRouteBuilder from './components/MapRouteBuilder';
