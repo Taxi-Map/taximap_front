@@ -205,8 +205,10 @@ export const MapcnRoute: React.FC<MapcnRouteProps> = ({
         }
 
         return () => {
-            if (map.getLayer(layerId)) map.removeLayer(layerId);
-            if (map.getSource(sourceId)) map.removeSource(sourceId);
+            if (map && map.getStyle()) {
+                if (map.getLayer(layerId)) map.removeLayer(layerId);
+                if (map.getSource(sourceId)) map.removeSource(sourceId);
+            }
         };
     }, [map, isLoaded, coordinates, color, width, opacity, dashArray, id, onClick]);
 

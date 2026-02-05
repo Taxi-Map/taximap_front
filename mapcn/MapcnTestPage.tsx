@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Mapcn, MapcnRoute, MapcnMarker, MapcnControls, MapcnTaxiAnimator } from './Mapcn';
-import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints } from 'lucide-react';
+import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints, Route } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { routeService, RouteData, Stop } from '../services/routeService';
 import { orsService } from '../services/orsService';
 import { findTwoNearestStops } from '../utils/geoUtils';
+import { fuzzySearch } from '../utils/fuzzySearch';
 
 export default function MapcnTestPage() {
     const [searchParams] = useSearchParams();
@@ -98,7 +100,7 @@ export default function MapcnTestPage() {
         fetchStops();
     }, []);
 
-    // Filter stops
+    // Filter stops with fuzzy search
     const handleDestinationChange = (value: string) => {
         setDestination(value);
         setSelectedDestination(null);
@@ -106,9 +108,15 @@ export default function MapcnTestPage() {
             setFilteredStops(allStops);
             setShowDropdown(false);
         } else {
-            const filtered = allStops.filter(stop =>
-                stop.nome.toLowerCase().includes(value.toLowerCase())
+            // Use fuzzy search to find matches even with typos
+            const fuzzyResults = fuzzySearch<Stop>(
+                value,
+                allStops,
+                (stop) => stop.nome,
+                0.3 // minimum similarity score
             );
+            // Extract just the items, already sorted by score
+            const filtered = fuzzyResults.map(result => result.item);
             setFilteredStops(filtered);
             setShowDropdown(true);
         }
@@ -498,9 +506,18 @@ export default function MapcnTestPage() {
                             <X className="w-6 h-6 text-slate-900" />
                         </button>
                     </div>
-                    <a href="/profile" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors">
-                        <User className="w-6 h-6 text-slate-900" />
-                    </a>
+                    <div className="flex items-center gap-2">
+                        <Link
+                            to="/builder"
+                            className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors"
+                            title="Route Builder"
+                        >
+                            <Route className="w-6 h-6 text-slate-900" />
+                        </Link>
+                        <a href="/profile" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors">
+                            <User className="w-6 h-6 text-slate-900" />
+                        </a>
+                    </div>
                 </div>
 
                 {/* Search Inputs */}

@@ -9,12 +9,12 @@ interface SearchInputProps {
   placeholder?: string;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ 
-  value, 
-  onChange, 
-  onSubmit, 
-  loading, 
-  placeholder = "Para onde vais?" 
+const SearchInput: React.FC<SearchInputProps> = ({
+  value,
+  onChange,
+  onSubmit,
+  loading,
+  placeholder = "Para onde vais?"
 }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,10 +32,10 @@ const SearchInput: React.FC<SearchInputProps> = ({
           <div className="white" />
           <div className="border" />
           <div id="main">
-            <input 
+            <input
               placeholder={placeholder}
-              type="text" 
-              name="text" 
+              type="text"
+              name="text"
               className="input"
               value={value}
               onChange={(e) => onChange(e.target.value)}
@@ -44,7 +44,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
             <div id="input-mask" />
             <div id="pink-mask" />
             <div className="filterBorder" />
-            <button 
+            <button
               type="submit"
               id="filter-icon"
               disabled={loading}
@@ -79,35 +79,60 @@ const SearchInput: React.FC<SearchInputProps> = ({
 }
 
 const StyledWrapper = styled.div`
+  width: 100%;
+  max-width: 630px;
+  
+  form {
+    width: 100%;
+  }
+  
   .white,
   .border,
   .darkBorderBg,
   .glow {
-    max-height: 90px;
-    max-width: 630px;
-    height: 100%;
+    height: 56px;
     width: 100%;
     position: absolute;
     overflow: hidden;
     z-index: -1;
-    /* Border Radius */
-    border-radius: 12px;
+    border-radius: 10px;
     filter: blur(3px);
+    left: 0;
+    top: 0;
   }
   .input {
     background-color: #010201;
     border: none;
-    width: 600px;
-    height: 70px;
+    width: 100%;
+    height: 56px;
     border-radius: 10px;
     color: white;
-    padding-inline: 70px;
-    font-size: 20px;
+    padding-left: 50px;
+    padding-right: 60px;
+    font-size: 16px;
   }
+  
+  @media (min-width: 640px) {
+    .input {
+      height: 70px;
+      padding-left: 70px;
+      padding-right: 70px;
+      font-size: 20px;
+    }
+    .white,
+    .border,
+    .darkBorderBg,
+    .glow {
+      height: 70px;
+    }
+  }
+  
   #poda {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    position: relative;
   }
   .input::placeholder {
     color: #c0b9c0;
@@ -154,9 +179,6 @@ const StyledWrapper = styled.div`
   }
 
   .white {
-    max-height: 83px;
-    max-width: 623px;
-    border-radius: 10px;
     filter: blur(2px);
   }
 
@@ -185,9 +207,6 @@ const StyledWrapper = styled.div`
     transition: all 2s;
   }
   .border {
-    max-height: 79px;
-    max-width: 619px;
-    border-radius: 11px;
     filter: blur(0.5px);
   }
   .border::before {
@@ -214,10 +233,7 @@ const StyledWrapper = styled.div`
     // animation: rotate 4s 0.1s linear infinite;
     transition: all 2s;
   }
-  .darkBorderBg {
-    max-height: 85px;
-    max-width: 628px;
-  }
+
   .darkBorderBg::before {
     content: "";
     z-index: -2;
@@ -344,25 +360,30 @@ const StyledWrapper = styled.div`
 
   #filter-icon {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 8px;
+    right: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
-    max-height: 50px;
-    max-width: 48px;
-    height: 100%;
-    width: 100%;
+    height: 40px;
+    width: 40px;
     border: none;
     cursor: pointer;
-
     isolation: isolate;
     overflow: hidden;
-    /* Border Radius */
     border-radius: 10px;
     background: linear-gradient(180deg, #161329, black, #1d1b4b);
     transition: all 0.3s;
+  }
+  
+  @media (min-width: 640px) {
+    #filter-icon {
+      top: 12px;
+      right: 12px;
+      height: 50px;
+      width: 48px;
+    }
   }
 
   #filter-icon:hover:not(:disabled) {
@@ -387,14 +408,23 @@ const StyledWrapper = styled.div`
   }
 
   .filterBorder {
-    height: 52px;
-    width: 50px;
+    height: 42px;
+    width: 42px;
     position: absolute;
     overflow: hidden;
-    top: 11px;
-    right: 11px;
+    top: 7px;
+    right: 7px;
     border-radius: 10px;
     pointer-events: none;
+  }
+  
+  @media (min-width: 640px) {
+    .filterBorder {
+      height: 52px;
+      width: 50px;
+      top: 11px;
+      right: 11px;
+    }
   }
 
   .filterBorder::before {
@@ -425,14 +455,26 @@ const StyledWrapper = styled.div`
   }
   #search-icon {
     position: absolute;
-    left: 25px;
-    top: 20px;
+    left: 16px;
+    top: 16px;
     pointer-events: none;
   }
   
   #search-icon svg {
-    width: 28px;
-    height: 28px;
+    width: 22px;
+    height: 22px;
+  }
+  
+  @media (min-width: 640px) {
+    #search-icon {
+      left: 25px;
+      top: 20px;
+    }
+    
+    #search-icon svg {
+      width: 28px;
+      height: 28px;
+    }
   }`;
 
 export default SearchInput;
