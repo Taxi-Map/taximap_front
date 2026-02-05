@@ -497,16 +497,45 @@ export default function MapcnPage() {
                 </div>
             )}
 
+            {/* Fixed Buttons - Mobile Only */}
+            {isMenuOpen && (
+                <>
+                    {/* Close Button */}
+                    <button
+                        onClick={() => setIsMenuOpen(false)}
+                        className="fixed top-4 left-4 z-30 p-2 bg-red-500 hover:bg-red-600 rounded-full shadow-lg lg:hidden"
+                    >
+                        <X className="w-6 h-6 text-white" />
+                    </button>
+
+                    {/* Profile & Builder Buttons */}
+                    <div className="fixed top-4 right-4 z-30 flex items-center gap-2 lg:hidden">
+                        <Link
+                            to="/builder"
+                            className="p-2 bg-white rounded-full shadow-lg hover:bg-slate-50 transition-colors"
+                            title="Route Builder"
+                        >
+                            <Route className="w-6 h-6 text-slate-900" />
+                        </Link>
+                        <a href="/profile" className="p-2 bg-white rounded-full shadow-lg hover:bg-slate-50 transition-colors">
+                            <User className="w-6 h-6 text-slate-900" />
+                        </a>
+                    </div>
+                </>
+            )}
+
             {/* UI Panel */}
-            <div className={`absolute top-0 left-0 w-full z-10 p-4 md:p-6 lg:max-w-[400px] lg:h-full lg:bg-white/90 lg:backdrop-blur-md lg:shadow-2xl max-h-[100vh] overflow-y-auto pb-20 transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} ${locationError ? 'opacity-20 pointer-events-none' : ''}`}>
-                {/* Header */}
+            <div className={`absolute top-0 left-0 w-full z-10 p-4 pt-16 md:p-6 lg:pt-6 lg:max-w-[400px] lg:h-full lg:bg-white/90 lg:backdrop-blur-md lg:shadow-2xl max-h-[100vh] overflow-y-auto pb-20 transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} ${locationError ? 'opacity-20 pointer-events-none' : ''}`}>
+                {/* Header - Desktop only buttons */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
-                        <button onClick={() => setIsMenuOpen(false)} className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50">
+                        {/* Close button for desktop only */}
+                        <button onClick={() => setIsMenuOpen(false)} className="hidden lg:block p-2 bg-white rounded-full shadow-md hover:bg-slate-50">
                             <X className="w-6 h-6 text-slate-900" />
                         </button>
                     </div>
-                    <div className="flex items-center gap-2">
+                    {/* Profile & Builder for desktop only */}
+                    <div className="hidden lg:flex items-center gap-2">
                         <Link
                             to="/builder"
                             className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors"
