@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { authService } from '../services/authService';
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -161,6 +162,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
                     <div className="flex gap-2 sm:gap-3">
                         <button
                             type="button"
+                            onClick={() => authService.loginWithGoogle()}
                             className="flex-1 py-2.5 sm:py-3 px-3 sm:px-4 border-2 border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
                         >
                             <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -168,6 +170,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
                         </button>
                         <button
                             type="button"
+                            onClick={() => authService.loginWithFacebook()}
                             className="flex-1 py-2.5 sm:py-3 px-3 sm:px-4 border-2 border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
                         >
                             <svg className="w-4 h-4 sm:w-5 sm:h-5 fill-[#1877F2]" viewBox="0 0 24 24">

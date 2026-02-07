@@ -6,6 +6,7 @@ import MapPage from './mapcn/MapcnPage';
 import ProfilePage from './components/ProfilePage';
 import RouteBuilderPage from './components/RouteBuilderPage';
 import MapRouteBuilder from './components/MapRouteBuilder';
+import AuthCallback from './components/AuthCallback';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/dashboard" element={<RouteBuilderPage />} />
         <Route path="/builder" element={<MapRouteBuilder />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
       </Routes>
     </BrowserRouter>
   );
