@@ -130,7 +130,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                                     value={formData.firstName}
                                     onChange={handleChange}
                                     required={!isLoginMode}
-                                    className="w-full pl-10 sm:pl-12 pr-3 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-yellow-400 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
+                                    className="w-full pl-10 sm:pl-12 pr-3 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
                                 />
                             </div>
                             <div className="relative flex-1">
@@ -141,7 +141,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                                     value={formData.lastName}
                                     onChange={handleChange}
                                     required={!isLoginMode}
-                                    className="w-full px-4 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-yellow-400 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
+                                    className="w-full px-4 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
                                 />
                             </div>
                         </div>
@@ -156,7 +156,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-yellow-400 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
+                            className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
                         />
                     </div>
 
@@ -169,7 +169,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                             value={formData.password}
                             onChange={handleChange}
                             required
-                            className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-yellow-400 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
+                            className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
                         />
                         <button
                             type="button"
@@ -195,7 +195,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full py-3 sm:py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 rounded-xl font-black text-base sm:text-lg hover:from-yellow-500 hover:to-yellow-600 active:scale-[0.98] transition-all shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-black text-base sm:text-lg hover:from-blue-700 hover:to-blue-800 active:scale-[0.98] transition-all shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {isLoading ? (
                             <>
@@ -245,7 +245,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                         <button
                             type="button"
                             onClick={switchMode}
-                            className="ml-2 text-yellow-600 hover:text-yellow-700 font-bold"
+                            className="ml-2 text-blue-600 hover:text-blue-700 font-bold"
                         >
                             {isLoginMode ? 'Criar conta' : 'Entrar'}
                         </button>

@@ -308,20 +308,20 @@ export default function ProfilePage() {
                             Nome Completo
                         </label>
                         {isEditing ? (
-                            <div className="flex gap-2 mt-2">
+                            <div className="grid grid-cols-2 gap-2 mt-2 w-full">
                                 <input
                                     type="text"
                                     value={editedFirstName}
                                     onChange={(e) => setEditedFirstName(e.target.value)}
                                     placeholder="Nome"
-                                    className="flex-1 px-4 py-3 bg-slate-50 rounded-xl text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                    className="w-full min-w-0 px-4 py-3 bg-slate-50 rounded-xl text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                 />
                                 <input
                                     type="text"
                                     value={editedLastName}
                                     onChange={(e) => setEditedLastName(e.target.value)}
                                     placeholder="Apelido"
-                                    className="flex-1 px-4 py-3 bg-slate-50 rounded-xl text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                    className="w-full min-w-0 px-4 py-3 bg-slate-50 rounded-xl text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                 />
                             </div>
                         ) : (

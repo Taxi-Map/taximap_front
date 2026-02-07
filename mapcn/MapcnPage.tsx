@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Mapcn, MapcnRoute, MapcnMarker, MapcnControls, MapcnTaxiAnimator } from './Mapcn';
-import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints, Route } from 'lucide-react';
+import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints, Route, CarTaxiFront, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { routeService, RouteData, Stop } from '../services/routeService';
 import { orsService } from '../services/orsService';
@@ -48,6 +48,7 @@ export default function MapcnPage() {
     const [primarySegmentPaths, setPrimarySegmentPaths] = useState<[number, number][][]>([]);
     const [alternativeSegmentPaths, setAlternativeSegmentPaths] = useState<[number, number][][]>([]);
     const [userToOriginPath, setUserToOriginPath] = useState<[number, number][] | null>(null);
+    const [altUserToOriginPath, setAltUserToOriginPath] = useState<[number, number][] | null>(null);
     const [initialWalkPath, setInitialWalkPath] = useState<[number, number][] | null>(null);
     const [intermediateWalkPath, setIntermediateWalkPath] = useState<[number, number][] | null>(null);
     const [altIntermediateWalkPath, setAltIntermediateWalkPath] = useState<[number, number][] | null>(null); // For alternative route
@@ -177,7 +178,10 @@ export default function MapcnPage() {
         setAlternativeSegmentPaths([]);
         setRoute(null);
         setAlternativeRoute(null);
+        setAlternativeRoute(null);
         setInitialWalkPath(null);
+        setUserToOriginPath(null);
+        setAltUserToOriginPath(null);
         setIntermediateWalkPath(null);
         setAltIntermediateWalkPath(null);
         setIncluiCaminhada(false);
@@ -319,6 +323,18 @@ export default function MapcnPage() {
                         setAltIntermediateWalkPath(altWalk.map(([lat, lng]) => [lng, lat]));
                     }
                 }
+
+                // Calculate walking path from user to alternative route first stop
+                const firstAltStop = altRoute.segmentos?.[0]?.paragensPercurso?.[0];
+                if (firstAltStop) {
+                    const altStartWalk = await orsService.getWalkingRoute([
+                        userLocation,
+                        [firstAltStop.latitude, firstAltStop.longitude]
+                    ]);
+                    if (altStartWalk) {
+                        setAltUserToOriginPath(altStartWalk.map(([lat, lng]) => [lng, lat]));
+                    }
+                }
             }
 
         } catch (e) {
@@ -345,6 +361,18 @@ export default function MapcnPage() {
                         <MapcnRoute
                             id="walking-route"
                             coordinates={userToOriginPath}
+                            color="#6B7280"
+                            width={4}
+                            opacity={0.7}
+                            dashArray={[10, 10]}
+                        />
+                    )}
+
+                    {/* Alternative walking route from user to first stop (dashed gray) */}
+                    {altUserToOriginPath && (selectedRouteType === 'both' || selectedRouteType === 'alternative') && (
+                        <MapcnRoute
+                            id="alt-walking-route"
+                            coordinates={altUserToOriginPath}
                             color="#6B7280"
                             width={4}
                             opacity={0.7}
@@ -646,14 +674,23 @@ export default function MapcnPage() {
                 </div>
 
                 {/* Action Buttons (Share, etc) */}
-                <div className="flex flex-wrap gap-2 mt-4">
-                    <button className="flex-1 min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 bg-white rounded-xl shadow-md font-bold text-sm text-slate-700 border border-slate-100">
+                {/* Action Buttons (Share, etc) */}
+                <div className="flex overflow-x-auto gap-3 mt-4 pb-2 -mx-4 px-4 no-scrollbar snap-x">
+                    <button className="flex-none w-[45%] flex items-center justify-center gap-2 px-3 py-3 bg-white rounded-xl shadow-md font-bold text-sm text-slate-700 border border-slate-100 snap-center">
                         <Share2 className="w-4 h-4 flex-shrink-0" />
                         <span className="truncate">Partilhar</span>
                     </button>
-                    <button className="flex-1 min-w-0 flex items-center justify-center gap-2 px-3 py-2.5 bg-white rounded-xl shadow-md font-bold text-sm text-slate-700 border border-slate-100">
+                    <button className="flex-none w-[45%] flex items-center justify-center gap-2 px-3 py-3 bg-white rounded-xl shadow-md font-bold text-sm text-slate-700 border border-slate-100 snap-center">
                         <Users className="w-4 h-4 flex-shrink-0" />
                         <span className="truncate">Ver pessoas</span>
+                    </button>
+                    <button className="flex-none w-[45%] flex items-center justify-center gap-2 px-3 py-3 bg-white rounded-xl shadow-md font-bold text-sm text-slate-700 border border-slate-100 snap-center">
+                        <CarTaxiFront className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">Táxis Privados</span>
+                    </button>
+                    <button className="flex-none w-[45%] flex items-center justify-center gap-2 px-3 py-3 bg-white rounded-xl shadow-md font-bold text-sm text-slate-700 border border-slate-100 snap-center">
+                        <UserPlus className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">Sócia de viagem</span>
                     </button>
                 </div>
 
@@ -664,7 +701,10 @@ export default function MapcnPage() {
                         <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
                             {route && (
                                 <div
-                                    onClick={() => setSelectedRouteType(selectedRouteType === 'primary' ? 'both' : 'primary')}
+                                    onClick={() => {
+                                        setSelectedRouteType(selectedRouteType === 'primary' ? 'both' : 'primary');
+                                        if (window.innerWidth < 1024) setIsMenuOpen(false);
+                                    }}
                                     className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${selectedRouteType === 'primary' || selectedRouteType === 'both' ? 'border-green-400 bg-green-50' : 'border-gray-200 opacity-50'}`}
                                 >
                                     <div className="flex items-center justify-between">
@@ -695,7 +735,10 @@ export default function MapcnPage() {
                             )}
                             {alternativeRoute && (
                                 <div
-                                    onClick={() => setSelectedRouteType(selectedRouteType === 'alternative' ? 'both' : 'alternative')}
+                                    onClick={() => {
+                                        setSelectedRouteType(selectedRouteType === 'alternative' ? 'both' : 'alternative');
+                                        if (window.innerWidth < 1024) setIsMenuOpen(false);
+                                    }}
                                     className={`p-4 rounded-2xl border cursor-pointer transition-all ${selectedRouteType === 'alternative' || selectedRouteType === 'both' ? 'border-blue-300 bg-blue-50' : 'border-gray-200 opacity-50'}`}
                                 >
                                     <div className="flex items-center justify-between">
@@ -761,6 +804,12 @@ export default function MapcnPage() {
                         </button>
                         <button className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Ver pessoas">
                             <Users className="w-5 h-5 text-slate-600" />
+                        </button>
+                        <button className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Táxis Privados">
+                            <CarTaxiFront className="w-5 h-5 text-slate-600" />
+                        </button>
+                        <button className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Sócia de viagem">
+                            <UserPlus className="w-5 h-5 text-slate-600" />
                         </button>
 
                         <div className="w-8 h-px bg-slate-200 my-2"></div>
