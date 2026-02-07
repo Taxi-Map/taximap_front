@@ -1,47 +1,79 @@
 import React, { useState } from 'react';
-import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
-import { authService } from '../services/authService';
+import { X, Mail, Lock, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { authService, AuthError } from '../services/authService';
 
 interface LoginModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onLogin: (email: string, password: string) => void;
-    onRegister: (name: string, email: string, password: string) => void;
+    onSuccess?: () => void;
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin, onRegister }) => {
+export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSuccess }) => {
     const [isLoginMode, setIsLoginMode] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
         setIsLoading(true);
 
-        // Mock delay to simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+            if (isLoginMode) {
+                await authService.login({
+                    email: formData.email,
+                    password: formData.password,
+                });
+            } else {
+                await authService.register({
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    password: formData.password,
+                });
+            }
 
-        if (isLoginMode) {
-            onLogin(formData.email, formData.password);
-        } else {
-            onRegister(formData.name, formData.email, formData.password);
+            // Success - close modal and notify parent
+            onClose();
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                // Redirect to map if no callback
+                window.location.href = '/map';
+            }
+        } catch (err) {
+            const authError = err as AuthError;
+            if (Array.isArray(authError.message)) {
+                setError(authError.message.join('. '));
+            } else {
+                setError(authError.message || 'Erro ao processar. Tenta novamente.');
+            }
+        } finally {
+            setIsLoading(false);
         }
-
-        setIsLoading(false);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setError(null); // Clear error on input change
         setFormData(prev => ({
             ...prev,
             [e.target.name]: e.target.value
         }));
+    };
+
+    const switchMode = () => {
+        setIsLoginMode(!isLoginMode);
+        setError(null);
+        setFormData({ firstName: '', lastName: '', email: '', password: '' });
     };
 
     return (
@@ -79,18 +111,39 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
 
                 {/* Form - Smaller padding on mobile */}
                 <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+                    {/* Error Display */}
+                    {error && (
+                        <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+                            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                            <span>{error}</span>
+                        </div>
+                    )}
+
                     {!isLoginMode && (
-                        <div className="relative">
-                            <User className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Nome completo"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required={!isLoginMode}
-                                className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-yellow-400 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
-                            />
+                        <div className="flex gap-2">
+                            <div className="relative flex-1">
+                                <User className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    placeholder="Nome"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
+                                    required={!isLoginMode}
+                                    className="w-full pl-10 sm:pl-12 pr-3 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-yellow-400 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
+                                />
+                            </div>
+                            <div className="relative flex-1">
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    placeholder="Apelido"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    required={!isLoginMode}
+                                    className="w-full px-4 py-3 sm:py-4 bg-slate-100 rounded-xl border-2 border-transparent focus:border-yellow-400 focus:bg-white outline-none transition-all font-medium text-sm sm:text-base"
+                                />
+                            </div>
                         </div>
                     )}
 
@@ -129,9 +182,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
 
                     {isLoginMode && (
                         <div className="text-right">
-                            <button type="button" className="text-xs sm:text-sm text-slate-500 hover:text-slate-700 font-medium">
+                            <a
+                                href="/forgot-password"
+                                onClick={onClose}
+                                className="text-xs sm:text-sm text-slate-500 hover:text-slate-700 font-medium hover:underline"
+                            >
                                 Esqueceste a palavra-passe?
-                            </button>
+                            </a>
                         </div>
                     )}
 
@@ -187,7 +244,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
                         {isLoginMode ? 'Não tens conta?' : 'Já tens uma conta?'}
                         <button
                             type="button"
-                            onClick={() => setIsLoginMode(!isLoginMode)}
+                            onClick={switchMode}
                             className="ml-2 text-yellow-600 hover:text-yellow-700 font-bold"
                         >
                             {isLoginMode ? 'Criar conta' : 'Entrar'}

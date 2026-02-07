@@ -10,6 +10,7 @@ import { orsService } from '../services/orsService';
 import { findTwoNearestStops } from '../utils/geoUtils';
 import { fuzzySearch } from '../utils/fuzzySearch';
 import { LoginModal } from '../components/LoginModal';
+import { authService } from '../services/authService';
 
 export default function MapcnPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -22,8 +23,7 @@ export default function MapcnPage() {
 
     // Login modal state
     const [showLoginModal, setShowLoginModal] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(() => authService.isAuthenticated());
 
     // Check for login param on mount
     useEffect(() => {
@@ -36,19 +36,9 @@ export default function MapcnPage() {
         }
     }, [searchParams, isLoggedIn, setSearchParams]);
 
-    // Mock login handler
-    const handleLogin = (email: string, password: string) => {
-        console.log('Mock login:', email);
+    // Handle successful login
+    const handleAuthSuccess = () => {
         setIsLoggedIn(true);
-        setCurrentUser({ name: 'Utilizador', email });
-        setShowLoginModal(false);
-    };
-
-    // Mock register handler
-    const handleRegister = (name: string, email: string, password: string) => {
-        console.log('Mock register:', name, email);
-        setIsLoggedIn(true);
-        setCurrentUser({ name, email });
         setShowLoginModal(false);
     };
 
@@ -794,8 +784,7 @@ export default function MapcnPage() {
             <LoginModal
                 isOpen={showLoginModal}
                 onClose={() => setShowLoginModal(false)}
-                onLogin={handleLogin}
-                onRegister={handleRegister}
+                onSuccess={handleAuthSuccess}
             />
         </div>
     );
