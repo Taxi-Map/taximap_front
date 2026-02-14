@@ -96,8 +96,7 @@ export const orsService = {
 
             const response = await orsDirections.calculate({
                 coordinates: coords,
-                profile: 'driving-car',
-                preference: 'recommended',
+                profile: 'foot-walking',
                 format: 'geojson'
             });
 

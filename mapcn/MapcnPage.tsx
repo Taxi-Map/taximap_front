@@ -49,6 +49,8 @@ export default function MapcnPage() {
     const [alternativeSegmentPaths, setAlternativeSegmentPaths] = useState<[number, number][][]>([]);
     const [userToOriginPath, setUserToOriginPath] = useState<[number, number][] | null>(null);
     const [altUserToOriginPath, setAltUserToOriginPath] = useState<[number, number][] | null>(null);
+    const [transferWalkPaths, setTransferWalkPaths] = useState<[number, number][][]>([]);
+    const [altTransferWalkPaths, setAltTransferWalkPaths] = useState<[number, number][][]>([]);
     const [initialWalkPath, setInitialWalkPath] = useState<[number, number][] | null>(null);
     const [intermediateWalkPath, setIntermediateWalkPath] = useState<[number, number][] | null>(null);
     const [altIntermediateWalkPath, setAltIntermediateWalkPath] = useState<[number, number][] | null>(null); // For alternative route
@@ -68,6 +70,8 @@ export default function MapcnPage() {
     const [isMenuOpen, setIsMenuOpen] = useState(true);
     const [showWalkingPopup, setShowWalkingPopup] = useState(false);
     const [walkingMessage, setWalkingMessage] = useState('');
+    const [showNoRouteModal, setShowNoRouteModal] = useState(false);
+    const [noRouteMessage, setNoRouteMessage] = useState('');
 
     const handleStartTrip = () => {
         setIsTripStarted(true);
@@ -182,6 +186,8 @@ export default function MapcnPage() {
         setInitialWalkPath(null);
         setUserToOriginPath(null);
         setAltUserToOriginPath(null);
+        setTransferWalkPaths([]);
+        setAltTransferWalkPaths([]);
         setIntermediateWalkPath(null);
         setAltIntermediateWalkPath(null);
         setIncluiCaminhada(false);
@@ -230,7 +236,8 @@ export default function MapcnPage() {
             // Handle no route found
             if (!principal) {
                 const errorMsg = analise?.avisos?.join('\n') || 'Não foi encontrada nenhuma rota.';
-                alert(errorMsg);
+                setNoRouteMessage(errorMsg);
+                setShowNoRouteModal(true);
                 setIsLoadingRoute(false);
                 return;
             }
@@ -252,29 +259,51 @@ export default function MapcnPage() {
                     }
                 }
             }
+
             setPrimarySegmentPaths(segmentPaths);
+
+            // Calculate transfer walking paths (between taxi segments)
+            const transfers: [number, number][][] = [];
+            for (let i = 0; i < principal.segmentos.length - 1; i++) {
+                const currentSeg = principal.segmentos[i];
+                const nextSeg = principal.segmentos[i + 1];
+
+                if (currentSeg.paragensPercurso && nextSeg.paragensPercurso) {
+                    const lastStop = currentSeg.paragensPercurso[currentSeg.paragensPercurso.length - 1];
+                    const nextStartStop = nextSeg.paragensPercurso[0];
+
+                    // Only calculate if stops are different and have coordinates
+                    if (lastStop && nextStartStop && lastStop.id !== nextStartStop.id) {
+                        // Direct line for walking transfer
+                        transfers.push([
+                            [lastStop.longitude, lastStop.latitude],
+                            [nextStartStop.longitude, nextStartStop.latitude]
+                        ]);
+                    }
+                }
+            }
+            setTransferWalkPaths(transfers);
 
             // Walking route from user to suggested origin (or first taxi stop)
             const firstTaxiStop = principal.segmentos[0]?.paragensPercurso[0];
             const originCoords: [number, number] = paragemOrigemSugerida
                 ? [paragemOrigemSugerida.latitude, paragemOrigemSugerida.longitude]
                 : firstTaxiStop ? [firstTaxiStop.latitude, firstTaxiStop.longitude] : userLocation;
-            const walkPath = await orsService.getWalkingRoute([userLocation, originCoords]);
-            if (walkPath) {
-                setUserToOriginPath(walkPath.map(([lat, lng]) => [lng, lat]));
-            }
+            const walkPath = [
+                [userLocation[1], userLocation[0]], // [lng, lat]
+                [originCoords[1], originCoords[0]]  // [lng, lat]
+            ];
+            setUserToOriginPath(walkPath as [number, number][]);
 
             // Process caminhadaInicial if present (walk from suggested origin to first taxi stop)
             if (principal.caminhadaInicial) {
                 setIncluiCaminhada(true);
                 const { paragemOrigem, paragemDestino } = principal.caminhadaInicial;
-                const initWalk = await orsService.getWalkingRoute([
-                    [paragemOrigem.latitude, paragemOrigem.longitude],
-                    [paragemDestino.latitude, paragemDestino.longitude]
-                ]);
-                if (initWalk) {
-                    setInitialWalkPath(initWalk.map(([lat, lng]) => [lng, lat]));
-                }
+                const initWalk = [
+                    [paragemOrigem.longitude, paragemOrigem.latitude],
+                    [paragemDestino.longitude, paragemDestino.latitude]
+                ];
+                setInitialWalkPath(initWalk as [number, number][]);
                 console.log(`[MapcnPage] 🚶 Initial walk: ${principal.caminhadaInicial.distanciaMetros}m`);
             }
 
@@ -282,13 +311,11 @@ export default function MapcnPage() {
             if (principal.caminhadaFinal) {
                 setIncluiCaminhada(true);
                 const { paragemOrigem, paragemDestino } = principal.caminhadaFinal;
-                const intermediateWalk = await orsService.getWalkingRoute([
-                    [paragemOrigem.latitude, paragemOrigem.longitude],
-                    [paragemDestino.latitude, paragemDestino.longitude]
-                ]);
-                if (intermediateWalk) {
-                    setIntermediateWalkPath(intermediateWalk.map(([lat, lng]) => [lng, lat]));
-                }
+                const intermediateWalk = [
+                    [paragemOrigem.longitude, paragemOrigem.latitude],
+                    [paragemDestino.longitude, paragemDestino.latitude]
+                ];
+                setIntermediateWalkPath(intermediateWalk as [number, number][]);
                 console.log(`[MapcnPage] 🚶 Intermediate walk: ${principal.caminhadaFinal.distanciaMetros}m`);
             }
 
@@ -312,28 +339,45 @@ export default function MapcnPage() {
                 }
                 setAlternativeSegmentPaths(altSegmentPaths);
 
+                // Calculate transfer walking paths for alternative route
+                const altTransfers: [number, number][][] = [];
+                for (let i = 0; i < (altRoute.segmentos?.length || 0) - 1; i++) {
+                    const currentSeg = altRoute.segmentos[i];
+                    const nextSeg = altRoute.segmentos[i + 1];
+
+                    if (currentSeg.paragensPercurso && nextSeg.paragensPercurso) {
+                        const lastStop = currentSeg.paragensPercurso[currentSeg.paragensPercurso.length - 1];
+                        const nextStartStop = nextSeg.paragensPercurso[0];
+
+                        if (lastStop && nextStartStop && lastStop.id !== nextStartStop.id) {
+                            // Direct line for walking transfer
+                            altTransfers.push([
+                                [lastStop.longitude, lastStop.latitude],
+                                [nextStartStop.longitude, nextStartStop.latitude]
+                            ]);
+                        }
+                    }
+                }
+                setAltTransferWalkPaths(altTransfers);
+
                 // Process caminhadaFinal for alternative route (orange walking line)
                 if (altRoute.caminhadaFinal) {
                     const { paragemOrigem, paragemDestino } = altRoute.caminhadaFinal;
-                    const altWalk = await orsService.getWalkingRoute([
-                        [paragemOrigem.latitude, paragemOrigem.longitude],
-                        [paragemDestino.latitude, paragemDestino.longitude]
-                    ]);
-                    if (altWalk) {
-                        setAltIntermediateWalkPath(altWalk.map(([lat, lng]) => [lng, lat]));
-                    }
+                    const altWalk = [
+                        [paragemOrigem.longitude, paragemOrigem.latitude],
+                        [paragemDestino.longitude, paragemDestino.latitude]
+                    ];
+                    setAltIntermediateWalkPath(altWalk as [number, number][]);
                 }
 
                 // Calculate walking path from user to alternative route first stop
                 const firstAltStop = altRoute.segmentos?.[0]?.paragensPercurso?.[0];
                 if (firstAltStop) {
-                    const altStartWalk = await orsService.getWalkingRoute([
-                        userLocation,
-                        [firstAltStop.latitude, firstAltStop.longitude]
-                    ]);
-                    if (altStartWalk) {
-                        setAltUserToOriginPath(altStartWalk.map(([lat, lng]) => [lng, lat]));
-                    }
+                    const altStartWalk = [
+                        [userLocation[1], userLocation[0]], // [lng, lat]
+                        [firstAltStop.longitude, firstAltStop.latitude] // [lng, lat]
+                    ];
+                    setAltUserToOriginPath(altStartWalk as [number, number][]);
                 }
             }
 
@@ -379,6 +423,38 @@ export default function MapcnPage() {
                             dashArray={[10, 10]}
                         />
                     )}
+
+
+
+                    {/* Transfer walking routes (between taxi segments) - Primary */}
+                    {transferWalkPaths.map((path, idx) => (
+                        (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
+                            <MapcnRoute
+                                key={`transfer-${idx}`}
+                                id={`transfer-route-${idx}`}
+                                coordinates={path}
+                                color="#F97316"
+                                width={4}
+                                opacity={0.8}
+                                dashArray={[8, 8]}
+                            />
+                        )
+                    ))}
+
+                    {/* Transfer walking routes (between taxi segments) - Alternative */}
+                    {altTransferWalkPaths.map((path, idx) => (
+                        (selectedRouteType === 'both' || selectedRouteType === 'alternative') && (
+                            <MapcnRoute
+                                key={`alt-transfer-${idx}`}
+                                id={`alt-transfer-route-${idx}`}
+                                coordinates={path}
+                                color="#F97316"
+                                width={4}
+                                opacity={0.8}
+                                dashArray={[8, 8]}
+                            />
+                        )
+                    ))}
 
                     {/* ⭐ NEW: Intermediate walking route between taxi segments (dashed orange) */}
                     {intermediateWalkPath && (selectedRouteType === 'both' || selectedRouteType === 'primary') && (
@@ -561,6 +637,46 @@ export default function MapcnPage() {
                         >
                             Ver Caminho
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* No Route Found Modal */}
+            {showNoRouteModal && (
+                <div className="absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6">
+                    <div className="bg-white rounded-[2.5rem] p-8 max-w-sm w-full text-center shadow-2xl animate-in zoom-in-95 duration-300">
+                        <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="text-4xl">😔</span>
+                        </div>
+                        <h2 className="text-2xl font-black text-slate-900 mb-2">Rota não encontrada</h2>
+                        <p className="text-slate-600 mb-4 text-sm">
+                            {noRouteMessage}
+                        </p>
+                        <div className="bg-blue-50 p-4 rounded-2xl mb-6">
+                            <p className="text-blue-800 font-medium text-sm mb-2">
+                                Ajuda-nos a conectar Luanda! 🇦🇴
+                            </p>
+                            <p className="text-blue-600 text-xs">
+                                Esta rota ainda não existe, mas tu podes criá-la e ajudar milhares de pessoas.
+                            </p>
+                        </div>
+                        <div className="space-y-3">
+                            <Link
+                                to="/builder"
+                                className="block w-full bg-slate-900 hover:bg-slate-800 text-white py-3.5 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2"
+                            >
+                                <div className="p-1 bg-white/20 rounded-lg">
+                                    <Route className="w-4 h-4" />
+                                </div>
+                                Ir para o Construtor
+                            </Link>
+                            <button
+                                onClick={() => setShowNoRouteModal(false)}
+                                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3.5 rounded-xl font-bold text-lg transition-all"
+                            >
+                                Fechar
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
