@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Camera, Check, Phone, User, Shield, Edit2, Mail, LogOut, Loader2, X, AlertTriangle, TrendingUp, MapPin, CreditCard, ChevronRight } from 'lucide-react';
 import { authService, AuthUser } from '../services/authService';
 import { cloudinaryService } from '../services/cloudinaryService';
+import { useTmCoins, valorEmKz } from '../hooks/useTmCoins';
 
 
 export default function ProfilePage() {
@@ -50,15 +51,8 @@ export default function ProfilePage() {
         ]
     };
 
-    // Mock data for wallet and contributions
-    const [tmCoins, setTmCoins] = useState(2500);
-    const [contributions, setContributions] = useState([
-        { id: 1, type: 'stop', name: 'Paragem Mutamba', points: 1500, date: '2024-02-14' },
-        { id: 2, type: 'line', name: 'Viana - Zango', points: 1000, date: '2024-02-10' }
-    ]);
-
-    // 1000 TM Coin = 100 Kz -> 1 TM Coin = 0.1 Kz
-    const balanceKz = tmCoins * 0.1;
+    // TM Coins from real API
+    const { saldo: tmCoins, valorKz: balanceKz, contribuicoes, loading: coinsLoading, solicitarPagamento, refreshSaldo } = useTmCoins();
 
     // Fetch user profile on mount
     useEffect(() => {
@@ -155,16 +149,34 @@ export default function ProfilePage() {
         }
     };
 
-    const handlePaymentRequest = () => {
-        if (!selectedPaymentMethod) {
-            setMessage({ type: 'error', text: 'Por favor, selecione uma forma de pagamento.' });
+    const handlePaymentRequest = async () => {
+        if (!selectedPaymentMethod || !selectedAmount) {
+            setMessage({ type: 'error', text: 'Por favor, selecione uma forma de pagamento e um valor.' });
             return;
         }
 
-        // Mock payment request API call
-        setIsPaymentModalOpen(false);
-        setMessage({ type: 'success', text: `Solicitação de pagamento via ${selectedPaymentMethod.toUpperCase()} enviada com sucesso!` });
-        setSelectedPaymentMethod(null);
+        try {
+            const telefone = user?.phoneNumber || '';
+            if (!telefone) {
+                setMessage({ type: 'error', text: 'Adicione um número de telefone ao seu perfil primeiro.' });
+                return;
+            }
+
+            const result = await solicitarPagamento(
+                selectedPaymentMethod,
+                parseInt(selectedAmount),
+                telefone
+            );
+            setIsPaymentModalOpen(false);
+            setSelectedPaymentMethod(null);
+            setSelectedAmount(null);
+            setMessage({ type: 'success', text: result.mensagem });
+        } catch (error: any) {
+            const errorMsg = Array.isArray(error.message)
+                ? error.message.join('. ')
+                : error.message || 'Erro ao solicitar pagamento';
+            setMessage({ type: 'error', text: errorMsg });
+        }
     };
 
     const handleLogout = () => {
@@ -407,21 +419,31 @@ export default function ProfilePage() {
                                 <TrendingUp className="w-4 h-4 text-slate-400" />
                             </div>
                             <div>
-                                {contributions.length > 0 ? (
-                                    contributions.map((contribution, index) => (
-                                        <div key={contribution.id} className={`p-4 flex items-center justify-between ${index !== contributions.length - 1 ? 'border-b border-slate-50' : ''}`}>
+                                {coinsLoading ? (
+                                    <div className="p-8 text-center">
+                                        <Loader2 className="w-6 h-6 animate-spin text-yellow-500 mx-auto" />
+                                    </div>
+                                ) : contribuicoes.length > 0 ? (
+                                    contribuicoes.map((contribution, index) => (
+                                        <div key={contribution._id} className={`p-4 flex items-center justify-between ${index !== contribuicoes.length - 1 ? 'border-b border-slate-50' : ''}`}>
                                             <div className="flex items-center gap-3">
-                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${contribution.type === 'stop' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>
-                                                    {contribution.type === 'stop' ? <MapPin className="w-5 h-5" /> : <TrendingUp className="w-5 h-5" />}
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${contribution.tipo === 'paragem' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>
+                                                    {contribution.tipo === 'paragem' ? <MapPin className="w-5 h-5" /> : <TrendingUp className="w-5 h-5" />}
                                                 </div>
                                                 <div>
-                                                    <p className="font-semibold text-slate-900">{contribution.name}</p>
-                                                    <p className="text-xs text-slate-500">{contribution.type === 'stop' ? 'Nova Paragem' : 'Nova Rota'}</p>
+                                                    <p className="font-semibold text-slate-900">{contribution.nome}</p>
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="text-xs text-slate-500">{contribution.tipo === 'paragem' ? 'Nova Paragem' : 'Nova Rota'}</p>
+                                                        <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${contribution.status === 'aprovada' ? 'bg-green-100 text-green-700' :
+                                                                contribution.status === 'rejeitada' ? 'bg-red-100 text-red-700' :
+                                                                    'bg-yellow-100 text-yellow-700'
+                                                            }`}>{contribution.status}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="font-bold text-green-600">+{contribution.points}</p>
-                                                <p className="text-xs text-slate-400">{contribution.date}</p>
+                                                <p className={`font-bold ${contribution.status === 'aprovada' ? 'text-green-600' : 'text-slate-400'}`}>+{contribution.tmCoinsGanhos}</p>
+                                                <p className="text-xs text-slate-400">{new Date(contribution.createdAt).toLocaleDateString('pt-AO')}</p>
                                             </div>
                                         </div>
                                     ))
@@ -661,8 +683,8 @@ export default function ProfilePage() {
                                                 <label
                                                     key={option.value}
                                                     className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedAmount === option.value
-                                                            ? 'border-yellow-400 bg-yellow-50 shadow-sm'
-                                                            : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                                                        ? 'border-yellow-400 bg-yellow-50 shadow-sm'
+                                                        : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
                                                         }`}
                                                 >
                                                     <input

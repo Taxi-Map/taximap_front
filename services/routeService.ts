@@ -5,12 +5,25 @@ export interface Stop {
     nome: string;
     latitude: number;
     longitude: number;
+    status?: 'aprovada' | 'pendente' | 'rejeitada'; // Add status
+    criadoPor?: string;
+    criadoEm?: string;
 }
 
 export interface Linha {
     id: number;
     nome: string;
     descricao: string;
+    status: 'aprovada' | 'pendente' | 'rejeitada';
+    criadoPor?: string;
+    criadoEm?: string;
+}
+
+export interface LinhaResponse {
+    linha: Linha;
+    percurso: Stop[];
+    pendente: boolean;
+    status: 'aprovada' | 'pendente' | 'rejeitada'; // Add strict status type
 }
 
 export interface Segmento {
@@ -73,6 +86,25 @@ export interface RouteResponse {
 export interface LinhaDetalhes {
     linha: Linha;
     percurso: Stop[];
+}
+
+export interface PendingLineResponse {
+    linha: Linha;
+    percurso: Stop[];
+    metadata: {
+        status: 'pendente';
+        criadoPor: string;
+        criadoEm: string;
+    };
+}
+
+export interface PendingStopResponse {
+    paragem: Stop;
+    metadata: {
+        status: 'pendente';
+        criadoPor: string;
+        criadoEm: string;
+    };
 }
 
 // ===== UTILITY FUNCTIONS =====
@@ -161,6 +193,15 @@ const addLegacyFields = (route: RouteData) => {
 };
 
 // ===== SERVICE =====
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('auth_token');
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+};
 
 export const routeService = {
     async getShortestPath(originId: number, destinationId: number, alternativas: number = 3): Promise<RouteResponse | null> {
@@ -297,27 +338,32 @@ export const routeService = {
         try {
             const response = await fetch('/rotas/paragem', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ nome, latitude, longitude }),
             });
-            if (!response.ok) throw new Error('Failed to create stop');
             const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to create stop');
+            }
+
             return data.sucesso ? data.dados : null;
         } catch (error) {
             console.error('Error creating stop:', error);
-            return null;
+            throw error; // Re-throw so UI can handle it
         }
     },
 
-    async createLine(nome: string, descricao: string, paragemIds: number[]): Promise<Linha | null> {
+    async createLine(nome: string, descricao: string, paragemIds: number[]): Promise<LinhaResponse | null> {
         try {
             const response = await fetch('/rotas/linha', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ nome, descricao, paragemIds }),
             });
             if (!response.ok) throw new Error('Failed to create line');
             const data = await response.json();
+            // Return full response data including 'pendente' flag
             return data.sucesso ? data.dados : null;
         } catch (error) {
             console.error('Error creating line:', error);
@@ -329,27 +375,34 @@ export const routeService = {
         try {
             const response = await fetch(`/rotas/paragem?id=${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(updates),
             });
-            if (!response.ok) throw new Error('Failed to update stop');
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Falha ao atualizar paragem');
+            }
             return data.sucesso ? data.dados : null;
         } catch (error) {
             console.error('Error updating stop:', error);
-            return null;
+            throw error; // Re-throw to be caught by UI
         }
     },
 
     async deleteStop(id: number): Promise<boolean> {
         try {
-            const response = await fetch(`/rotas/paragem?id=${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Failed to delete stop');
+            const response = await fetch(`/rotas/paragem?id=${id}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders()
+            });
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Falha ao apagar paragem');
+            }
             return data.sucesso;
         } catch (error) {
             console.error('Error deleting stop:', error);
-            return false;
+            throw error;
         }
     },
 
@@ -357,26 +410,152 @@ export const routeService = {
         try {
             const response = await fetch(`/rotas/linha?id=${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(updates),
             });
-            if (!response.ok) throw new Error('Failed to update line');
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Falha ao atualizar linha');
+            }
             return data.sucesso ? data.dados : null;
         } catch (error) {
             console.error('Error updating line:', error);
-            return null;
+            throw error;
         }
     },
 
     async deleteLine(id: number): Promise<boolean> {
         try {
-            const response = await fetch(`/rotas/linha?id=${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Failed to delete line');
+            const response = await fetch(`/rotas/linha?id=${id}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders()
+            });
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Falha ao apagar linha');
+            }
             return data.sucesso;
         } catch (error) {
             console.error('Error deleting line:', error);
+            throw error;
+        }
+    },
+    // ===== NEW: Approval System Endpoints =====
+
+    async getPendingLines(): Promise<PendingLineResponse[] | null> {
+        try {
+            const response = await fetch('/rotas/linhas-pendentes', {
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) throw new Error('Failed to fetch pending lines');
+            const data = await response.json();
+            return data.sucesso ? data.dados : null;
+        } catch (error) {
+            console.error('Error fetching pending lines:', error);
+            return null;
+        }
+    },
+
+    async getMyLines(): Promise<LinhaResponse[] | null> {
+        try {
+            const response = await fetch('/rotas/minhas-linhas', {
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) throw new Error('Failed to fetch my lines');
+            const data = await response.json();
+            return data.sucesso ? data.dados : null;
+        } catch (error) {
+            console.error('Error fetching my lines:', error);
+            return null;
+        }
+    },
+
+    async approveLine(id: number): Promise<boolean> {
+        try {
+            const response = await fetch(`/rotas/aprovar-linha?id=${id}`, {
+                method: 'POST',
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) throw new Error('Failed to approve line');
+            const data = await response.json();
+            return data.sucesso;
+        } catch (error) {
+            console.error('Error approving line:', error);
+            return false;
+        }
+    },
+
+    async rejectLine(id: number): Promise<boolean> {
+        try {
+            const response = await fetch(`/rotas/rejeitar-linha?id=${id}`, {
+                method: 'POST',
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) throw new Error('Failed to reject line');
+            const data = await response.json();
+            return data.sucesso;
+        } catch (error) {
+            console.error('Error rejecting line:', error);
+            return false;
+        }
+    },
+
+    // ===== PENDING STOPS =====
+
+    async getPendingStops(): Promise<PendingStopResponse[] | null> {
+        try {
+            const response = await fetch('/rotas/paragens-pendentes', {
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) throw new Error('Failed to fetch pending stops');
+            const data = await response.json();
+            return data.sucesso ? data.dados : null;
+        } catch (error) {
+            console.error('Error fetching pending stops:', error);
+            return null;
+        }
+    },
+
+    async getMyStops(): Promise<Stop[] | null> {
+        try {
+            const response = await fetch('/rotas/minhas-paragens', {
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) throw new Error('Failed to fetch my stops');
+            const data = await response.json();
+            return data.sucesso ? data.dados : null;
+        } catch (error) {
+            console.error('Error fetching my stops:', error);
+            return null;
+        }
+    },
+
+    async approveStop(id: number): Promise<boolean> {
+        try {
+            const response = await fetch(`/rotas/aprovar-paragem?id=${id}`, {
+                method: 'POST',
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) throw new Error('Failed to approve stop');
+            const data = await response.json();
+            return data.sucesso;
+        } catch (error) {
+            console.error('Error approving stop:', error);
+            return false;
+        }
+    },
+
+    async rejectStop(id: number): Promise<boolean> {
+        try {
+            const response = await fetch(`/rotas/rejeitar-paragem?id=${id}`, {
+                method: 'POST',
+                headers: getAuthHeaders()
+            });
+            if (!response.ok) throw new Error('Failed to reject stop');
+            const data = await response.json();
+            return data.sucesso;
+        } catch (error) {
+            console.error('Error rejecting stop:', error);
             return false;
         }
     }

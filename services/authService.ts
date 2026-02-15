@@ -13,8 +13,43 @@ export interface AuthUser {
     providers: ('google' | 'facebook' | 'local')[];
     googleId?: string;
     facebookId?: string;
+    role: 'user' | 'admin';
+    tmCoins: number;
+    totalContribuicoes: number;
     createdAt: string;
     updatedAt: string;
+}
+
+export interface Contribuicao {
+    _id: string;
+    userId?: string;
+    tipo: 'paragem' | 'linha';
+    nome: string;
+    referenciaId: number;
+    tmCoinsGanhos: number;
+    status: 'pendente' | 'aprovada' | 'rejeitada';
+    createdAt: string;
+    aprovadoEm?: string;
+    aprovadoPor?: string;
+}
+
+export interface Pagamento {
+    _id: string;
+    userId?: string;
+    metodo: 'africell' | 'unitel' | 'express';
+    valorKz: number;
+    tmCoinsDebitados: number;
+    telefone: string;
+    status: 'pendente' | 'processado' | 'cancelado';
+    createdAt: string;
+    processadoEm?: string;
+    processadoPor?: string;
+}
+
+export interface SaldoResponse {
+    tmCoins: number;
+    totalContribuicoes: number;
+    valorKz: number;
 }
 
 export interface RegisterData {
@@ -245,6 +280,68 @@ export const authService = {
             body: JSON.stringify({ token, newPassword }),
         });
         return response.json();
+    },
+
+    // ==================== TM COINS & CONTRIBUIÇÕES ====================
+
+    async getMeuSaldo(): Promise<SaldoResponse | null> {
+        try {
+            const response = await fetch(`${API_URL}/auth/meu-saldo`, {
+                headers: this.authHeaders(),
+            });
+            if (!response.ok) return null;
+            const data = await response.json();
+            return data.sucesso ? data.dados : null;
+        } catch (error) {
+            console.error('Error fetching saldo:', error);
+            return null;
+        }
+    },
+
+    async getMinhasContribuicoes(pagina = 1, porPagina = 20): Promise<{ dados: Contribuicao[]; paginacao: any } | null> {
+        try {
+            const response = await fetch(
+                `${API_URL}/rotas/minhas-contribuicoes?pagina=${pagina}&porPagina=${porPagina}`,
+                { headers: this.authHeaders() }
+            );
+            if (!response.ok) return null;
+            const data = await response.json();
+            return data.sucesso ? { dados: data.dados, paginacao: data.paginacao } : null;
+        } catch (error) {
+            console.error('Error fetching contribuicoes:', error);
+            return null;
+        }
+    },
+
+    async solicitarPagamento(metodo: string, valorKz: number, telefone: string): Promise<{ dados: Pagamento; mensagem: string }> {
+        const response = await fetch(`${API_URL}/auth/solicitar-pagamento`, {
+            method: 'POST',
+            headers: this.authHeaders(),
+            body: JSON.stringify({ metodo, valorKz, telefone }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw { statusCode: response.status, message: result.message || 'Erro ao solicitar pagamento' } as AuthError;
+        }
+
+        return { dados: result.dados, mensagem: result.mensagem };
+    },
+
+    async getMeusPagamentos(pagina = 1, porPagina = 20): Promise<{ dados: Pagamento[]; paginacao: any } | null> {
+        try {
+            const response = await fetch(
+                `${API_URL}/auth/meus-pagamentos?pagina=${pagina}&porPagina=${porPagina}`,
+                { headers: this.authHeaders() }
+            );
+            if (!response.ok) return null;
+            const data = await response.json();
+            return data.sucesso ? { dados: data.dados, paginacao: data.paginacao } : null;
+        } catch (error) {
+            console.error('Error fetching pagamentos:', error);
+            return null;
+        }
     },
 
     // ==================== LOGOUT ====================

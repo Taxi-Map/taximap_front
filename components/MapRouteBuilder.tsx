@@ -15,6 +15,8 @@ interface LineData {
 
 type EditMode = 'view' | 'add-stop' | 'create-route' | 'edit-line';
 
+import { NotificationModal, NotificationType } from './NotificationModal';
+
 export default function MapRouteBuilder() {
     const navigate = useNavigate();
     const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -27,6 +29,47 @@ export default function MapRouteBuilder() {
     const [lines, setLines] = useState<LineData[]>([]);
     const [selectedStop, setSelectedStop] = useState<Stop | null>(null);
     const [selectedLine, setSelectedLine] = useState<LineData | null>(null);
+
+    // Notification State
+    const [notification, setNotification] = useState<{
+        isOpen: boolean;
+        title: string;
+        message: string;
+        type: NotificationType;
+        onConfirm?: () => void;
+        confirmText?: string;
+        cancelText?: string;
+    }>({
+        isOpen: false,
+        title: '',
+        message: '',
+        type: 'info'
+    });
+
+    const showNotification = (
+        title: string,
+        message: string,
+        type: NotificationType = 'info',
+        onConfirm?: () => void,
+        confirmText?: string,
+        cancelText?: string
+    ) => {
+        setNotification({
+            isOpen: true,
+            title,
+            message,
+            type,
+            onConfirm,
+            confirmText,
+            cancelText
+        });
+    };
+
+    const closeNotification = () => {
+        setNotification(prev => ({ ...prev, isOpen: false }));
+    };
+
+
 
     // Edit mode state
     const [editMode, setEditMode] = useState<EditMode>('view');
@@ -92,11 +135,11 @@ export default function MapRouteBuilder() {
                 }
                 const el = document.createElement('div');
                 el.style.cssText = `
-                    width: 24px; height: 24px;
-                    background: #22c55e;
-                    border: 3px solid white;
-                    border-radius: 50%;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                width: 24px; height: 24px;
+                background: #22c55e;
+                border: 3px solid white;
+                border-radius: 50%;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
                 `;
                 tempMarkerRef.current = new maplibregl.Marker({ element: el })
                     .setLngLat([lng, lat])
@@ -131,6 +174,7 @@ export default function MapRouteBuilder() {
             }
         } catch (error) {
             console.error('Failed to fetch data', error);
+            showNotification('Erro', 'Falha ao carregar dados do servidor.', 'error');
         } finally {
             setIsLoading(false);
         }
@@ -168,7 +212,7 @@ export default function MapRouteBuilder() {
                 cursor: pointer;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.3);
                 transition: box-shadow 0.2s, border-color 0.2s;
-            `;
+                `;
             el.title = stop.nome;
 
             el.addEventListener('mouseenter', () => {
@@ -254,23 +298,37 @@ export default function MapRouteBuilder() {
         if (!newStopPosition || !newStopName.trim()) return;
         setIsSaving(true);
 
-        const newStop = await routeService.createStop(
-            newStopName.trim(),
-            newStopPosition.lat,
-            newStopPosition.lng
-        );
+        try {
+            const newStop = await routeService.createStop(
+                newStopName.trim(),
+                newStopPosition.lat,
+                newStopPosition.lng
+            );
 
-        if (newStop) {
-            setStops(prev => [...prev, newStop]);
-            setShowStopModal(false);
-            setNewStopName('');
-            setNewStopPosition(null);
-            if (tempMarkerRef.current) {
-                tempMarkerRef.current.remove();
-                tempMarkerRef.current = null;
+            if (newStop) {
+                setStops(prev => [...prev, newStop]);
+                setShowStopModal(false);
+                setNewStopName('');
+                setNewStopPosition(null);
+                if (tempMarkerRef.current) {
+                    tempMarkerRef.current.remove();
+                    tempMarkerRef.current = null;
+                }
+
+                // Check for pending status (if backend returns it immediately or if we infer it)
+                // For now, if the stop is created but not showing up for others, it might be pending.
+                // The current API returns the created stop object.
+                // We'll assume if it has a status field and it's 'pendente', we notify.
+                if (newStop.status === 'pendente') {
+                    showNotification('Sucesso', 'Paragem criada! Ela ficará pendente até aprovação.', 'success');
+                } else {
+                    showNotification('Sucesso', 'Paragem criada com sucesso!', 'success');
+                }
+            } else {
+                showNotification('Erro', 'Erro ao criar paragem.', 'error');
             }
-        } else {
-            alert('Erro ao criar paragem. Verifique se o backend está configurado.');
+        } catch (err: any) {
+            showNotification('Erro', err.message || 'Erro ao criar paragem.', 'error');
         }
         setIsSaving(false);
     };
@@ -279,21 +337,31 @@ export default function MapRouteBuilder() {
         if (routeStops.length < 2 || !newRouteName.trim()) return;
         setIsSaving(true);
 
-        const newLine = await routeService.createLine(
-            newRouteName.trim(),
-            newRouteDesc.trim(),
-            routeStops.map(s => s.id)
-        );
+        try {
+            const newLineResponse = await routeService.createLine(
+                newRouteName.trim(),
+                newRouteDesc.trim(),
+                routeStops.map(s => s.id)
+            );
 
-        if (newLine) {
-            await fetchData();
-            setShowRouteModal(false);
-            setRouteStops([]);
-            setNewRouteName('');
-            setNewRouteDesc('');
-            setEditMode('view');
-        } else {
-            alert('Erro ao criar linha. Verifique se o backend está configurado.');
+            if (newLineResponse) {
+                await fetchData();
+                setShowRouteModal(false);
+                setRouteStops([]);
+                setNewRouteName('');
+                setNewRouteDesc('');
+                setEditMode('view');
+
+                if (newLineResponse.pendente) {
+                    showNotification('Sucesso', 'Linha criada! Ela ficará pendente até aprovação.', 'success');
+                } else {
+                    showNotification('Sucesso', 'Linha criada e aprovada com sucesso!', 'success');
+                }
+            } else {
+                showNotification('Erro', 'Erro ao criar linha.', 'error');
+            }
+        } catch (err: any) {
+            showNotification('Erro', err.message || 'Erro ao criar linha.', 'error');
         }
         setIsSaving(false);
     };
@@ -326,7 +394,7 @@ export default function MapRouteBuilder() {
         // Sanitize name - remove potentially dangerous characters
         const sanitizedName = editStopName.trim().replace(/[<>"'&;]/g, '');
         if (sanitizedName.length === 0 || sanitizedName.length > 100) {
-            alert('Nome da paragem inválido (máximo 100 caracteres).');
+            showNotification('Aviso', 'Nome da paragem inválido (máximo 100 caracteres).', 'warning');
             return;
         }
 
@@ -335,48 +403,67 @@ export default function MapRouteBuilder() {
 
         // Validate numbers
         if (isNaN(lat) || isNaN(lng)) {
-            alert('Latitude e longitude devem ser números válidos.');
+            showNotification('Aviso', 'Latitude e longitude devem ser números válidos.', 'warning');
             return;
         }
 
         // Validate coordinate ranges
         if (lat < -90 || lat > 90) {
-            alert('Latitude deve estar entre -90 e 90.');
+            showNotification('Aviso', 'Latitude deve estar entre -90 e 90.', 'warning');
             return;
         }
         if (lng < -180 || lng > 180) {
-            alert('Longitude deve estar entre -180 e 180.');
+            showNotification('Aviso', 'Longitude deve estar entre -180 e 180.', 'warning');
             return;
         }
 
         setIsSaving(true);
-        const updated = await routeService.updateStop(selectedStop.id, {
-            nome: sanitizedName,
-            latitude: lat,
-            longitude: lng
-        });
-        if (updated) {
-            await fetchData();
-            setSelectedStop(updated);
-            setShowEditStopModal(false);
-        } else {
-            alert('Erro ao atualizar paragem.');
+        try {
+            const updated = await routeService.updateStop(selectedStop.id, {
+                nome: sanitizedName,
+                latitude: lat,
+                longitude: lng
+            });
+            if (updated) {
+                await fetchData();
+                setSelectedStop(updated);
+                setShowEditStopModal(false);
+                showNotification('Sucesso', 'Paragem atualizada com sucesso!', 'success');
+            } else {
+                showNotification('Erro', 'Erro ao atualizar paragem.', 'error');
+            }
+        } catch (err: any) {
+            showNotification('Erro', err.message || 'Erro ao atualizar paragem.', 'error');
         }
         setIsSaving(false);
     };
 
     const handleDeleteStop = async () => {
         if (!selectedStop) return;
-        if (!confirm(`Tens a certeza que queres apagar a paragem "${selectedStop.nome}"?`)) return;
-        setIsSaving(true);
-        const success = await routeService.deleteStop(selectedStop.id);
-        if (success) {
-            await fetchData();
-            setSelectedStop(null);
-        } else {
-            alert('Erro ao apagar paragem. Pode estar em uso por uma linha.');
-        }
-        setIsSaving(false);
+
+        showNotification(
+            'Apagar Paragem',
+            `Tens a certeza que queres apagar a paragem "${selectedStop.nome}"?`,
+            'warning',
+            async () => {
+                setIsSaving(true);
+                try {
+                    const success = await routeService.deleteStop(selectedStop.id);
+                    if (success) {
+                        await fetchData();
+                        setSelectedStop(null);
+                        showNotification('Sucesso', 'Paragem apagada com sucesso!', 'success');
+                    } else {
+                        showNotification('Erro', 'Erro ao apagar paragem.', 'error');
+                    }
+                } catch (err: any) {
+                    showNotification('Erro', err.message || 'Erro ao apagar paragem.', 'error');
+                }
+                setIsSaving(false);
+            },
+            'Sim, apagar',
+            'Cancelar'
+        );
     };
 
     // ===== EDIT LINE =====
@@ -420,22 +507,27 @@ export default function MapRouteBuilder() {
     const handleSaveEditLine = async () => {
         if (!selectedLine || !editLineName.trim()) return;
         if (editLineStops.length < 2) {
-            alert('Uma linha deve ter pelo menos 2 paragens.');
+            showNotification('Aviso', 'Uma linha deve ter pelo menos 2 paragens.', 'warning');
             return;
         }
         setIsSaving(true);
-        const updated = await routeService.updateLine(selectedLine.id, {
-            nome: editLineName.trim(),
-            descricao: editLineDesc.trim() || undefined,
-            paragemIds: editLineStops.map(s => s.id)
-        });
-        if (updated) {
-            await fetchData();
-            setEditMode('view');
-            setSelectedLine(null);
-            setEditLineStops([]);
-        } else {
-            alert('Erro ao atualizar linha.');
+        try {
+            const updated = await routeService.updateLine(selectedLine.id, {
+                nome: editLineName.trim(),
+                descricao: editLineDesc.trim() || undefined,
+                paragemIds: editLineStops.map(s => s.id)
+            });
+            if (updated) {
+                await fetchData();
+                setEditMode('view');
+                setSelectedLine(null);
+                setEditLineStops([]);
+                showNotification('Sucesso', 'Linha atualizada com sucesso!', 'success');
+            } else {
+                showNotification('Erro', 'Erro ao atualizar linha.', 'error');
+            }
+        } catch (err: any) {
+            showNotification('Erro', err.message || 'Erro ao atualizar linha.', 'error');
         }
         setIsSaving(false);
     };
@@ -447,20 +539,43 @@ export default function MapRouteBuilder() {
     };
 
     const handleDeleteLine = async (line: LineData) => {
-        if (!confirm(`Tens a certeza que queres apagar a linha "${line.nome}"?`)) return;
-        setIsSaving(true);
-        const success = await routeService.deleteLine(line.id);
-        if (success) {
-            await fetchData();
-            if (selectedLine?.id === line.id) setSelectedLine(null);
-        } else {
-            alert('Erro ao apagar linha.');
-        }
-        setIsSaving(false);
+        showNotification(
+            'Apagar Linha',
+            `Tens a certeza que queres apagar a linha "${line.nome}"?`,
+            'warning',
+            async () => {
+                setIsSaving(true);
+                try {
+                    const success = await routeService.deleteLine(line.id);
+                    if (success) {
+                        await fetchData();
+                        if (selectedLine?.id === line.id) setSelectedLine(null);
+                        showNotification('Sucesso', 'Linha apagada com sucesso!', 'success');
+                    } else {
+                        showNotification('Erro', 'Erro ao apagar linha.', 'error');
+                    }
+                } catch (err: any) {
+                    showNotification('Erro', err.message || 'Erro ao apagar linha.', 'error');
+                }
+                setIsSaving(false);
+            },
+            'Sim, apagar',
+            'Cancelar'
+        );
     };
 
     return (
         <div className="w-full h-screen bg-slate-50 flex flex-col relative">
+            <NotificationModal
+                isOpen={notification.isOpen}
+                onClose={closeNotification}
+                title={notification.title}
+                message={notification.message}
+                type={notification.type}
+                onConfirm={notification.onConfirm}
+                confirmText={notification.confirmText}
+                cancelText={notification.cancelText}
+            />
             {/* Header - Responsive */}
             <div className="absolute top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b px-2 py-2 md:px-4 md:py-3 flex items-center justify-between z-20 shadow-sm gap-2">
                 <div className="flex items-center gap-1 md:gap-3 min-w-0 flex-shrink-0">

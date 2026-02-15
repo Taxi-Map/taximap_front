@@ -54,32 +54,66 @@ export default function MapPage() {
         setRoute(null);
 
         try {
-            // New logic requested by user:
-            // 1. Call Backend to get stops (Hardcoded for testing: 1 -> 2)
-            console.log("Fetching route from backend...");
-            const backendData = await routeService.getShortestPath(1, 2);
+            if (!userLocation) {
+                alert("Por favor, active a localização primeiro.");
+                setIsLoadingRoute(false);
+                return;
+            }
+
+            console.log("Fetching route from coords:", userLocation);
+            // Use new endpoint that takes user coordinates and destination ID
+            // Hardcoded destination ID 2 (Viana) for now as per previous logic, but ideally should come from search
+            // If we have a destination selected from search, we should use its ID.
+            // For this fix, I'll assumme destination ID 2 if not available, or try to find a way to get ID.
+            // Since the previous code used `getShortestPath(1, 2)`, I will use destination ID 2.
+            const destinationId = 2;
+
+            const backendData = await routeService.getRouteFromCoords(
+                userLocation[0],
+                userLocation[1],
+                destinationId
+            );
 
             if (backendData && backendData.sucesso) {
-                setRoute(backendData.dados);
+                const principalRoute = backendData.dados.principal;
 
-                // 2. Extract coordinates from the stops (paragens)
-                // user requested: "ver os dados de retorno pegar a localizacao"
-                const stops = backendData.dados.paragens;
-                if (stops && stops.length > 0) {
-                    const waypoints: [number, number][] = stops.map(stop => [stop.latitude, stop.longitude]);
+                // Show suggestion info if available
+                if (backendData.dados.paragemOrigemSugerida) {
+                    console.log(`Paragem sugerida: ${backendData.dados.paragemOrigemSugerida.nome}`);
+                    console.log(`Distância até paragem: ${backendData.dados.distanciaAteParagem}m`);
+                    // You might want to show this to the user via UI state
+                }
 
-                    // 3. Call ORS with these points to draw the path
-                    // "fazer outra requisicao no openrouteservice-js para desenhar a rotas desses pontos"
-                    console.log("Fetching visual route from ORS with stops:", waypoints);
-                    const visualPath = await orsService.getRoute(waypoints);
+                if (principalRoute) {
+                    setRoute(principalRoute);
 
-                    if (visualPath) {
-                        setOrsPath(visualPath);
+                    // 2. Extract coordinates from the stops (paragens)
+                    // user requested: "ver os dados de retorno pegar a localizacao"
+                    const stops = principalRoute.paragens;
+                    if (stops && stops.length > 0) {
+                        const waypoints: [number, number][] = stops.map(stop => [stop.latitude, stop.longitude]);
+
+                        // 3. Call ORS with these points to draw the path
+                        // "fazer outra requisicao no openrouteservice-js para desenhar a rotas desses pontos"
+                        console.log("Fetching visual route from ORS with stops:", waypoints);
+                        const visualPath = await orsService.getRoute(waypoints);
+
+                        if (visualPath) {
+                            setOrsPath(visualPath);
+                        } else {
+                            console.warn("ORS could not calculate path between these stops.");
+                        }
                     } else {
-                        console.warn("ORS could not calculate path between these stops.");
+                        alert("A rota retornada pelo backend não tem paragens.");
                     }
                 } else {
-                    alert("A rota retornada pelo backend não tem paragens.");
+                    console.warn("Rota principal não encontrada no backend");
+                    // Check if it's a walking route or error
+                    if (backendData.dados.analise.podeIrAPe) {
+                        alert(`Pode ir a pé! Distância: ${backendData.dados.analise.distanciaAPeMetros}m`);
+                    } else {
+                        alert("Rota principal não encontrada. " + (backendData.dados.analise.avisos[0] || ""));
+                    }
                 }
 
             } else {
