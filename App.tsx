@@ -5,6 +5,7 @@ import MapPage from './mapcn/MapcnPage';
 import ProfilePage from './components/ProfilePage';
 import RouteBuilderPage from './components/RouteBuilderPage';
 import MapRouteBuilder from './components/MapRouteBuilder';
+import AdminPanelPage from './components/AdminPanelPage';
 import AuthCallback from './components/AuthCallback';
 import VerifyEmailPage from './components/VerifyEmailPage';
 import ForgotPasswordPage from './components/ForgotPasswordPage';
@@ -31,6 +32,11 @@ export default function App() {
         <Route path="/builder" element={
           <ProtectedRoute>
             <MapRouteBuilder />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminPanelPage />
           </ProtectedRoute>
         } />
         <Route path="/auth/callback" element={<AuthCallback />} />

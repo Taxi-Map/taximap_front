@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Mapcn, MapcnRoute, MapcnMarker, MapcnControls, MapcnTaxiAnimator } from './Mapcn';
-import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints, Route, CarTaxiFront, UserPlus } from 'lucide-react';
+import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints, Route, CarTaxiFront, UserPlus, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { routeService, RouteData, Stop } from '../services/routeService';
 import { orsService } from '../services/orsService';
@@ -11,6 +11,7 @@ import { findTwoNearestStops } from '../utils/geoUtils';
 import { fuzzySearch } from '../utils/fuzzySearch';
 import { LoginModal } from '../components/LoginModal';
 import { authService } from '../services/authService';
+import { useAuth } from '../hooks/useAuth';
 
 export default function MapcnPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -24,6 +25,8 @@ export default function MapcnPage() {
     // Login modal state
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(() => authService.isAuthenticated());
+    const { user } = useAuth();
+    const isAdmin = user?.role === 'admin' || user?.role === 'staff';
 
     // Check for login param on mount
     useEffect(() => {
@@ -694,6 +697,15 @@ export default function MapcnPage() {
 
                     {/* Profile & Builder Buttons */}
                     <div className="fixed top-4 right-4 z-30 flex items-center gap-2 lg:hidden">
+                        {isAdmin && (
+                            <Link
+                                to="/admin"
+                                className="p-2 bg-amber-100 rounded-full shadow-lg hover:bg-amber-200 transition-colors"
+                                title="Painel Admin"
+                            >
+                                <Shield className="w-6 h-6 text-amber-700" />
+                            </Link>
+                        )}
                         <Link
                             to="/builder"
                             className="p-2 bg-white rounded-full shadow-lg hover:bg-slate-50 transition-colors"
@@ -720,6 +732,15 @@ export default function MapcnPage() {
                     </div>
                     {/* Profile & Builder for desktop only */}
                     <div className="hidden lg:flex items-center gap-2">
+                        {isAdmin && (
+                            <Link
+                                to="/admin"
+                                className="p-2 bg-amber-100 rounded-full shadow-md hover:bg-amber-200 transition-colors"
+                                title="Painel Admin"
+                            >
+                                <Shield className="w-6 h-6 text-amber-700" />
+                            </Link>
+                        )}
                         <Link
                             to="/builder"
                             className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors"
@@ -909,6 +930,11 @@ export default function MapcnPage() {
                     </button>
 
                     <div className="flex-1 flex flex-col items-center gap-2">
+                        {isAdmin && (
+                            <Link to="/admin" className="p-3 hover:bg-amber-50 rounded-xl transition-all" title="Painel Admin">
+                                <Shield className="w-5 h-5 text-amber-600" />
+                            </Link>
+                        )}
                         <Link to="/builder" className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Route Builder">
                             <Route className="w-5 h-5 text-slate-600" />
                         </Link>

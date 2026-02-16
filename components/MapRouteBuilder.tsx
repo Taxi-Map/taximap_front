@@ -4,6 +4,8 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { routeService, Stop } from '../services/routeService';
+import { authService } from '../services/authService';
+import { useAuth } from '../hooks/useAuth';
 import { ArrowLeft, RefreshCw, Plus, Route, Eye, X, Check, MapPin, Trash2, Edit2, List, ChevronUp, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,6 +21,8 @@ import { NotificationModal, NotificationType } from './NotificationModal';
 
 export default function MapRouteBuilder() {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const isAdminOrStaff = user?.role === 'admin' || user?.role === 'staff';
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<maplibregl.Map | null>(null);
     const markersRef = useRef<maplibregl.Marker[]>([]);
@@ -154,23 +158,80 @@ export default function MapRouteBuilder() {
     const fetchData = useCallback(async () => {
         setIsLoading(true);
         try {
-            const allStops = await routeService.getAllStops();
-            if (allStops) setStops(allStops);
+            // Admin/Staff: single endpoint returns everything (approved + pending)
+            // Regular user: approved stops + own pending stops
+            let mergedStops: Stop[];
+            if (isAdminOrStaff) {
+                const all = await routeService.getAllStopsIncludingPending();
+                mergedStops = all || [];
+            } else {
+                const approved = await routeService.getAllStops();
+                mergedStops = approved || [];
 
-            const allLines = await routeService.getAllLines();
-            if (allLines) {
-                const lineDetails: LineData[] = [];
-                for (const line of allLines) {
-                    const details = await routeService.getLineDetails(line.id);
-                    if (details && details.percurso) {
-                        lineDetails.push({
-                            id: line.id,
-                            nome: line.nome,
-                            percurso: details.percurso,
+                // Merge user's own pending stops
+                if (authService.isAuthenticated()) {
+                    const myStops = await routeService.getMyStops();
+                    if (myStops) {
+                        const myPendingMap = new Map(myStops.filter(s => s.status === 'pendente').map(s => [s.id, s]));
+
+                        // Update status on existing stops
+                        mergedStops = mergedStops.map(s => {
+                            const p = myPendingMap.get(s.id);
+                            return p ? { ...s, status: p.status, criadoPor: p.criadoPor, criadoEm: p.criadoEm } : s;
                         });
+
+                        // Add new pending stops not in approved list
+                        const ids = new Set(mergedStops.map(s => s.id));
+                        const newPending = myStops.filter(s => s.status === 'pendente' && !ids.has(s.id));
+                        mergedStops = [...mergedStops, ...newPending];
                     }
                 }
-                setLines(lineDetails);
+            }
+            setStops(mergedStops);
+
+            // Lines: admin/staff get full data including pending
+            if (isAdminOrStaff) {
+                const allLinesData = await routeService.getAllLinesIncludingPending();
+                if (allLinesData) {
+                    const lineDetails: LineData[] = [];
+                    for (const lr of allLinesData) {
+                        // If response already includes percurso, use it directly
+                        if (lr.percurso && lr.percurso.length > 0) {
+                            lineDetails.push({
+                                id: lr.linha.id,
+                                nome: lr.linha.nome,
+                                percurso: lr.percurso,
+                            });
+                        } else {
+                            // Fallback: fetch details individually (works for approved lines)
+                            const details = await routeService.getLineDetails(lr.linha.id);
+                            if (details && details.percurso) {
+                                lineDetails.push({
+                                    id: lr.linha.id,
+                                    nome: lr.linha.nome,
+                                    percurso: details.percurso,
+                                });
+                            }
+                        }
+                    }
+                    setLines(lineDetails);
+                }
+            } else {
+                const allLines = await routeService.getAllLines();
+                if (allLines) {
+                    const lineDetails: LineData[] = [];
+                    for (const line of allLines) {
+                        const details = await routeService.getLineDetails(line.id);
+                        if (details && details.percurso) {
+                            lineDetails.push({
+                                id: line.id,
+                                nome: line.nome,
+                                percurso: details.percurso,
+                            });
+                        }
+                    }
+                    setLines(lineDetails);
+                }
             }
         } catch (error) {
             console.error('Failed to fetch data', error);
@@ -193,7 +254,9 @@ export default function MapRouteBuilder() {
             const isInRoute = routeStops.some(s => s.id === stop.id);
             const isInEditLine = editLineStops.some(s => s.id === stop.id);
 
-            // Color priority: edit-line (purple) > create-route (green) > default (yellow)
+            const isPending = stop.status === 'pendente';
+
+            // Color priority: edit-line (purple) > create-route (green) > pending (orange) > default (yellow)
             let bgColor = '#EAB308';
             let borderColor = '#1e293b';
             if (isInEditLine) {
@@ -202,6 +265,9 @@ export default function MapRouteBuilder() {
             } else if (isInRoute) {
                 bgColor = '#22c55e';
                 borderColor = '#166534';
+            } else if (isPending) {
+                bgColor = '#f97316';
+                borderColor = '#c2410c';
             }
 
             el.style.cssText = `
@@ -212,6 +278,7 @@ export default function MapRouteBuilder() {
                 cursor: pointer;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.3);
                 transition: box-shadow 0.2s, border-color 0.2s;
+                ${isPending ? 'animation: pulse 2s infinite;' : ''}
                 `;
             el.title = stop.nome;
 
@@ -859,11 +926,19 @@ export default function MapRouteBuilder() {
                 <div className="absolute bottom-20 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-white rounded-2xl shadow-xl p-4 z-20">
                     <div className="flex items-start justify-between mb-3">
                         <div>
-                            <h3 className="font-bold text-slate-900 text-lg">{selectedStop.nome}</h3>
+                            <div className="flex items-center gap-2">
+                                <h3 className="font-bold text-slate-900 text-lg">{selectedStop.nome}</h3>
+                                {selectedStop.status === 'pendente' && (
+                                    <span className="text-[10px] px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full font-bold">⏳ Pendente</span>
+                                )}
+                            </div>
                             <p className="text-sm text-slate-500 mt-1">
                                 📍 {selectedStop.latitude.toFixed(5)}, {selectedStop.longitude.toFixed(5)}
                             </p>
                             <p className="text-sm text-slate-500">ID: {selectedStop.id}</p>
+                            {selectedStop.status === 'pendente' && (
+                                <p className="text-xs text-orange-500 mt-1">Esta paragem aguarda aprovação de um admin</p>
+                            )}
                         </div>
                         <button onClick={() => setSelectedStop(null)} className="p-1 hover:bg-slate-100 rounded-full">
                             ✕
@@ -895,6 +970,10 @@ export default function MapRouteBuilder() {
                     <span>Paragem</span>
                 </div>
                 <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-slate-600 mt-0.5 md:mt-1">
+                    <div className="w-3 h-3 md:w-4 md:h-4 bg-orange-500 border-2 border-orange-800 rounded-full"></div>
+                    <span>Pendente</span>
+                </div>
+                <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-slate-600 mt-0.5 md:mt-1">
                     <div className="w-3 h-3 md:w-4 md:h-4 bg-green-500 border-2 border-green-800 rounded-full"></div>
                     <span>Nova Linha</span>
                 </div>
@@ -908,6 +987,9 @@ export default function MapRouteBuilder() {
             <div className="absolute top-16 md:top-20 right-2 md:right-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-2 md:p-3 z-10">
                 <p className="text-[10px] md:text-xs font-bold text-slate-700">Estatísticas</p>
                 <p className="text-xs md:text-sm text-slate-600">{stops.length} paragens</p>
+                {stops.filter(s => s.status === 'pendente').length > 0 && (
+                    <p className="text-xs md:text-sm text-orange-500">⏳ {stops.filter(s => s.status === 'pendente').length} pendente(s)</p>
+                )}
                 <p className="text-xs md:text-sm text-slate-600">{lines.length} linhas</p>
             </div>
 

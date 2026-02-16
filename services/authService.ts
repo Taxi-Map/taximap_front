@@ -13,7 +13,7 @@ export interface AuthUser {
     providers: ('google' | 'facebook' | 'local')[];
     googleId?: string;
     facebookId?: string;
-    role: 'user' | 'admin';
+    role: 'user' | 'staff' | 'admin';
     tmCoins: number;
     totalContribuicoes: number;
     createdAt: string;
@@ -341,6 +341,88 @@ export const authService = {
         } catch (error) {
             console.error('Error fetching pagamentos:', error);
             return null;
+        }
+    },
+
+    // ==================== ADMIN — GESTÃO DE PAGAMENTOS ====================
+
+    async getAllPaymentRequests(pagina = 1, porPagina = 20): Promise<{ dados: Pagamento[]; paginacao: any } | null> {
+        try {
+            const response = await fetch(
+                `${API_URL}/auth/pagamentos-pendentes?pagina=${pagina}&porPagina=${porPagina}`,
+                { headers: this.authHeaders(), cache: 'no-store' }
+            );
+            if (!response.ok) return null;
+            const data = await response.json();
+            return data.sucesso ? { dados: data.dados, paginacao: data.paginacao } : null;
+        } catch (error) {
+            console.error('Error fetching all payment requests:', error);
+            return null;
+        }
+    },
+
+    async processPayment(id: string): Promise<boolean> {
+        try {
+            const response = await fetch(`${API_URL}/auth/processar-pagamento?id=${id}`, {
+                method: 'POST',
+                headers: this.authHeaders(),
+            });
+            if (!response.ok) return false;
+            const data = await response.json();
+            return data.sucesso;
+        } catch (error) {
+            console.error('Error processing payment:', error);
+            return false;
+        }
+    },
+
+    async cancelPayment(id: string): Promise<boolean> {
+        try {
+            const response = await fetch(`${API_URL}/auth/cancelar-pagamento?id=${id}`, {
+                method: 'POST',
+                headers: this.authHeaders(),
+            });
+            if (!response.ok) return false;
+            const data = await response.json();
+            return data.sucesso;
+        } catch (error) {
+            console.error('Error cancelling payment:', error);
+            return false;
+        }
+    },
+
+    // ==================== ADMIN — GESTÃO DE UTILIZADORES ====================
+
+    async getAllUsers(pagina = 1, porPagina = 50, search = ''): Promise<{ dados: AuthUser[]; total: number; paginacao: any } | null> {
+        try {
+            const params = new URLSearchParams({ pagina: String(pagina), porPagina: String(porPagina) });
+            if (search) params.set('search', search);
+            const response = await fetch(
+                `${API_URL}/auth/utilizadores?${params.toString()}`,
+                { headers: this.authHeaders(), cache: 'no-store' }
+            );
+            if (!response.ok) return null;
+            const data = await response.json();
+            return data.sucesso ? { dados: data.dados, total: data.total, paginacao: data.paginacao } : null;
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            return null;
+        }
+    },
+
+    async changeUserRole(userId: string, novoRole: 'user' | 'staff' | 'admin'): Promise<boolean> {
+        try {
+            const response = await fetch(`${API_URL}/auth/alterar-role`, {
+                method: 'POST',
+                headers: this.authHeaders(),
+                body: JSON.stringify({ userId, novoRole }),
+            });
+            if (!response.ok) return false;
+            const data = await response.json();
+            return data.sucesso;
+        } catch (error) {
+            console.error('Error changing user role:', error);
+            return false;
         }
     },
 

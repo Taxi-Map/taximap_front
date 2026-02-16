@@ -107,6 +107,16 @@ export interface PendingStopResponse {
     };
 }
 
+export interface PendingLineResponse {
+    linha: Linha;
+    percurso: Stop[];
+    metadata: {
+        status: 'pendente';
+        criadoPor: string;
+        criadoEm: string;
+    };
+}
+
 // ===== UTILITY FUNCTIONS =====
 
 /**
@@ -288,7 +298,7 @@ export const routeService = {
 
     async getAllStops(): Promise<Stop[] | null> {
         try {
-            const response = await fetch('/rotas/paragens');
+            const response = await fetch('/rotas/paragens', { cache: 'no-store' });
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             return data.sucesso ? data.dados : null;
@@ -298,9 +308,90 @@ export const routeService = {
         }
     },
 
+    // Admin/Staff: returns ALL stops including pending
+    async getAllStopsIncludingPending(): Promise<Stop[] | null> {
+        try {
+            // Try dedicated endpoint first
+            let response = await fetch('/rotas/todas-paragens', {
+                headers: getAuthHeaders(),
+                cache: 'no-store'
+            });
+
+            // Fallback to query param if endpoint not found
+            if (response.status === 404) {
+                response = await fetch('/rotas/paragens?incluirPendentes=true', {
+                    headers: getAuthHeaders(),
+                    cache: 'no-store'
+                });
+            }
+
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            if (!data.sucesso) return null;
+
+            // Handle both flat and wrapped response formats
+            return data.dados.map((item: any) => {
+                if (item.paragem) {
+                    // Wrapped format: { paragem: {...}, metadata: {...} }
+                    return {
+                        ...item.paragem,
+                        status: item.metadata?.status || item.paragem.status || 'aprovada',
+                        criadoPor: item.metadata?.criadoPor || item.paragem.criadoPor,
+                        criadoEm: item.metadata?.criadoEm || item.paragem.criadoEm,
+                    };
+                }
+                // Flat format: already a Stop object
+                return item;
+            });
+        } catch (error) {
+            console.error('Error fetching all stops (including pending):', error);
+            return null;
+        }
+    },
+
+    // Admin/Staff: returns ALL lines including pending (with percurso)
+    async getAllLinesIncludingPending(): Promise<LinhaResponse[] | null> {
+        try {
+            let response = await fetch('/rotas/todas-linhas', {
+                headers: getAuthHeaders(),
+                cache: 'no-store'
+            });
+
+            // Fallback to query param
+            if (response.status === 404) {
+                response = await fetch('/rotas/linhas?incluirPendentes=true', {
+                    headers: getAuthHeaders(),
+                    cache: 'no-store'
+                });
+            }
+
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            if (!data.sucesso) return null;
+
+            // Normalize: handle both flat Linha[] and LinhaResponse[] formats
+            return data.dados.map((item: any) => {
+                // Already in LinhaResponse format (has linha + percurso)
+                if (item.linha && item.percurso) {
+                    return item;
+                }
+                // Flat Linha format: wrap it
+                return {
+                    linha: item,
+                    percurso: item.percurso || [],
+                    pendente: item.status === 'pendente',
+                    status: item.status || 'aprovada',
+                };
+            });
+        } catch (error) {
+            console.error('Error fetching all lines (including pending):', error);
+            return null;
+        }
+    },
+
     async getStopById(id: number): Promise<Stop | null> {
         try {
-            const response = await fetch(`/rotas/paragem?id=${id}`);
+            const response = await fetch(`/rotas/paragem?id=${id}`, { cache: 'no-store' });
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             return data.sucesso ? data.dados : null;
@@ -312,7 +403,7 @@ export const routeService = {
 
     async getAllLines(): Promise<Linha[] | null> {
         try {
-            const response = await fetch('/rotas/linhas');
+            const response = await fetch('/rotas/linhas', { cache: 'no-store' });
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             return data.sucesso ? data.dados : null;
@@ -324,7 +415,7 @@ export const routeService = {
 
     async getLineDetails(id: number): Promise<LinhaDetalhes | null> {
         try {
-            const response = await fetch(`/rotas/linha?id=${id}`);
+            const response = await fetch(`/rotas/linha?id=${id}`, { cache: 'no-store' });
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             return data.sucesso ? data.dados : null;
@@ -445,7 +536,8 @@ export const routeService = {
     async getPendingLines(): Promise<PendingLineResponse[] | null> {
         try {
             const response = await fetch('/rotas/linhas-pendentes', {
-                headers: getAuthHeaders()
+                headers: getAuthHeaders(),
+                cache: 'no-store'
             });
             if (!response.ok) throw new Error('Failed to fetch pending lines');
             const data = await response.json();
@@ -459,11 +551,14 @@ export const routeService = {
     async getMyLines(): Promise<LinhaResponse[] | null> {
         try {
             const response = await fetch('/rotas/minhas-linhas', {
-                headers: getAuthHeaders()
+                headers: getAuthHeaders(),
+                cache: 'no-store'
             });
             if (!response.ok) throw new Error('Failed to fetch my lines');
             const data = await response.json();
-            return data.sucesso ? data.dados : null;
+            if (!data.sucesso) return null;
+            // Backend returns wrapped format: { linha: {...}, percurso: [...], metadata: {...} }
+            return data.dados;
         } catch (error) {
             console.error('Error fetching my lines:', error);
             return null;
@@ -505,7 +600,8 @@ export const routeService = {
     async getPendingStops(): Promise<PendingStopResponse[] | null> {
         try {
             const response = await fetch('/rotas/paragens-pendentes', {
-                headers: getAuthHeaders()
+                headers: getAuthHeaders(),
+                cache: 'no-store'
             });
             if (!response.ok) throw new Error('Failed to fetch pending stops');
             const data = await response.json();
@@ -519,11 +615,26 @@ export const routeService = {
     async getMyStops(): Promise<Stop[] | null> {
         try {
             const response = await fetch('/rotas/minhas-paragens', {
-                headers: getAuthHeaders()
+                headers: getAuthHeaders(),
+                cache: 'no-store'
             });
             if (!response.ok) throw new Error('Failed to fetch my stops');
             const data = await response.json();
-            return data.sucesso ? data.dados : null;
+            if (!data.sucesso) return null;
+            // Backend returns wrapped format: { paragem: {...}, metadata: {...} }
+            // Unwrap to flat Stop[] with status/criadoPor/criadoEm
+            return data.dados.map((item: any) => {
+                if (item.paragem) {
+                    return {
+                        ...item.paragem,
+                        status: item.metadata?.status || item.paragem.status,
+                        criadoPor: item.metadata?.criadoPor || item.paragem.criadoPor,
+                        criadoEm: item.metadata?.criadoEm || item.paragem.criadoEm,
+                    };
+                }
+                // Fallback: already flat format
+                return item;
+            });
         } catch (error) {
             console.error('Error fetching my stops:', error);
             return null;
@@ -560,3 +671,4 @@ export const routeService = {
         }
     }
 };
+
