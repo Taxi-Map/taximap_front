@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 // ==================== TIPOS ====================
 
@@ -435,9 +435,18 @@ export const authService = {
 
     logoutAndRedirect(): void {
         this.logout();
-        window.location.href = '/';
+        window.location.href = '/login';
     },
+
+    getUser(): { id: string, name: string, role: string } | null {
+        const stored = localStorage.getItem('user');
+        if (!stored) return null;
+        try {
+            return JSON.parse(stored);
+        } catch (e) {
+            return null;
+        }
+    }
 };
 
 export default authService;
-

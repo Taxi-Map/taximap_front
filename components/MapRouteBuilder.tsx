@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { routeService, Stop } from '../services/routeService';
 import { authService } from '../services/authService';
 import { useAuth } from '../hooks/useAuth';
 import { ArrowLeft, RefreshCw, Plus, Route, Eye, X, Check, MapPin, Trash2, Edit2, List, ChevronUp, ChevronDown } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 interface LineData {
     id: number;
@@ -23,7 +23,8 @@ import { NotificationModal, NotificationType } from './NotificationModal';
 
 export default function MapRouteBuilder() {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user: authUser } = useAuth();
+    const user = authUser || authService.getUser();
     const isAdminOrStaff = user?.role === 'admin' || user?.role === 'staff';
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<maplibregl.Map | null>(null);
@@ -165,7 +166,19 @@ export default function MapRouteBuilder() {
             let mergedStops: Stop[];
             if (isAdminOrStaff) {
                 const all = await routeService.getAllStopsIncludingPending();
-                mergedStops = all || [];
+                console.log('--- DADOS DA API: PARAGENS (ADMIN) ---', all);
+                mergedStops = (all || []).map(s => {
+                    // Safe extractor: handle both flat objects and nested {paragem, metadata} formats
+                    const isNested = (s as any).paragem !== undefined;
+                    const stopData = isNested ? (s as any).paragem : s;
+                    const metaStatus = isNested ? (s as any).metadata?.status : undefined;
+
+                    return {
+                        ...stopData,
+                        status: metaStatus || stopData.status || stopData.pendente ? 'pendente' : 'aprovada',
+                        pendente: stopData.pendente || metaStatus === 'pendente' || stopData.status === 'pendente'
+                    };
+                });
             } else {
                 const approved = await routeService.getAllStops();
                 mergedStops = approved || [];
@@ -194,30 +207,52 @@ export default function MapRouteBuilder() {
             // Lines: admin/staff get full data including pending
             if (isAdminOrStaff) {
                 const allLinesData = await routeService.getAllLinesIncludingPending();
+                console.log('--- DADOS DA API: LINHAS (ADMIN) ---', allLinesData);
                 if (allLinesData) {
                     const lineDetails: LineData[] = [];
-                    for (const lr of allLinesData) {
-                        // If response already includes percurso, use it directly
-                        if (lr.percurso && lr.percurso.length > 0) {
+                    for (const rawLine of allLinesData) {
+                        // Safe extractor: handle both flat objects and nested {linha, metadata} formats
+                        const isNested = (rawLine as any).linha !== undefined;
+                        const lineData = isNested ? (rawLine as any).linha : (rawLine as any);
+                        const metaStatus = isNested ? (rawLine as any).metadata?.status : undefined;
+
+                        const isPending = lineData.pendente || metaStatus === 'pendente' || lineData.status === 'pendente';
+                        const statusFinal = metaStatus || lineData.status || (isPending ? 'pendente' : 'aprovada');
+
+                        // If response already includes percurso natively, use it directly
+                        if ((rawLine as any).percurso && (rawLine as any).percurso.length > 0) {
                             lineDetails.push({
-                                id: lr.linha.id,
-                                nome: lr.linha.nome,
-                                percurso: lr.percurso,
-                                status: lr.status,
-                                pendente: lr.pendente
+                                id: lineData.id,
+                                nome: lineData.nome,
+                                percurso: (rawLine as any).percurso,
+                                status: statusFinal,
+                                pendente: isPending
                             });
-                        } else {
-                            // Fallback: fetch details individually (works for approved lines)
-                            const details = await routeService.getLineDetails(lr.linha.id);
-                            if (details && details.percurso) {
-                                lineDetails.push({
-                                    id: lr.linha.id,
-                                    nome: lr.linha.nome,
-                                    percurso: details.percurso,
-                                    status: lr.status,
-                                    pendente: lr.pendente
-                                });
+                        } else if (!isPending) {
+                            // Only fetch additional detail coordinates for lines that have been approved routing tables
+                            try {
+                                const details = await routeService.getLineDetails(lineData.id);
+                                if (details && details.percurso) {
+                                    lineDetails.push({
+                                        id: lineData.id,
+                                        nome: lineData.nome,
+                                        percurso: details.percurso,
+                                        status: statusFinal,
+                                        pendente: isPending
+                                    });
+                                }
+                            } catch (err) {
+                                console.warn(`Silent skip: Couldn't fetch details for approved line id ${lineData.id}`, err);
                             }
+                        } else {
+                            // Pending line without path details embedded: just display basic struct
+                            lineDetails.push({
+                                id: lineData.id,
+                                nome: lineData.nome,
+                                percurso: [], // We don't have routing details yet
+                                status: statusFinal,
+                                pendente: isPending
+                            });
                         }
                     }
                     setLines(lineDetails);
@@ -267,7 +302,14 @@ export default function MapRouteBuilder() {
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [isAdminOrStaff]); // VERY IMPORTANT: Re-create fetchData if role changes!
+
+    // Force refresh if auth role finally loads in the background
+    useEffect(() => {
+        if (mapRef.current && !isLoading) {
+            fetchData();
+        }
+    }, [isAdminOrStaff]);
 
     // Render markers when stops change
     useEffect(() => {
