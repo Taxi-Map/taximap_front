@@ -13,6 +13,8 @@ interface LineData {
     id: number;
     nome: string;
     percurso: Stop[];
+    status?: string | 'pendente' | 'aprovada' | 'rejeitada';
+    pendente?: boolean;
 }
 
 type EditMode = 'view' | 'add-stop' | 'create-route' | 'edit-line';
@@ -201,6 +203,8 @@ export default function MapRouteBuilder() {
                                 id: lr.linha.id,
                                 nome: lr.linha.nome,
                                 percurso: lr.percurso,
+                                status: lr.status,
+                                pendente: lr.pendente
                             });
                         } else {
                             // Fallback: fetch details individually (works for approved lines)
@@ -210,6 +214,8 @@ export default function MapRouteBuilder() {
                                     id: lr.linha.id,
                                     nome: lr.linha.nome,
                                     percurso: details.percurso,
+                                    status: lr.status,
+                                    pendente: lr.pendente
                                 });
                             }
                         }
@@ -217,9 +223,9 @@ export default function MapRouteBuilder() {
                     setLines(lineDetails);
                 }
             } else {
+                const lineDetails: LineData[] = [];
                 const allLines = await routeService.getAllLines();
                 if (allLines) {
-                    const lineDetails: LineData[] = [];
                     for (const line of allLines) {
                         const details = await routeService.getLineDetails(line.id);
                         if (details && details.percurso) {
@@ -227,11 +233,33 @@ export default function MapRouteBuilder() {
                                 id: line.id,
                                 nome: line.nome,
                                 percurso: details.percurso,
+                                status: 'aprovada',
+                                pendente: false
                             });
                         }
                     }
-                    setLines(lineDetails);
                 }
+
+                // Merge user's own pending lines
+                if (authService.isAuthenticated()) {
+                    const myLines = await routeService.getMyLines();
+                    if (myLines) {
+                        const pendingLines = myLines.filter(l => (l as any).metadata?.status === 'pendente' || l.linha?.status === 'pendente' || l.status === 'pendente');
+                        for (const lr of pendingLines) {
+                            // Check if it's not already in lineDetails
+                            if (!lineDetails.some(ml => ml.id === lr.linha.id)) {
+                                lineDetails.push({
+                                    id: lr.linha.id,
+                                    nome: lr.linha.nome,
+                                    percurso: lr.percurso || [],
+                                    status: 'pendente',
+                                    pendente: true
+                                });
+                            }
+                        }
+                    }
+                }
+                setLines(lineDetails);
             }
         } catch (error) {
             console.error('Failed to fetch data', error);
@@ -321,7 +349,11 @@ export default function MapRouteBuilder() {
             const arrowLayerId = `arrow-layer-${line.id}`;
 
             const colors = ['#22c55e', '#3b82f6', '#ef4444', '#a855f7', '#f97316', '#06b6d4'];
-            const color = colors[lineIndex % colors.length];
+            let color = colors[lineIndex % colors.length];
+
+            if (line.pendente || line.status === 'pendente') {
+                color = '#f97316'; // orange for pending lines
+            }
 
             if (map.getLayer(arrowLayerId)) map.removeLayer(arrowLayerId);
             if (map.getLayer(layerId)) map.removeLayer(layerId);
