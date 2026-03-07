@@ -18,21 +18,23 @@ Esta API calcula rotas de táxi (candongueiro) em Luanda, incluindo:
 |----------|--------|------|-------|
 | `/rotas/caminho-mais-curto` | GET | Nenhuma | — |
 | `/rotas/caminho-mais-curto-coords` | GET | Nenhuma | — |
-| `/rotas/paragens` | GET | Nenhuma | — |
-| `/rotas/linhas` | GET | Nenhuma | — |
-| `/rotas/paragem?id=` | GET | Nenhuma | — |
-| `/rotas/linha?id=` | GET | Nenhuma | — |
+| `/rotas/paragens` | GET | Opcional (JWT) | Sem token → só aprovadas; com token → ver abaixo |
+| `/rotas/linhas` | GET | Opcional (JWT) | Sem token → só aprovadas; com token → ver abaixo |
+| `/rotas/paragem?id=` | GET | Opcional (JWT) | Sem token → só aprovadas; pendentes visíveis a admin/staff ou dono |
+| `/rotas/linha?id=` | GET | Opcional (JWT) | Sem token → só aprovadas; pendentes visíveis a admin/staff ou dono |
+| `/rotas/todas-paragens` | GET | JWT | Admin/Staff — todas as paragens com status |
+| `/rotas/todas-linhas` | GET | JWT | Admin/Staff — todas as linhas com percurso populado |
 | `/rotas/paragem` | POST | JWT | Qualquer (user=pendente, admin=aprovada) |
 | `/rotas/paragem` | PUT/DELETE | JWT | Admin=todas; User=só as suas pendentes |
 | `/rotas/linha` | POST | JWT | Qualquer (user=pendente, admin=aprovada) |
 | `/rotas/linha` | PUT/DELETE | JWT | Admin=todas; User=só as suas pendentes |
-| `/rotas/linhas-pendentes` | GET | JWT | Admin |
-| `/rotas/paragens-pendentes` | GET | JWT | Admin |
-| `/rotas/aprovar-linha?id=` | POST | JWT | Admin |
-| `/rotas/rejeitar-linha?id=` | POST | JWT | Admin |
+| `/rotas/linhas-pendentes` | GET | JWT | Admin/Staff |
+| `/rotas/paragens-pendentes` | GET | JWT | Admin/Staff |
+| `/rotas/aprovar-linha?id=` | POST | JWT | Admin/Staff |
+| `/rotas/rejeitar-linha?id=` | POST | JWT | Admin/Staff |
 | `/rotas/minhas-linhas` | GET | JWT | Qualquer |
-| `/rotas/aprovar-paragem?id=` | POST | JWT | Admin |
-| `/rotas/rejeitar-paragem?id=` | POST | JWT | Admin |
+| `/rotas/aprovar-paragem?id=` | POST | JWT | Admin/Staff |
+| `/rotas/rejeitar-paragem?id=` | POST | JWT | Admin/Staff |
 | `/rotas/minhas-paragens` | GET | JWT | Qualquer |
 
 ---
@@ -471,26 +473,119 @@ if (dados.principal.caminhadaFinal) {
 ### Listar Paragens
 ```
 GET /rotas/paragens
+GET /rotas/paragens?incluirPendentes=true
+Authorization: Bearer <JWT>  (opcional)
 ```
-**Auth:** Nenhuma
+
+**Comportamento por papel:**
+| Token | `incluirPendentes` | Resultado |
+|-------|--------------------|-----------|
+| Nenhum | qualquer | Apenas paragens **aprovadas** |
+| User normal | `false` ou ausente | Apenas paragens **aprovadas** |
+| User normal | `true` | Aprovadas + **as suas próprias** pendentes |
+| Admin/Staff | `true` | **Todas** as paragens (aprovadas + pendentes) |
+
+**⚠️ Nota:** O query param `incluirPendentes=true` sem token é ignorado — devolve apenas aprovadas.
+
+**Formato de resposta (paragem com status):**
+```typescript
+interface ParagemComStatus {
+  id: number;
+  nome: string;
+  latitude: number;
+  longitude: number;
+  status?: 'aprovada' | 'pendente' | 'rejeitada';
+  criadoPor?: string;
+  criadoEm?: string;
+}
+```
 
 ### Listar Linhas
 ```
 GET /rotas/linhas
+GET /rotas/linhas?incluirPendentes=true
+Authorization: Bearer <JWT>  (opcional)
 ```
-**Auth:** Nenhuma (retorna apenas linhas aprovadas)
+
+**Comportamento por papel:**
+| Token | `incluirPendentes` | Resultado |
+|-------|--------------------|-----------|
+| Nenhum | qualquer | Apenas linhas **aprovadas** |
+| User normal | `false` ou ausente | Apenas linhas **aprovadas** |
+| User normal | `true` | Aprovadas + **as suas próprias** pendentes (com percurso) |
+| Admin/Staff | `true` | **Todas** as linhas com percurso populado |
+
+**⚠️ Importante (admin/staff):** Quando `incluirPendentes=true`, a resposta muda de formato:
+```typescript
+// Formato normal (sem incluirPendentes)
+{ sucesso: true, dados: Linha[] }
+
+// Formato com incluirPendentes=true (admin/staff ou dono)
+{ sucesso: true, dados: Array<{ linha: Linha; percurso: Paragem[] }> }
+```
 
 ### Obter Paragem por ID
 ```
 GET /rotas/paragem?id={id}
+Authorization: Bearer <JWT>  (opcional)
 ```
-**Auth:** Nenhuma
+Paragens aprovadas são públicas. Paragens pendentes/rejeitadas só são visíveis para admin/staff ou o utilizador que as criou (requer token JWT).
 
 ### Obter Linha por ID (com percurso)
 ```
 GET /rotas/linha?id={id}
+Authorization: Bearer <JWT>  (opcional)
 ```
-**Auth:** Nenhuma
+Linhas aprovadas são públicas. Linhas pendentes/rejeitadas só são visíveis para admin/staff ou o utilizador que as criou (requer token JWT).
+
+**Resposta:**
+```json
+{
+  "sucesso": true,
+  "dados": {
+    "linha": { "id": 1, "nome": "...", "descricao": "...", "status": "aprovada" },
+    "percurso": [
+      { "id": 1, "nome": "Paragem A", "latitude": -8.9, "longitude": 13.2 }
+    ]
+  }
+}
+```
+
+### Todas as Paragens (Admin/Staff)
+```
+GET /rotas/todas-paragens
+Authorization: Bearer <JWT> (admin ou staff obrigatório)
+```
+Retorna todas as paragens (aprovadas + pendentes + rejeitadas) com `status`, `criadoPor` e `criadoEm`.
+
+### Todas as Linhas com Percurso (Admin/Staff)
+```
+GET /rotas/todas-linhas
+Authorization: Bearer <JWT> (admin ou staff obrigatório)
+```
+Retorna todas as linhas com o percurso **completamente populado** (objetos Paragem com coordenadas), incluindo linhas pendentes.
+
+**Resposta:**
+```json
+{
+  "sucesso": true,
+  "dados": [
+    {
+      "linha": {
+        "id": 17,
+        "nome": "Teste linha",
+        "descricao": "Opcional",
+        "status": "pendente",
+        "criadoPor": "65a1b2c3d4e5f6a7b8c9d0e1",
+        "criadoEm": "2026-02-15T10:30:00.000Z"
+      },
+      "percurso": [
+        { "id": 63, "nome": "Paragem X", "latitude": -8.91, "longitude": 13.22 },
+        { "id": 64, "nome": "Paragem Y", "latitude": -8.92, "longitude": 13.23 }
+      ]
+    }
+  ]
+}
 
 ---
 
@@ -629,8 +724,10 @@ Header: Authorization: Bearer <JWT>
 ### Listar Linhas Pendentes
 ```
 GET /rotas/linhas-pendentes
-Header: Authorization: Bearer <JWT> (admin)
+Header: Authorization: Bearer <JWT> (admin ou staff)
 ```
+
+**⚠️ Importante:** O array `percurso` agora contém os **objetos completos** das paragens (id, nome, latitude, longitude), permitindo ao frontend desenhar a rota no mapa.
 
 **Resposta (200):**
 ```json
@@ -638,15 +735,23 @@ Header: Authorization: Bearer <JWT> (admin)
   "sucesso": true,
   "dados": [
     {
-      "linha": { "id": 15, "nome": "Nova Linha", "descricao": "..." },
+      "linha": {
+        "id": 17,
+        "nome": "Nova Linha",
+        "descricao": "...",
+        "status": "pendente",
+        "criadoPor": "65a1b2c3d4e5f6a7b8c9d0e1",
+        "criadoEm": "2026-03-07T10:30:00.000Z"
+      },
       "percurso": [
         { "id": 1, "nome": "Paragem A", "latitude": -8.9, "longitude": 13.2 },
-        { "id": 2, "nome": "Paragem B", "latitude": -8.91, "longitude": 13.21 }
+        { "id": 2, "nome": "Paragem B", "latitude": -8.91, "longitude": 13.21 },
+        { "id": 3, "nome": "Paragem C", "latitude": -8.92, "longitude": 13.22 }
       ],
       "metadata": {
         "status": "pendente",
         "criadoPor": "65a1b2c3d4e5f6a7b8c9d0e1",
-        "criadoEm": "2026-02-15T10:30:00.000Z"
+        "criadoEm": "2026-03-07T10:30:00.000Z"
       }
     }
   ],
@@ -914,7 +1019,21 @@ const handleCalculateRoute = async () => {
 
 ## Changelog
 
-### v3.0.0 (Fevereiro 2026)
+### v4.0.0 (Março 2026)
+- ✅ **`GET /rotas/linhas-pendentes`** — array `percurso` agora contém **objetos Paragem completos** (id, nome, latitude, longitude). Anteriormente vinha vazio para linhas pendentes, impedindo o mapa de desenhar a rota
+- ✅ **`GET /rotas/todas-linhas`** — endpoint protegido (admin/staff) retorna todas as linhas com percurso completamente populado no formato `{ linha, percurso }[]`
+- ✅ **`GET /rotas/linhas?incluirPendentes=true`** — agora seguro: admin/staff vêem tudo, utilizador normal vê apenas as suas próprias pendentes, pedido sem token devolve sempre só aprovadas
+- ✅ **`GET /rotas/paragens?incluirPendentes=true`** — mesma lógica de visibilidade restrita aplicada
+- ✅ **`GET /rotas/linha?id=` e `GET /rotas/paragem?id=`** — aceitam token JWT opcional; linhas/paragens pendentes agora acessíveis por admin/staff e pelo criador
+- ✅ **`GET /rotas/todas-paragens`** — endpoint protegido para admin/staff listarem todas as paragens
+- ✅ Novo guard `OptionalJwtAuthGuard` — permite autenticação opcional sem bloquear pedidos anónimos
+- 🔒 Segurança: `incluirPendentes=true` sem token é ignorado (não expõe dados pendentes publicamente)
+
+### v3.1.0 (Fevereiro 2026)
+- ✅ CORS configurado para aceitar `https://192.168.0.172:5173` (acesso em rede local)
+- ✅ `CORS_ORIGINS` configurável via variável de ambiente
+- ✅ Linhas pendentes **nunca** escritas no `linhas.csv` / `percursos.csv` (só após aprovação)
+- ✅ CSVs contêm apenas dados aprovados — sem poluição de qualidade
 - ✅ **Autenticação obrigatória** em todos os endpoints CRUD (criar, editar, eliminar)
 - ✅ **Paragens — fluxo com aprovação**: user pode criar/editar/eliminar as suas paragens pendentes; admin aprova/rejeita
 - ✅ **Novos endpoints de paragens**: `GET /rotas/paragens-pendentes`, `POST /rotas/aprovar-paragem`, `POST /rotas/rejeitar-paragem`, `GET /rotas/minhas-paragens`

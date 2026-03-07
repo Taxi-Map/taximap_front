@@ -129,10 +129,18 @@ export default function MapRouteBuilder() {
                     const stopData = isNested ? (s as any).paragem : s;
                     const metaStatus = isNested ? (s as any).metadata?.status : undefined;
 
+                    const isPending = stopData.pendente === true ||
+                        metaStatus === 'pendente' ||
+                        stopData.status === 'pendente' ||
+                        (s as any).pendente === true ||
+                        (s as any).status === 'pendente';
+
+                    const finalStatus = metaStatus || stopData.status || (s as any).status || (isPending ? 'pendente' : 'aprovada');
+
                     return {
                         ...stopData,
-                        status: metaStatus || stopData.status || stopData.pendente ? 'pendente' : 'aprovada',
-                        pendente: stopData.pendente || metaStatus === 'pendente' || stopData.status === 'pendente'
+                        status: finalStatus === 'pendente' ? 'pendente' : finalStatus,
+                        pendente: isPending || finalStatus === 'pendente'
                     };
                 });
             } else {
@@ -162,54 +170,77 @@ export default function MapRouteBuilder() {
 
             // Lines: admin/staff get full data including pending
             if (isAdminOrStaff) {
-                const allLinesData = await routeService.getAllLinesIncludingPending();
+                // We fetch both: the general inclusive list and the specific pending list,
+                // because getAllLinesIncludingPending might omit "percurso" for pending lines,
+                // while getPendingLines() explicitly returns the "percurso" array needed to draw the map.
+                const [allLinesData, pendingSpecificData] = await Promise.all([
+                    routeService.getAllLinesIncludingPending(),
+                    routeService.getPendingLines()
+                ]);
                 console.log('--- DADOS DA API: LINHAS (ADMIN) ---', allLinesData);
+                console.log('--- DADOS PENDENTES ESPECÍFICOS (ADMIN) ---', pendingSpecificData);
+
                 if (allLinesData) {
                     const lineDetails: LineData[] = [];
+                    // Create a lookup map for pending lines coordinates so we don't draw empty lines
+                    const pendingPathsMap = new Map<number, Stop[]>();
+                    if (pendingSpecificData) {
+                        pendingSpecificData.forEach(pLine => {
+                            const pLineId = pLine.linha?.id || (pLine as any).id;
+                            if (pLineId && pLine.percurso && Array.isArray(pLine.percurso)) {
+                                pendingPathsMap.set(pLineId, pLine.percurso);
+                            }
+                        });
+                    }
+
                     for (const rawLine of allLinesData) {
                         // Safe extractor: handle both flat objects and nested {linha, metadata} formats
                         const isNested = (rawLine as any).linha !== undefined;
                         const lineData = isNested ? (rawLine as any).linha : (rawLine as any);
                         const metaStatus = isNested ? (rawLine as any).metadata?.status : undefined;
 
-                        const isPending = lineData.pendente || metaStatus === 'pendente' || lineData.status === 'pendente';
-                        const statusFinal = metaStatus || lineData.status || (isPending ? 'pendente' : 'aprovada');
+                        let isPending = lineData.pendente === true ||
+                            metaStatus === 'pendente' ||
+                            lineData.status === 'pendente' ||
+                            (rawLine as any).pendente === true ||
+                            (rawLine as any).status === 'pendente';
 
-                        // If response already includes percurso natively, use it directly
+                        const statusFinal = metaStatus || lineData.status || (rawLine as any).status || (isPending ? 'pendente' : 'aprovada');
+
+                        // Force isPending true if statusFinal resolved to pendente
+                        if (statusFinal === 'pendente') isPending = true;
+
+                        let percursoFinal: Stop[] = [];
+
+                        // 1. If response already includes percurso natively, use it
                         if ((rawLine as any).percurso && (rawLine as any).percurso.length > 0) {
-                            lineDetails.push({
-                                id: lineData.id,
-                                nome: lineData.nome,
-                                percurso: (rawLine as any).percurso,
-                                status: statusFinal,
-                                pendente: isPending
-                            });
-                        } else if (!isPending) {
-                            // Only fetch additional detail coordinates for lines that have been approved routing tables
+                            percursoFinal = (rawLine as any).percurso;
+                        }
+                        // 2. If it is a pending line, grab the populated path from our specific fetch
+                        else if (isPending && pendingPathsMap.has(lineData.id)) {
+                            percursoFinal = pendingPathsMap.get(lineData.id) || [];
+                        }
+                        // 3. If it is approved, try to fetch its full routing dictionary
+                        else if (!isPending) {
                             try {
                                 const details = await routeService.getLineDetails(lineData.id);
                                 if (details && details.percurso) {
-                                    lineDetails.push({
-                                        id: lineData.id,
-                                        nome: lineData.nome,
-                                        percurso: details.percurso,
-                                        status: statusFinal,
-                                        pendente: isPending
-                                    });
+                                    percursoFinal = details.percurso;
                                 }
                             } catch (err) {
-                                console.warn(`Silent skip: Couldn't fetch details for approved line id ${lineData.id}`, err);
+                                // Explicitly ignore 404s for approved lines that might be missing details
+                                console.warn(`Silent skip: Details not found for line ${lineData.id}`);
                             }
-                        } else {
-                            // Pending line without path details embedded: just display basic struct
-                            lineDetails.push({
-                                id: lineData.id,
-                                nome: lineData.nome,
-                                percurso: [], // We don't have routing details yet
-                                status: statusFinal,
-                                pendente: isPending
-                            });
                         }
+
+                        // Finally, register the line to be drawn!
+                        lineDetails.push({
+                            id: lineData.id,
+                            nome: lineData.nome,
+                            percurso: percursoFinal,
+                            status: statusFinal,
+                            pendente: isPending
+                        });
                     }
                     setLines(lineDetails);
                 }
