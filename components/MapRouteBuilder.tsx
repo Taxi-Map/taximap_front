@@ -23,8 +23,7 @@ import { NotificationModal, NotificationType } from './NotificationModal';
 
 export default function MapRouteBuilder() {
     const navigate = useNavigate();
-    const { user: authUser } = useAuth();
-    const user = authUser || authService.getUser();
+    const { user, loading: authLoading } = useAuth();
     const isAdminOrStaff = user?.role === 'admin' || user?.role === 'staff';
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<maplibregl.Map | null>(null);
@@ -102,62 +101,19 @@ export default function MapRouteBuilder() {
     const [showLinesList, setShowLinesList] = useState(false);
     const [editLineStops, setEditLineStops] = useState<Stop[]>([]); // Stops being edited for a line
 
-    // Initialize map
-    useEffect(() => {
-        if (!mapContainerRef.current || mapRef.current) return;
+    // Show loading state while authenticating
+    if (authLoading) {
+        return (
+            <div className="w-full h-screen bg-slate-50 flex items-center justify-center">
+                <div className="bg-white rounded-2xl p-6 shadow-xl flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-slate-900 mb-3"></div>
+                    <p className="text-slate-700 font-medium">A verificar autenticação...</p>
+                </div>
+            </div>
+        );
+    }
 
-        const map = new maplibregl.Map({
-            container: mapContainerRef.current,
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-            center: [13.2345, -8.839],
-            zoom: 12,
-        });
-
-        map.on('load', () => {
-            mapRef.current = map;
-            fetchData();
-        });
-
-        map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
-
-        return () => {
-            map.remove();
-        };
-    }, []);
-
-    // Handle map clicks for adding stops
-    useEffect(() => {
-        const map = mapRef.current;
-        if (!map) return;
-
-        const handleClick = (e: maplibregl.MapMouseEvent) => {
-            if (editMode === 'add-stop') {
-                const { lng, lat } = e.lngLat;
-                setNewStopPosition({ lng, lat });
-                setShowStopModal(true);
-
-                // Show temporary marker
-                if (tempMarkerRef.current) {
-                    tempMarkerRef.current.remove();
-                }
-                const el = document.createElement('div');
-                el.style.cssText = `
-                width: 24px; height: 24px;
-                background: #22c55e;
-                border: 3px solid white;
-                border-radius: 50%;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-                `;
-                tempMarkerRef.current = new maplibregl.Marker({ element: el })
-                    .setLngLat([lng, lat])
-                    .addTo(map);
-            }
-        };
-
-        map.on('click', handleClick);
-        return () => { map.off('click', handleClick); };
-    }, [editMode]);
-
+    // Define fetchData before using it in useEffects
     const fetchData = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -304,12 +260,71 @@ export default function MapRouteBuilder() {
         }
     }, [isAdminOrStaff]); // VERY IMPORTANT: Re-create fetchData if role changes!
 
-    // Force refresh if auth role finally loads in the background
+    // Initialize map
     useEffect(() => {
-        if (mapRef.current && !isLoading) {
+        if (!mapContainerRef.current || mapRef.current) return;
+
+        const map = new maplibregl.Map({
+            container: mapContainerRef.current,
+            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            center: [13.2345, -8.839],
+            zoom: 12,
+        });
+
+        map.on('load', () => {
+            mapRef.current = map;
+            // Only fetch data if auth has finished loading
+            if (!authLoading) {
+                fetchData();
+            }
+        });
+
+        map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
+
+        return () => {
+            map.remove();
+        };
+    }, [authLoading, fetchData]);
+
+    // Reload data when auth state changes
+    useEffect(() => {
+        if (mapRef.current && !authLoading) {
             fetchData();
         }
-    }, [isAdminOrStaff]);
+    }, [authLoading, isAdminOrStaff, fetchData]);
+
+    // Handle map clicks for adding stops
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const handleClick = (e: maplibregl.MapMouseEvent) => {
+            if (editMode === 'add-stop') {
+                const { lng, lat } = e.lngLat;
+                setNewStopPosition({ lng, lat });
+                setShowStopModal(true);
+
+                // Show temporary marker
+                if (tempMarkerRef.current) {
+                    tempMarkerRef.current.remove();
+                }
+                const el = document.createElement('div');
+                el.style.cssText = `
+                width: 24px; height: 24px;
+                background: #22c55e;
+                border: 3px solid white;
+                border-radius: 50%;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                `;
+                tempMarkerRef.current = new maplibregl.Marker({ element: el })
+                    .setLngLat([lng, lat])
+                    .addTo(map);
+            }
+        };
+
+        map.on('click', handleClick);
+        return () => { map.off('click', handleClick); };
+    }, [editMode]);
 
     // Render markers when stops change
     useEffect(() => {

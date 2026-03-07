@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authService, AuthUser } from '../services/authService';
 
-interface UseAuthReturn {
+interface AuthContextType {
     user: AuthUser | null;
     loading: boolean;
     isAuthenticated: boolean;
@@ -10,14 +10,20 @@ interface UseAuthReturn {
     refreshUser: () => Promise<void>;
 }
 
-export const useAuth = (): UseAuthReturn => {
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState(true);
 
     const refreshUser = useCallback(async () => {
         if (authService.isAuthenticated()) {
-            const profile = await authService.getProfile();
-            setUser(profile);
+            try {
+                const profile = await authService.getProfile();
+                setUser(profile);
+            } catch (err) {
+                setUser(null);
+            }
         } else {
             setUser(null);
         }
@@ -46,7 +52,7 @@ export const useAuth = (): UseAuthReturn => {
         setUser(null);
     };
 
-    return {
+    const value = {
         user,
         loading,
         isAuthenticated: !!user,
@@ -54,6 +60,18 @@ export const useAuth = (): UseAuthReturn => {
         logout,
         refreshUser,
     };
+
+    return <AuthContext.Provider value={ value }> { children } </AuthContext.Provider>;
+};
+
+export const useAuth = (): AuthContextType => {
+    const context = useContext(AuthContext);
+    if (context === undefined) {
+        // Fallback for components used outside AuthProvider (e.g. some root level tests or edge cases)
+        // Ideally we should throw an error, but to maintain backwards compatibility during refactor:
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
 };
 
 export default useAuth;
