@@ -5,18 +5,19 @@ import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
+  const apiUrl = env.VITE_API_URL || 'http://localhost:3000';
   return {
     server: {
       port: 5173,
       host: '0.0.0.0',
       proxy: {
         '/rotas': {
-          target: 'http://localhost:3000',
+          target: apiUrl,
           changeOrigin: true,
           secure: false
         },
         '/auth': {
-          target: 'http://localhost:3000',
+          target: apiUrl,
           changeOrigin: true,
           secure: false
         }
