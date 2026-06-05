@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { MapComponent } from './MapComponent';
 import { Header } from './Header';
@@ -172,9 +172,9 @@ export default function MapPage() {
                 {/* Header: Back Button & Profile Button */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
-                        <a href="/" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors">
+                        <Link to="/" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors">
                             <ArrowLeft className="w-6 h-6 text-slate-900" />
-                        </a>
+                        </Link>
                         <h1 className="text-xl font-bold text-slate-900 lg:hidden">Rota</h1>
                     </div>
 

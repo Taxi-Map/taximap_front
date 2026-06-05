@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { X, Mail, Lock, User, Eye, EyeOff, AlertCircle, Navigation } from 'lucide-react';
+import { X, Mail, Lock, User, Eye, EyeOff, Navigation } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
-import { authService, AuthError } from '../services/authService';
+import { authService } from '../services/authService';
 import { authStore } from '../stores/authStore';
+import { extractApiError } from '../services/api';
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -21,14 +23,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
         password: '',
     });
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [googleLoading, setGoogleLoading] = useState(false);
 
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
         setIsLoading(true);
 
         try {
@@ -56,19 +56,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                 window.location.href = '/map';
             }
         } catch (err) {
-            const authError = err as AuthError;
-            if (Array.isArray(authError.message)) {
-                setError(authError.message.join('. '));
-            } else {
-                setError(authError.message || 'Erro ao processar. Tenta novamente.');
-            }
+            toast.error(extractApiError(err, 'Erro ao processar. Tenta novamente.'));
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleGoogleSuccess = async (credentialResponse: any) => {
-        setError(null);
         setGoogleLoading(true);
 
         try {
@@ -82,26 +76,22 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                 window.location.href = '/map';
             }
         } catch (err) {
-            const authError = err as AuthError;
-            setError(authError.message || 'Erro ao autenticar com Google. Tenta novamente.');
+            toast.error(extractApiError(err, 'Erro ao autenticar com Google. Tenta novamente.'));
         } finally {
             setGoogleLoading(false);
         }
     };
 
     const handleGoogleError = () => {
-        setError('Autenticação com Google falhou. Tenta novamente.');
         toast.error('Autenticação com Google falhou. Tenta novamente.');
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setError(null);
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
     const switchMode = () => {
         setIsLoginMode(!isLoginMode);
-        setError(null);
         setFormData({ firstName: '', lastName: '', email: '', password: '' });
     };
 
@@ -135,13 +125,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                    {error && (
-                        <div className="flex items-start gap-2 p-3 bg-error-bg border border-error/20 rounded-xl text-error text-sm">
-                            <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-                            <span className="font-medium">{error}</span>
-                        </div>
-                    )}
-
                     {!isLoginMode && (
                         <div className="flex gap-2">
                             <div className="relative flex-1">
@@ -205,13 +188,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
 
                     {isLoginMode && (
                         <div className="text-right">
-                            <a
-                                href="/forgot-password"
+                            <Link
+                                to="/forgot-password"
                                 onClick={onClose}
                                 className="text-sm text-slate-mid hover:text-blue-atlantic font-medium transition-colors"
                             >
                                 Esqueceste a palavra-passe?
-                            </a>
+                            </Link>
                         </div>
                     )}
 

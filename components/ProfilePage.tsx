@@ -6,6 +6,7 @@ import {
     TrendingUp, MapPin, CreditCard, ChevronRight, Navigation, Coins
 } from 'lucide-react';
 import { authService, AuthUser } from '../services/authService';
+import { extractApiError } from '../services/api';
 import { cloudinaryService } from '../services/cloudinaryService';
 import { useTmCoins, valorEmKz } from '../hooks/useTmCoins';
 import { Button } from './ui/Button';
@@ -89,9 +90,8 @@ export default function ProfilePage() {
             setUser(updatedUser);
             setIsEditing(false);
             toast.success('Perfil actualizado com sucesso!');
-        } catch (error: any) {
-            const errorMsg = Array.isArray(error.message) ? error.message.join('. ') : error.message || 'Erro ao actualizar perfil';
-            toast.error(errorMsg);
+        } catch (error) {
+            toast.error(extractApiError(error, 'Erro ao actualizar perfil'));
         } finally {
             setSaving(false);
         }
@@ -110,8 +110,8 @@ export default function ProfilePage() {
             const updatedUser = await authService.updateProfile({ picture: imageUrl });
             setUser(updatedUser);
             toast.success('Foto actualizada com sucesso!');
-        } catch (error: any) {
-            toast.error(error.message || 'Erro ao carregar foto');
+        } catch (error) {
+            toast.error(extractApiError(error, 'Erro ao carregar foto'));
         } finally {
             setUploading(false);
             if (fileInputRef.current) fileInputRef.current.value = '';
@@ -131,9 +131,8 @@ export default function ProfilePage() {
             setSelectedPaymentMethod(null);
             setSelectedAmount(null);
             toast.success(result.mensagem);
-        } catch (error: any) {
-            const errorMsg = Array.isArray(error.message) ? error.message.join('. ') : error.message || 'Erro ao solicitar pagamento';
-            toast.error(errorMsg);
+        } catch (error) {
+            toast.error(extractApiError(error, 'Erro ao solicitar pagamento'));
         }
     };
 

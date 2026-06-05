@@ -30,4 +30,20 @@ api.interceptors.response.use(
   },
 );
 
+export function extractApiError(err: unknown, fallback = 'Erro inesperado.'): string {
+  if (axios.isAxiosError(err)) {
+    const data = err.response?.data as Record<string, unknown> | undefined;
+    const msg = data?.mensagem || data?.message || data?.error;
+    if (Array.isArray(msg)) return msg.join('. ');
+    if (typeof msg === 'string' && msg) return msg;
+    return err.message || fallback;
+  }
+  if (err && typeof err === 'object' && 'message' in err) {
+    const msg = (err as { message: unknown }).message;
+    if (Array.isArray(msg)) return msg.join('. ');
+    if (typeof msg === 'string' && msg) return msg;
+  }
+  return fallback;
+}
+
 export default api;
