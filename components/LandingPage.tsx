@@ -80,12 +80,7 @@ export default function LandingPage() {
                             <div className="space-y-4 lg:space-y-6">
                                 <div className="space-y-2 lg:space-y-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-blue-atlantic rounded-2xl flex items-center justify-center shadow-lg shadow-blue-atlantic/40">
-                                            <Navigation className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                                        </div>
-                                        <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white leading-none tracking-tight drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">
-                                            TAXI MAP
-                                        </h1>
+                                        <img src="/icon/logo.png" alt="Taxi Map" className="h-14 sm:h-16 lg:h-20 w-auto drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]" />
                                     </div>
                                     <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-blue-sky font-bold leading-tight drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
                                         A forma mais simples, segura e inteligente de te moveres em Luanda
@@ -281,11 +276,10 @@ export default function LandingPage() {
             {/* Footer */}
             <footer className="py-16 lg:py-32 bg-blue-deep text-white">
                 <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center space-y-10 lg:space-y-16">
-                    <div className="flex items-center justify-center gap-4 group">
-                        <div className="bg-blue-atlantic p-3 lg:p-4 rounded-3xl shadow-2xl group-hover:rotate-12 transition-transform">
+                    <div className="flex items-center justify-center">
+                        <div className="bg-blue-atlantic p-3 lg:p-4 rounded-3xl shadow-2xl hover:rotate-12 transition-transform">
                             <img src="/icon/logo.png" alt="Taxi Map Logo" className="h-14 w-auto object-contain" />
                         </div>
-                        <span className="font-display text-3xl lg:text-5xl tracking-tighter">TAXI MAP</span>
                     </div>
                     <p className="font-display text-3xl lg:text-7xl text-amber-warm italic tracking-tighter opacity-90">
                         "Saber para onde vais muda tudo."

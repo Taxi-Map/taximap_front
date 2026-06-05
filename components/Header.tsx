@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Map as MapIcon, Menu, X, Navigation, ArrowRight } from 'lucide-react';
+import { Menu, X, ArrowRight } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,10 +17,7 @@ export const Header: React.FC = () => {
       <div className="px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 sm:h-20">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-atlantic rounded-xl flex items-center justify-center shadow-lg shadow-blue-atlantic/30">
-              <Navigation className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-display text-xl sm:text-2xl text-white tracking-wider">TAXI MAP</span>
+            <img src="/icon/logo.png" alt="Taxi Map" className="h-8 sm:h-9 w-auto" />
           </div>
 
           <div className="hidden md:flex items-center gap-8">

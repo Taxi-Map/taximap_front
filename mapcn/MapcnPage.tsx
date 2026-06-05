@@ -369,10 +369,7 @@ export default function MapcnPage() {
                             <X className="w-6 h-6 text-white" />
                         </button>
                         <div className="flex items-center gap-2">
-                            <div className="w-9 h-9 bg-blue-atlantic rounded-xl flex items-center justify-center shadow-lg">
-                                <Navigation className="w-5 h-5 text-white" />
-                            </div>
-                            <span className="font-display text-xl text-white tracking-wider hidden lg:block">TAXI MAP</span>
+                            <img src="/icon/logo.png" alt="Taxi Map" className="h-9 w-auto hidden lg:block" />
                         </div>
                     </div>
                     <div className="hidden lg:flex items-center gap-2">
