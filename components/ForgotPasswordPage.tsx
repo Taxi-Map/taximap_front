@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { Mail, ArrowLeft, Send, CheckCircle, Navigation } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
@@ -11,7 +12,7 @@ export default function ForgotPasswordPage() {
         e.preventDefault();
         setLoading(true);
         const { authService } = await import('../services/authService');
-        try { await authService.forgotPassword(email); } catch {} finally { setSent(true); setLoading(false); }
+        try { await authService.forgotPassword(email); } catch { toast.error('Erro ao enviar email. Tenta novamente.'); } finally { setSent(true); setLoading(false); }
     };
 
     return (

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Toaster } from 'react-hot-toast';
 import LandingPage from './components/LandingPage';
 import MapPageLeaflet from './components/MapPage';
 import MapPage from './mapcn/MapcnPage';
@@ -22,6 +23,25 @@ export default function App() {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <AuthProvider>
       <BrowserRouter>
+        <Toaster
+          position="top-right"
+          gutter={8}
+          toastOptions={{
+            duration: 4000,
+            style: {
+              fontSize: '14px',
+              fontWeight: 600,
+              borderRadius: '12px',
+              padding: '12px 16px',
+            },
+            success: {
+              iconTheme: { primary: '#22C55E', secondary: '#fff' },
+            },
+            error: {
+              iconTheme: { primary: '#EF4444', secondary: '#fff' },
+            },
+          }}
+        />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/map" element={<MapPage />} />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
     ArrowLeft, Camera, Check, Phone, User, Shield, Edit2, Mail, LogOut, Loader2, X, AlertTriangle,
     TrendingUp, MapPin, CreditCard, ChevronRight, Navigation, Coins
@@ -20,7 +21,6 @@ export default function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [resendingVerification, setResendingVerification] = useState(false);
 
     const [isEditing, setIsEditing] = useState(false);
@@ -75,17 +75,11 @@ export default function ProfilePage() {
         fetchProfile();
     }, [navigate]);
 
-    useEffect(() => {
-        if (message) {
-            const timer = setTimeout(() => setMessage(null), 4000);
-            return () => clearTimeout(timer);
-        }
-    }, [message]);
+
 
     const handleSave = async () => {
         if (!user) return;
         setSaving(true);
-        setMessage(null);
         try {
             const updatedUser = await authService.updateProfile({
                 firstName: editedFirstName,
@@ -94,10 +88,10 @@ export default function ProfilePage() {
             });
             setUser(updatedUser);
             setIsEditing(false);
-            setMessage({ type: 'success', text: 'Perfil actualizado com sucesso!' });
+            toast.success('Perfil actualizado com sucesso!');
         } catch (error: any) {
             const errorMsg = Array.isArray(error.message) ? error.message.join('. ') : error.message || 'Erro ao actualizar perfil';
-            setMessage({ type: 'error', text: errorMsg });
+            toast.error(errorMsg);
         } finally {
             setSaving(false);
         }
@@ -109,16 +103,15 @@ export default function ProfilePage() {
         const file = e.target.files?.[0];
         if (!file) return;
         const validation = cloudinaryService.validateImage(file);
-        if (!validation.valid) { setMessage({ type: 'error', text: validation.error! }); return; }
+        if (!validation.valid) { toast.error(validation.error!); return; }
         setUploading(true);
-        setMessage(null);
         try {
             const imageUrl = await cloudinaryService.uploadImage(file);
             const updatedUser = await authService.updateProfile({ picture: imageUrl });
             setUser(updatedUser);
-            setMessage({ type: 'success', text: 'Foto actualizada com sucesso!' });
+            toast.success('Foto actualizada com sucesso!');
         } catch (error: any) {
-            setMessage({ type: 'error', text: error.message || 'Erro ao carregar foto' });
+            toast.error(error.message || 'Erro ao carregar foto');
         } finally {
             setUploading(false);
             if (fileInputRef.current) fileInputRef.current.value = '';
@@ -127,20 +120,20 @@ export default function ProfilePage() {
 
     const handlePaymentRequest = async () => {
         if (!selectedPaymentMethod || !selectedAmount) {
-            setMessage({ type: 'error', text: 'Por favor, selecione uma forma de pagamento e um valor.' });
+            toast.error('Por favor, selecione uma forma de pagamento e um valor.');
             return;
         }
         try {
             const telefone = user?.phoneNumber || '';
-            if (!telefone) { setMessage({ type: 'error', text: 'Adicione um número de telefone ao seu perfil primeiro.' }); return; }
+            if (!telefone) { toast.error('Adicione um número de telefone ao seu perfil primeiro.'); return; }
             const result = await solicitarPagamento(selectedPaymentMethod, parseInt(selectedAmount), telefone);
             setIsPaymentModalOpen(false);
             setSelectedPaymentMethod(null);
             setSelectedAmount(null);
-            setMessage({ type: 'success', text: result.mensagem });
+            toast.success(result.mensagem);
         } catch (error: any) {
             const errorMsg = Array.isArray(error.message) ? error.message.join('. ') : error.message || 'Erro ao solicitar pagamento';
-            setMessage({ type: 'error', text: errorMsg });
+            toast.error(errorMsg);
         }
     };
 
@@ -231,15 +224,6 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            {/* Message Toast */}
-            {message && (
-                <div className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-xl shadow-lg font-medium text-sm max-w-sm text-center animate-in slide-in-from-top-5 fade-in duration-300 ${
-                    message.type === 'success' ? 'bg-success text-white' : 'bg-error text-white'
-                }`}>
-                    {message.text}
-                </div>
-            )}
-
             {/* Email verification banner */}
             {!user.verified && (
                 <div className="bg-amber-warm/10 border-b border-amber-warm/20">
@@ -252,8 +236,8 @@ export default function ProfilePage() {
                         <button
                             onClick={async () => {
                                 setResendingVerification(true);
-                                try { await authService.resendVerification(); setMessage({ type: 'success', text: 'Email de verificação enviado!' }); }
-                                catch { setMessage({ type: 'error', text: 'Erro ao enviar email' }); }
+                                try { await authService.resendVerification(); toast.success('Email de verificação enviado!'); }
+                                catch { toast.error('Erro ao enviar email'); }
                                 finally { setResendingVerification(false); }
                             }}
                             disabled={resendingVerification}

@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { routeService, Stop } from '../services/routeService';
@@ -285,7 +286,7 @@ export default function MapRouteBuilder() {
             }
         } catch (error) {
             console.error('Failed to fetch data', error);
-            showNotification('Erro', 'Falha ao carregar dados do servidor.', 'error');
+            toast.error('Falha ao carregar dados do servidor.');
         } finally {
             setIsLoading(false);
         }
@@ -507,15 +508,15 @@ export default function MapRouteBuilder() {
                 // The current API returns the created stop object.
                 // We'll assume if it has a status field and it's 'pendente', we notify.
                 if (newStop.status === 'pendente') {
-                    showNotification('Sucesso', 'Paragem criada! Ela ficará pendente até aprovação.', 'success');
+                    toast.success('Paragem criada! Ela ficará pendente até aprovação.');
                 } else {
-                    showNotification('Sucesso', 'Paragem criada com sucesso!', 'success');
+                    toast.success('Paragem criada com sucesso!');
                 }
             } else {
-                showNotification('Erro', 'Erro ao criar paragem.', 'error');
+                toast.error('Erro ao criar paragem.');
             }
         } catch (err: any) {
-            showNotification('Erro', err.message || 'Erro ao criar paragem.', 'error');
+            toast.error(err.message || 'Erro ao criar paragem.');
         }
         setIsSaving(false);
     };
@@ -540,15 +541,15 @@ export default function MapRouteBuilder() {
                 setEditMode('view');
 
                 if (newLineResponse.pendente) {
-                    showNotification('Sucesso', 'Linha criada! Ela ficará pendente até aprovação.', 'success');
+                    toast.success('Linha criada! Ela ficará pendente até aprovação.');
                 } else {
-                    showNotification('Sucesso', 'Linha criada e aprovada com sucesso!', 'success');
+                    toast.success('Linha criada e aprovada com sucesso!');
                 }
             } else {
-                showNotification('Erro', 'Erro ao criar linha.', 'error');
+                toast.error('Erro ao criar linha.');
             }
         } catch (err: any) {
-            showNotification('Erro', err.message || 'Erro ao criar linha.', 'error');
+            toast.error(err.message || 'Erro ao criar linha.');
         }
         setIsSaving(false);
     };
@@ -581,7 +582,7 @@ export default function MapRouteBuilder() {
         // Sanitize name - remove potentially dangerous characters
         const sanitizedName = editStopName.trim().replace(/[<>"'&;]/g, '');
         if (sanitizedName.length === 0 || sanitizedName.length > 100) {
-            showNotification('Aviso', 'Nome da paragem inválido (máximo 100 caracteres).', 'warning');
+            toast('Nome da paragem inválido (máximo 100 caracteres).', { icon: '⚠️' });
             return;
         }
 
@@ -590,17 +591,17 @@ export default function MapRouteBuilder() {
 
         // Validate numbers
         if (isNaN(lat) || isNaN(lng)) {
-            showNotification('Aviso', 'Latitude e longitude devem ser números válidos.', 'warning');
+            toast('Latitude e longitude devem ser números válidos.', { icon: '⚠️' });
             return;
         }
 
         // Validate coordinate ranges
         if (lat < -90 || lat > 90) {
-            showNotification('Aviso', 'Latitude deve estar entre -90 e 90.', 'warning');
+            toast('Latitude deve estar entre -90 e 90.', { icon: '⚠️' });
             return;
         }
         if (lng < -180 || lng > 180) {
-            showNotification('Aviso', 'Longitude deve estar entre -180 e 180.', 'warning');
+            toast('Longitude deve estar entre -180 e 180.', { icon: '⚠️' });
             return;
         }
 
@@ -615,12 +616,12 @@ export default function MapRouteBuilder() {
                 await fetchData();
                 setSelectedStop(updated);
                 setShowEditStopModal(false);
-                showNotification('Sucesso', 'Paragem atualizada com sucesso!', 'success');
+                toast.success('Paragem atualizada com sucesso!');
             } else {
-                showNotification('Erro', 'Erro ao atualizar paragem.', 'error');
+                toast.error('Erro ao atualizar paragem.');
             }
         } catch (err: any) {
-            showNotification('Erro', err.message || 'Erro ao atualizar paragem.', 'error');
+            toast.error(err.message || 'Erro ao atualizar paragem.');
         }
         setIsSaving(false);
     };
@@ -639,12 +640,12 @@ export default function MapRouteBuilder() {
                     if (success) {
                         await fetchData();
                         setSelectedStop(null);
-                        showNotification('Sucesso', 'Paragem apagada com sucesso!', 'success');
+                        toast.success('Paragem apagada com sucesso!');
                     } else {
-                        showNotification('Erro', 'Erro ao apagar paragem.', 'error');
+                        toast.error('Erro ao apagar paragem.');
                     }
                 } catch (err: any) {
-                    showNotification('Erro', err.message || 'Erro ao apagar paragem.', 'error');
+                    toast.error(err.message || 'Erro ao apagar paragem.');
                 }
                 setIsSaving(false);
             },
@@ -694,7 +695,7 @@ export default function MapRouteBuilder() {
     const handleSaveEditLine = async () => {
         if (!selectedLine || !editLineName.trim()) return;
         if (editLineStops.length < 2) {
-            showNotification('Aviso', 'Uma linha deve ter pelo menos 2 paragens.', 'warning');
+            toast('Uma linha deve ter pelo menos 2 paragens.', { icon: '⚠️' });
             return;
         }
         setIsSaving(true);
@@ -709,12 +710,12 @@ export default function MapRouteBuilder() {
                 setEditMode('view');
                 setSelectedLine(null);
                 setEditLineStops([]);
-                showNotification('Sucesso', 'Linha atualizada com sucesso!', 'success');
+                toast.success('Linha atualizada com sucesso!');
             } else {
-                showNotification('Erro', 'Erro ao atualizar linha.', 'error');
+                toast.error('Erro ao atualizar linha.');
             }
         } catch (err: any) {
-            showNotification('Erro', err.message || 'Erro ao atualizar linha.', 'error');
+            toast.error(err.message || 'Erro ao atualizar linha.');
         }
         setIsSaving(false);
     };
@@ -737,12 +738,12 @@ export default function MapRouteBuilder() {
                     if (success) {
                         await fetchData();
                         if (selectedLine?.id === line.id) setSelectedLine(null);
-                        showNotification('Sucesso', 'Linha apagada com sucesso!', 'success');
+                        toast.success('Linha apagada com sucesso!');
                     } else {
-                        showNotification('Erro', 'Erro ao apagar linha.', 'error');
+                        toast.error('Erro ao apagar linha.');
                     }
                 } catch (err: any) {
-                    showNotification('Erro', err.message || 'Erro ao apagar linha.', 'error');
+                    toast.error(err.message || 'Erro ao apagar linha.');
                 }
                 setIsSaving(false);
             },

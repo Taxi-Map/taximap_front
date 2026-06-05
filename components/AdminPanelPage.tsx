@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
     ArrowLeft, Shield, MapPin, Route, Check, X, Loader2,
     Clock, CreditCard, AlertTriangle, RefreshCw, Ban,
@@ -51,8 +52,6 @@ export default function AdminPanelPage() {
     const [userSearch, setUserSearch] = useState('');
     const [roleMenuOpen, setRoleMenuOpen] = useState<string | null>(null);
 
-    const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-
     useEffect(() => {
         if (!authLoading && (!user || (user.role !== 'admin' && user.role !== 'staff'))) {
             navigate('/map');
@@ -87,62 +86,60 @@ export default function AdminPanelPage() {
 
     useEffect(() => { const timer = setTimeout(() => fetchUsers(userSearch), 400); return () => clearTimeout(timer); }, [userSearch, fetchUsers]);
 
-    useEffect(() => { if (message) { const timer = setTimeout(() => setMessage(null), 4000); return () => clearTimeout(timer); } }, [message]);
-
     const handleApproveStop = async (id: number, name: string) => {
         setActionLoading(`stop-approve-${id}`);
         const success = await routeService.approveStop(id);
-        if (success) { setMessage({ type: 'success', text: `Paragem "${name}" aprovada` }); setApprovalHistory(prev => [{ id, type: 'paragem', name, action: 'aprovada', date: new Date().toISOString() }, ...prev]); setPendingStops(prev => prev.filter(s => s.paragem.id !== id)); }
-        else { setMessage({ type: 'error', text: `Erro ao aprovar paragem "${name}"` }); }
+        if (success) { toast.success(`Paragem "${name}" aprovada`); setApprovalHistory(prev => [{ id, type: 'paragem', name, action: 'aprovada', date: new Date().toISOString() }, ...prev]); setPendingStops(prev => prev.filter(s => s.paragem.id !== id)); }
+        else { toast.error(`Erro ao aprovar paragem "${name}"`); }
         setActionLoading(null);
     };
 
     const handleRejectStop = async (id: number, name: string) => {
         setActionLoading(`stop-reject-${id}`);
         const success = await routeService.rejectStop(id);
-        if (success) { setMessage({ type: 'success', text: `Paragem "${name}" rejeitada` }); setApprovalHistory(prev => [{ id, type: 'paragem', name, action: 'rejeitada', date: new Date().toISOString() }, ...prev]); setPendingStops(prev => prev.filter(s => s.paragem.id !== id)); }
-        else { setMessage({ type: 'error', text: `Erro ao rejeitar paragem "${name}"` }); }
+        if (success) { toast.success(`Paragem "${name}" rejeitada`); setApprovalHistory(prev => [{ id, type: 'paragem', name, action: 'rejeitada', date: new Date().toISOString() }, ...prev]); setPendingStops(prev => prev.filter(s => s.paragem.id !== id)); }
+        else { toast.error(`Erro ao rejeitar paragem "${name}"`); }
         setActionLoading(null);
     };
 
     const handleApproveLine = async (id: number, name: string) => {
         setActionLoading(`line-approve-${id}`);
         const success = await routeService.approveLine(id);
-        if (success) { setMessage({ type: 'success', text: `Linha "${name}" aprovada` }); setApprovalHistory(prev => [{ id, type: 'linha', name, action: 'aprovada', date: new Date().toISOString() }, ...prev]); setPendingLines(prev => prev.filter(l => l.linha.id !== id)); }
-        else { setMessage({ type: 'error', text: `Erro ao aprovar linha "${name}"` }); }
+        if (success) { toast.success(`Linha "${name}" aprovada`); setApprovalHistory(prev => [{ id, type: 'linha', name, action: 'aprovada', date: new Date().toISOString() }, ...prev]); setPendingLines(prev => prev.filter(l => l.linha.id !== id)); }
+        else { toast.error(`Erro ao aprovar linha "${name}"`); }
         setActionLoading(null);
     };
 
     const handleRejectLine = async (id: number, name: string) => {
         setActionLoading(`line-reject-${id}`);
         const success = await routeService.rejectLine(id);
-        if (success) { setMessage({ type: 'success', text: `Linha "${name}" rejeitada` }); setApprovalHistory(prev => [{ id, type: 'linha', name, action: 'rejeitada', date: new Date().toISOString() }, ...prev]); setPendingLines(prev => prev.filter(l => l.linha.id !== id)); }
-        else { setMessage({ type: 'error', text: `Erro ao rejeitar linha "${name}"` }); }
+        if (success) { toast.success(`Linha "${name}" rejeitada`); setApprovalHistory(prev => [{ id, type: 'linha', name, action: 'rejeitada', date: new Date().toISOString() }, ...prev]); setPendingLines(prev => prev.filter(l => l.linha.id !== id)); }
+        else { toast.error(`Erro ao rejeitar linha "${name}"`); }
         setActionLoading(null);
     };
 
     const handleProcessPayment = async (payment: Pagamento) => {
         setActionLoading(`pay-process-${payment._id}`);
         const success = await authService.processPayment(payment._id);
-        if (success) { setMessage({ type: 'success', text: `Pagamento de ${payment.valorKz} Kz via ${payment.metodo.toUpperCase()} processado!` }); setPayments(prev => prev.map(p => p._id === payment._id ? { ...p, status: 'processado' as const } : p)); }
-        else { setMessage({ type: 'error', text: 'Erro ao processar pagamento' }); }
+        if (success) { toast.success(`Pagamento de ${payment.valorKz} Kz via ${payment.metodo.toUpperCase()} processado!`); setPayments(prev => prev.map(p => p._id === payment._id ? { ...p, status: 'processado' as const } : p)); }
+        else { toast.error('Erro ao processar pagamento'); }
         setActionLoading(null);
     };
 
     const handleCancelPayment = async (payment: Pagamento) => {
         setActionLoading(`pay-cancel-${payment._id}`);
         const success = await authService.cancelPayment(payment._id);
-        if (success) { setMessage({ type: 'success', text: 'Pagamento cancelado. TM Coins devolvidos.' }); setPayments(prev => prev.map(p => p._id === payment._id ? { ...p, status: 'cancelado' as const } : p)); }
-        else { setMessage({ type: 'error', text: 'Erro ao cancelar pagamento' }); }
+        if (success) { toast.success('Pagamento cancelado. TM Coins devolvidos.'); setPayments(prev => prev.map(p => p._id === payment._id ? { ...p, status: 'cancelado' as const } : p)); }
+        else { toast.error('Erro ao cancelar pagamento'); }
         setActionLoading(null);
     };
 
     const handleChangeRole = async (targetUser: AuthUser, novoRole: 'user' | 'staff' | 'admin') => {
-        if (targetUser._id === user?._id) { setMessage({ type: 'error', text: 'Não podes alterar o teu próprio papel' }); return; }
+        if (targetUser._id === user?._id) { toast.error('Não podes alterar o teu próprio papel'); return; }
         setActionLoading(`role-${targetUser._id}`);
         const success = await authService.changeUserRole(targetUser._id, novoRole);
-        if (success) { setMessage({ type: 'success', text: `${targetUser.firstName} agora é ${ROLE_CONFIG[novoRole].label}` }); setAllUsers(prev => prev.map(u => u._id === targetUser._id ? { ...u, role: novoRole } : u)); }
-        else { setMessage({ type: 'error', text: 'Erro ao alterar papel do utilizador' }); }
+        if (success) { toast.success(`${targetUser.firstName} agora é ${ROLE_CONFIG[novoRole].label}`); setAllUsers(prev => prev.map(u => u._id === targetUser._id ? { ...u, role: novoRole } : u)); }
+        else { toast.error('Erro ao alterar papel do utilizador'); }
         setActionLoading(null);
         setRoleMenuOpen(null);
     };
@@ -186,16 +183,6 @@ export default function AdminPanelPage() {
                     />
                 </div>
             </div>
-
-            {/* Message Toast */}
-            {message && (
-                <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-bold flex items-center gap-2 animate-in slide-in-from-right-5 duration-300 ${
-                    message.type === 'success' ? 'bg-success-bg text-success border border-success/20' : 'bg-error-bg text-error border border-error/20'
-                }`}>
-                    {message.type === 'success' ? <Check className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
-                    {message.text}
-                </div>
-            )}
 
             <div className="max-w-4xl mx-auto px-4 py-6">
                 {activeTab === 'pendentes' && (

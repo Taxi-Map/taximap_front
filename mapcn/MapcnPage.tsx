@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { Mapcn, MapcnRoute, MapcnMarker, MapcnControls, MapcnTaxiAnimator } from './Mapcn';
 import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints, Route, CarTaxiFront, UserPlus, Shield, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -118,7 +119,7 @@ export default function MapcnPage() {
 
         try {
             const routeData = await routeService.getRouteFromCoords(userLocation[0], userLocation[1], selectedDestination.id);
-            if (!routeData?.sucesso) { alert('Erro ao obter rota do servidor.'); setIsLoadingRoute(false); return; }
+            if (!routeData?.sucesso) { toast.error('Erro ao obter rota do servidor.'); setIsLoadingRoute(false); return; }
 
             const { analise, principal, alternativas, paragemOrigemSugerida, distanciaAteParagem } = routeData.dados;
 
@@ -200,7 +201,7 @@ export default function MapcnPage() {
                 const firstAltStop = altRoute.segmentos?.[0]?.paragensPercurso?.[0];
                 if (firstAltStop) setAltUserToOriginPath([[userLocation[1], userLocation[0]], [firstAltStop.longitude, firstAltStop.latitude]] as [number, number][]);
             }
-        } catch (e) { console.error("Error:", e); alert('Erro ao calcular rota.'); }
+        } catch (e) { console.error("Error:", e); toast.error('Erro ao calcular rota.'); }
         setIsLoadingRoute(false);
     };
 

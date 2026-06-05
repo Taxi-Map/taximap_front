@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { Menu, X, ArrowRight, LogOut, ChevronDown, User, Map } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
@@ -65,7 +66,7 @@ export const Header: React.FC = () => {
                     </button>
                     <div className="h-px bg-white/5 mx-2" />
                     <button
-                      onClick={() => { logout(); setIsDropdownOpen(false); }}
+                      onClick={() => { logout(); setIsDropdownOpen(false); toast.success('Sessão terminada.'); }}
                       className="flex items-center gap-2 w-full px-4 py-3 text-xs text-blue-horizon hover:text-white hover:bg-white/5 rounded-b-xl transition-colors"
                     >
                       <LogOut className="w-3.5 h-3.5" />
@@ -118,7 +119,7 @@ export const Header: React.FC = () => {
                 </div>
                 <ChevronDown className={`w-4 h-4 text-blue-horizon shrink-0 transition-transform duration-200 ${isMobileUserExpanded ? 'rotate-180' : ''}`} />
                 <button
-                  onClick={(e) => { e.stopPropagation(); logout(); setIsMenuOpen(false); setIsMobileUserExpanded(false); }}
+                  onClick={(e) => { e.stopPropagation(); logout(); setIsMenuOpen(false); setIsMobileUserExpanded(false); toast.success('Sessão terminada.'); }}
                   className="text-slate-light hover:text-white transition-colors shrink-0 ml-1"
                 >
                   <LogOut className="w-5 h-5" />

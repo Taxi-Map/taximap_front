@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { X, Mail, Lock, User, Eye, EyeOff, AlertCircle, Navigation } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { authService, AuthError } from '../services/authService';
@@ -47,6 +48,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
 
             await authStore.getState().initialize();
 
+            toast.success(isLoginMode ? 'Login efetuado com sucesso!' : 'Conta criada com sucesso!');
             onClose();
             if (onSuccess) {
                 onSuccess();
@@ -89,6 +91,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
 
     const handleGoogleError = () => {
         setError('Autenticação com Google falhou. Tenta novamente.');
+        toast.error('Autenticação com Google falhou. Tenta novamente.');
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
