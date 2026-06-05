@@ -1,19 +1,11 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import ReactFlow, {
-    MiniMap,
-    Controls,
-    Background,
-    useNodesState,
-    useEdgesState,
-    Node,
-    Edge,
-    MarkerType,
-} from 'reactflow';
+import ReactFlow, { MiniMap, Controls, Background, useNodesState, useEdgesState, Node, Edge, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { routeService } from '../services/routeService';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Navigation } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CircleNode from './CircleNode';
+import { Button } from './ui/Button';
 
 export default function RouteBuilderPage() {
     const navigate = useNavigate();
@@ -26,55 +18,31 @@ export default function RouteBuilderPage() {
     const fetchData = useCallback(async () => {
         setIsLoading(true);
         try {
-            // Fetch Stops (Nodes)
             const stops = await routeService.getAllStops();
             if (stops) {
                 const newNodes: Node[] = stops.map((stop) => ({
                     id: stop.id.toString(),
-                    type: 'circle', // Use custom node type
-                    position: {
-                        x: (stop.longitude - 13.1) * 20000,
-                        y: -(stop.latitude + 8.8) * 20000
-                    },
+                    type: 'circle',
+                    position: { x: (stop.longitude - 13.1) * 20000, y: -(stop.latitude + 8.8) * 20000 },
                     data: { label: stop.nome },
-                    // Styles are handled by the component now
                 }));
                 setNodes(newNodes);
             }
 
-
-            // Helper to calculate edge handles based on node positions
             const calculateHandles = (sourceStop: any, targetStop: any) => {
-                // Project to screen coordinates (matching the node projection)
                 const x1 = (sourceStop.longitude - 13.1) * 20000;
                 const y1 = -(sourceStop.latitude + 8.8) * 20000;
                 const x2 = (targetStop.longitude - 13.1) * 20000;
                 const y2 = -(targetStop.latitude + 8.8) * 20000;
-
                 const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-
-                // Source uses "-source" suffix handles, target uses base handle IDs
-                let sourceHandle = 'right-source';
-                let targetHandle = 'left';
-
-                if (angle > -45 && angle <= 45) {
-                    sourceHandle = 'right-source';
-                    targetHandle = 'left';
-                } else if (angle > 45 && angle <= 135) {
-                    sourceHandle = 'bottom-source';
-                    targetHandle = 'top';
-                } else if (angle > 135 || angle <= -135) {
-                    sourceHandle = 'left-source';
-                    targetHandle = 'right';
-                } else {
-                    sourceHandle = 'top-source';
-                    targetHandle = 'bottom';
-                }
-
+                let sourceHandle = 'right-source', targetHandle = 'left';
+                if (angle > -45 && angle <= 45) { sourceHandle = 'right-source'; targetHandle = 'left'; }
+                else if (angle > 45 && angle <= 135) { sourceHandle = 'bottom-source'; targetHandle = 'top'; }
+                else if (angle > 135 || angle <= -135) { sourceHandle = 'left-source'; targetHandle = 'right'; }
+                else { sourceHandle = 'top-source'; targetHandle = 'bottom'; }
                 return { sourceHandle, targetHandle };
             };
 
-            // Fetch Lines to build Edges
             const lines = await routeService.getAllLines();
             if (lines) {
                 const newEdges: Edge[] = [];
@@ -83,88 +51,58 @@ export default function RouteBuilderPage() {
                     if (details && details.percurso) {
                         const stops = details.percurso;
                         for (let i = 0; i < stops.length - 1; i++) {
-                            const sourceStop = stops[i];
-                            const targetStop = stops[i + 1];
-                            const source = sourceStop.id.toString();
-                            const target = targetStop.id.toString();
-                            const edgeId = `e${source}-${target}-${line.id}`;
-
+                            const sourceStop = stops[i], targetStop = stops[i + 1];
+                            const source = sourceStop.id.toString(), target = targetStop.id.toString();
                             const { sourceHandle, targetHandle } = calculateHandles(sourceStop, targetStop);
-
                             newEdges.push({
-                                id: edgeId,
-                                source: source,
-                                target: target,
-                                sourceHandle: sourceHandle,
-                                targetHandle: targetHandle,
-                                label: line.nome, // Optional: hide label if too cluttered
+                                id: `e${source}-${target}-${line.id}`,
+                                source, target, sourceHandle, targetHandle,
+                                label: line.nome,
                                 animated: false,
-                                style: { stroke: '#94a3b8', strokeWidth: 1.5 },
-                                markerEnd: {
-                                    type: MarkerType.ArrowClosed,
-                                    color: '#94a3b8',
-                                },
+                                style: { stroke: '#94A3B8', strokeWidth: 2 },
+                                markerEnd: { type: MarkerType.ArrowClosed, color: '#94A3B8' },
                             });
                         }
                     }
                 }
                 setEdges(newEdges);
             }
-
-        } catch (error) {
-            console.error("Failed to fetch graph data", error);
-        } finally {
-            setIsLoading(false);
-        }
+        } catch (error) { console.error("Failed to fetch graph data", error); }
+        finally { setIsLoading(false); }
     }, [setNodes, setEdges]);
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+    useEffect(() => { fetchData(); }, [fetchData]);
 
     return (
-        <div className="w-full h-screen bg-slate-50 flex flex-col">
-            {/* Header - Responsive */}
-            <div className="bg-white border-b px-3 py-3 md:px-4 md:py-4 flex items-center justify-between z-10 shadow-sm">
+        <div className="w-full h-screen bg-blue-deep flex flex-col">
+            <div className="bg-blue-ocean border-b border-white/10 px-3 py-3 md:px-4 md:py-4 flex items-center justify-between z-10">
                 <div className="flex items-center gap-2 md:gap-4 min-w-0">
-                    <button onClick={() => navigate('/')} className="p-2 hover:bg-slate-100 rounded-full flex-shrink-0">
-                        <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-slate-700" />
+                    <button onClick={() => navigate('/')} className="p-2 hover:bg-white/10 rounded-full shrink-0 transition-colors">
+                        <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-blue-horizon" />
                     </button>
-                    <h1 className="text-base md:text-xl font-bold text-slate-900 truncate">Route Builder</h1>
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-blue-atlantic rounded-xl flex items-center justify-center">
+                            <Navigation className="w-4 h-4 text-white" />
+                        </div>
+                        <h1 className="text-base md:text-xl font-bold text-white truncate">Route Builder</h1>
+                    </div>
                 </div>
-                <button
-                    onClick={fetchData}
-                    className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium text-sm md:text-base flex-shrink-0"
-                >
-                    <RefreshCw className="w-4 h-4 md:w-5 md:h-5" />
+                <Button variant="secondary" size="sm" icon={<RefreshCw className="w-4 h-4 md:w-5 md:h-5" />} onClick={fetchData}>
                     <span className="hidden sm:inline">Refresh</span>
-                </button>
+                </Button>
             </div>
 
-            {/* ReactFlow Container */}
             <div className="flex-1 w-full h-full">
-                <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    nodeTypes={nodeTypes}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    fitView
-                    attributionPosition="bottom-right"
-                >
-                    {/* MiniMap - Hidden on mobile */}
-                    <div className="hidden md:block">
-                        <MiniMap />
-                    </div>
-                    <Controls />
-                    <Background color="#f1f5f9" gap={16} />
+                <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} fitView attributionPosition="bottom-right">
+                    <div className="hidden md:block"><MiniMap style={{ background: '#0A1628' }} nodeColor="#2E6B9E" maskColor="rgba(10,22,40,0.7)" /></div>
+                    <Controls style={{ background: '#1B3A5C', color: '#8EC8E8', border: '1px solid rgba(255,255,255,0.1)' }} />
+                    <Background color="#1B3A5C" gap={16} />
                 </ReactFlow>
             </div>
 
-            {/* Loading Overlay */}
             {isLoading && (
-                <div className="absolute inset-0 bg-white/50 z-50 flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-b-2 border-slate-900"></div>
+                <div className="absolute inset-0 bg-blue-deep/60 z-50 flex items-center justify-center backdrop-blur-sm">
+                    <div className="w-12 h-12 border-4 border-blue-atlantic/30 border-t-blue-sky rounded-full animate-spin" />
                 </div>
             )}
         </div>

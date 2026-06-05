@@ -1,76 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
+import { Navigation } from 'lucide-react';
 
 const Loader = () => {
   return (
-    <StyledWrapper>
-      <div className="center-body">
-        <div className="loader-shape-3" />
+    <div className="fixed inset-0 z-[9999] bg-blue-deep flex flex-col items-center justify-center">
+      <div className="relative">
+        <div className="w-20 h-20 bg-blue-atlantic rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-atlantic/40 animate-bounce">
+          <Navigation className="w-10 h-10 text-white" />
+        </div>
+        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-12 h-3 bg-blue-sky/30 rounded-full blur-md animate-pulse" />
       </div>
-    </StyledWrapper>
+      <p className="mt-8 font-display text-2xl text-blue-horizon tracking-widest animate-pulse">
+        TAXI MAP
+      </p>
+    </div>
   );
-}
-
-const StyledWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  
-  .center-body {
-    background: #202628;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  }
-  body {
-  }
-  .loader-shape-3 {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-  }
-  .loader-shape-3:after {
-    width: 30px;
-    height: 20px;
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 0.2);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin-top: 15px;
-  }
-  .loader-shape-3:before {
-    width: 20px;
-    height: 20px;
-    border-radius: 100% 100% 100% 0;
-    box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 1);
-    animation: anm-SL-3-move 1s linear infinite;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-46deg);
-    margin-top: 20px;
-  }
-  .loader-shape-3:before,
-  .loader-shape-3:after {
-    position: absolute;
-    content: "";
-  }
-  @keyframes anm-SL-3-move {
-    0% {
-      top: 0;
-    }
-    50% {
-      top: -5px;
-    }
-    100% {
-      top: 0;
-    }
-  }`;
+};
 
 export default Loader;
