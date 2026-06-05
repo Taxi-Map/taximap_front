@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
   return (
     <nav
       className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-7xl border border-white/10 shadow-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] overflow-hidden md:overflow-visible ${
-        isMenuOpen ? 'rounded-2xl bg-blue-deep' : 'rounded-full bg-blue-deep/90 backdrop-blur-md'
+        isMenuOpen ? 'rounded-2xl bg-blue-deep backdrop-blur-md' : 'rounded-2xl bg-blue-deep/90 backdrop-blur-md'
       }`}
       style={{
         maxHeight: isMenuOpen ? '640px' : '72px',
