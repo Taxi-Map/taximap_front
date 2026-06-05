@@ -1,4 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || '';
+import api from './api';
+import { authStore } from '../stores/authStore';
 
 // ==================== TIPOS ====================
 
@@ -10,9 +11,8 @@ export interface AuthUser {
     picture?: string;
     verified: boolean;
     phoneNumber?: string;
-    providers: ('google' | 'facebook' | 'local')[];
+    providers: ('google' | 'local')[];
     googleId?: string;
-    facebookId?: string;
     role: 'user' | 'staff' | 'admin';
     tmCoins: number;
     totalContribuicoes: number;
@@ -116,61 +116,28 @@ export const authService = {
         return !!this.getToken();
     },
 
-    authHeaders(): HeadersInit {
-        return {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.getToken()}`,
-        };
-    },
-
     // ==================== CADASTRO LOCAL ====================
 
     async register(data: RegisterData): Promise<AuthResponse> {
-        const response = await fetch(`${API_URL}/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw result as AuthError;
-        }
-
-        // Guardar token automaticamente
-        this.setToken(result.dados.accessToken, 'local');
-        return result;
+        const response = await api.post('/auth/register', data);
+        this.setToken(response.data.dados.accessToken, 'local');
+        return response.data;
     },
 
     // ==================== LOGIN LOCAL ====================
 
     async login(data: LoginData): Promise<AuthResponse> {
-        const response = await fetch(`${API_URL}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw result as AuthError;
-        }
-
-        // Guardar token automaticamente
-        this.setToken(result.dados.accessToken, 'local');
-        return result;
+        const response = await api.post('/auth/login', data);
+        this.setToken(response.data.dados.accessToken, 'local');
+        return response.data;
     },
 
-    // ==================== OAUTH ====================
+    // ==================== OAUTH GOOGLE ====================
 
-    loginWithGoogle(): void {
-        window.location.href = `${API_URL}/auth/google`;
-    },
-
-    loginWithFacebook(): void {
-        window.location.href = `${API_URL}/auth/facebook`;
+    async loginWithGoogleCredential(credential: string): Promise<AuthResponse> {
+        const response = await api.post('/auth/google', { credential });
+        this.setToken(response.data.dados.accessToken, 'google');
+        return response.data;
     },
 
     // ==================== PERFIL ====================
@@ -180,19 +147,10 @@ export const authService = {
         if (!token) return null;
 
         try {
-            const response = await fetch(`${API_URL}/auth/profile`, {
-                headers: this.authHeaders(),
-            });
-
-            if (!response.ok) {
-                this.logout();
-                return null;
-            }
-
-            const data = await response.json();
-            return data.dados as AuthUser;
-        } catch (error) {
-            console.error('Error fetching profile:', error);
+            const response = await api.get('/auth/profile');
+            return response.data.dados as AuthUser;
+        } catch {
+            this.logout();
             return null;
         }
     },
@@ -200,35 +158,15 @@ export const authService = {
     // ==================== ACTUALIZAR PERFIL ====================
 
     async updateProfile(data: UpdateProfileData): Promise<AuthUser> {
-        const response = await fetch(`${API_URL}/auth/profile`, {
-            method: 'PUT',
-            headers: this.authHeaders(),
-            body: JSON.stringify(data),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw result as AuthError;
-        }
-
-        return result.dados as AuthUser;
+        const response = await api.put('/auth/profile', data);
+        return response.data.dados as AuthUser;
     },
 
     // ==================== CLOUDINARY SIGNATURE ====================
 
     async getCloudinarySignature(): Promise<CloudinarySignature> {
-        const response = await fetch(`${API_URL}/auth/cloudinary-signature`, {
-            headers: this.authHeaders(),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw result as AuthError;
-        }
-
-        return result.dados as CloudinarySignature;
+        const response = await api.get('/auth/cloudinary-signature');
+        return response.data.dados as CloudinarySignature;
     },
 
     // ==================== VERIFICAR TOKEN ====================
@@ -238,10 +176,8 @@ export const authService = {
         if (!token) return false;
 
         try {
-            const response = await fetch(`${API_URL}/auth/verify`, {
-                headers: this.authHeaders(),
-            });
-            return response.ok;
+            const response = await api.get('/auth/verify');
+            return response.status === 200;
         } catch {
             return false;
         }
@@ -250,96 +186,64 @@ export const authService = {
     // ==================== VERIFICAÇÃO DE EMAIL ====================
 
     async verifyEmail(token: string): Promise<{ sucesso: boolean; mensagem: string }> {
-        const response = await fetch(`${API_URL}/auth/verify-email?token=${token}`);
-        return response.json();
+        const response = await api.get(`/auth/verify-email?token=${token}`);
+        return response.data;
     },
 
     async resendVerification(): Promise<{ sucesso: boolean; mensagem: string }> {
-        const response = await fetch(`${API_URL}/auth/resend-verification`, {
-            method: 'POST',
-            headers: this.authHeaders(),
-        });
-        return response.json();
+        const response = await api.post('/auth/resend-verification');
+        return response.data;
     },
 
     // ==================== RECUPERAÇÃO DE PASSWORD ====================
 
     async forgotPassword(email: string): Promise<{ sucesso: boolean; mensagem: string }> {
-        const response = await fetch(`${API_URL}/auth/forgot-password`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
-        });
-        return response.json();
+        const response = await api.post('/auth/forgot-password', { email });
+        return response.data;
     },
 
     async resetPassword(token: string, newPassword: string): Promise<{ sucesso: boolean; mensagem: string }> {
-        const response = await fetch(`${API_URL}/auth/reset-password`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token, newPassword }),
-        });
-        return response.json();
+        const response = await api.post('/auth/reset-password', { token, newPassword });
+        return response.data;
     },
 
     // ==================== TM COINS & CONTRIBUIÇÕES ====================
 
     async getMeuSaldo(): Promise<SaldoResponse | null> {
         try {
-            const response = await fetch(`${API_URL}/auth/meu-saldo`, {
-                headers: this.authHeaders(),
-            });
-            if (!response.ok) return null;
-            const data = await response.json();
-            return data.sucesso ? data.dados : null;
-        } catch (error) {
-            console.error('Error fetching saldo:', error);
+            const response = await api.get('/auth/meu-saldo');
+            return response.data.sucesso ? response.data.dados : null;
+        } catch {
             return null;
         }
     },
 
     async getMinhasContribuicoes(pagina = 1, porPagina = 20): Promise<{ dados: Contribuicao[]; paginacao: any } | null> {
         try {
-            const response = await fetch(
-                `${API_URL}/rotas/minhas-contribuicoes?pagina=${pagina}&porPagina=${porPagina}`,
-                { headers: this.authHeaders() }
-            );
-            if (!response.ok) return null;
-            const data = await response.json();
+            const response = await api.get(`/rotas/minhas-contribuicoes?pagina=${pagina}&porPagina=${porPagina}`);
+            const data = response.data;
             return data.sucesso ? { dados: data.dados, paginacao: data.paginacao } : null;
-        } catch (error) {
-            console.error('Error fetching contribuicoes:', error);
+        } catch {
             return null;
         }
     },
 
     async solicitarPagamento(metodo: string, valorKz: number, telefone: string): Promise<{ dados: Pagamento; mensagem: string }> {
-        const response = await fetch(`${API_URL}/auth/solicitar-pagamento`, {
-            method: 'POST',
-            headers: this.authHeaders(),
-            body: JSON.stringify({ metodo, valorKz, telefone }),
-        });
+        const response = await api.post('/auth/solicitar-pagamento', { metodo, valorKz, telefone });
 
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw { statusCode: response.status, message: result.message || 'Erro ao solicitar pagamento' } as AuthError;
+        if (!response.data.sucesso) {
+            throw { statusCode: response.status, message: response.data.message || 'Erro ao solicitar pagamento' } as AuthError;
         }
 
-        return { dados: result.dados, mensagem: result.mensagem };
+        return { dados: response.data.dados, mensagem: response.data.mensagem };
     },
 
     async getMeusPagamentos(pagina = 1, porPagina = 20): Promise<{ dados: Pagamento[]; paginacao: any } | null> {
         try {
-            const response = await fetch(
-                `${API_URL}/auth/meus-pagamentos?pagina=${pagina}&porPagina=${porPagina}`,
-                { headers: this.authHeaders() }
-            );
-            if (!response.ok) return null;
-            const data = await response.json();
+            const response = await api.get(`/auth/meus-pagamentos?pagina=${pagina}&porPagina=${porPagina}`);
+            const data = response.data;
             return data.sucesso ? { dados: data.dados, paginacao: data.paginacao } : null;
-        } catch (error) {
-            console.error('Error fetching pagamentos:', error);
+        } catch {
             return null;
         }
     },
@@ -348,45 +252,30 @@ export const authService = {
 
     async getAllPaymentRequests(pagina = 1, porPagina = 20): Promise<{ dados: Pagamento[]; paginacao: any } | null> {
         try {
-            const response = await fetch(
-                `${API_URL}/auth/pagamentos-pendentes?pagina=${pagina}&porPagina=${porPagina}`,
-                { headers: this.authHeaders(), cache: 'no-store' }
-            );
-            if (!response.ok) return null;
-            const data = await response.json();
+            const response = await api.get(`/auth/pagamentos-pendentes?pagina=${pagina}&porPagina=${porPagina}`, {
+                headers: { 'Cache-Control': 'no-store' },
+            });
+            const data = response.data;
             return data.sucesso ? { dados: data.dados, paginacao: data.paginacao } : null;
-        } catch (error) {
-            console.error('Error fetching all payment requests:', error);
+        } catch {
             return null;
         }
     },
 
     async processPayment(id: string): Promise<boolean> {
         try {
-            const response = await fetch(`${API_URL}/auth/processar-pagamento?id=${id}`, {
-                method: 'POST',
-                headers: this.authHeaders(),
-            });
-            if (!response.ok) return false;
-            const data = await response.json();
-            return data.sucesso;
-        } catch (error) {
-            console.error('Error processing payment:', error);
+            const response = await api.post(`/auth/processar-pagamento?id=${id}`);
+            return response.data.sucesso;
+        } catch {
             return false;
         }
     },
 
     async cancelPayment(id: string): Promise<boolean> {
         try {
-            const response = await fetch(`${API_URL}/auth/cancelar-pagamento?id=${id}`, {
-                method: 'POST',
-                headers: this.authHeaders(),
-            });
-            if (!response.ok) return false;
-            const data = await response.json();
-            return data.sucesso;
-        } catch (error) {
-            console.error('Error cancelling payment:', error);
+            const response = await api.post(`/auth/cancelar-pagamento?id=${id}`);
+            return response.data.sucesso;
+        } catch {
             return false;
         }
     },
@@ -397,31 +286,21 @@ export const authService = {
         try {
             const params = new URLSearchParams({ pagina: String(pagina), porPagina: String(porPagina) });
             if (search) params.set('search', search);
-            const response = await fetch(
-                `${API_URL}/auth/utilizadores?${params.toString()}`,
-                { headers: this.authHeaders(), cache: 'no-store' }
-            );
-            if (!response.ok) return null;
-            const data = await response.json();
+            const response = await api.get(`/auth/utilizadores?${params.toString()}`, {
+                headers: { 'Cache-Control': 'no-store' },
+            });
+            const data = response.data;
             return data.sucesso ? { dados: data.dados, total: data.total, paginacao: data.paginacao } : null;
-        } catch (error) {
-            console.error('Error fetching users:', error);
+        } catch {
             return null;
         }
     },
 
     async changeUserRole(userId: string, novoRole: 'user' | 'staff' | 'admin'): Promise<boolean> {
         try {
-            const response = await fetch(`${API_URL}/auth/alterar-role`, {
-                method: 'POST',
-                headers: this.authHeaders(),
-                body: JSON.stringify({ userId, novoRole }),
-            });
-            if (!response.ok) return false;
-            const data = await response.json();
-            return data.sucesso;
-        } catch (error) {
-            console.error('Error changing user role:', error);
+            const response = await api.post('/auth/alterar-role', { userId, novoRole });
+            return response.data.sucesso;
+        } catch {
             return false;
         }
     },
@@ -429,8 +308,7 @@ export const authService = {
     // ==================== LOGOUT ====================
 
     logout(): void {
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('auth_provider');
+        authStore.getState().logout();
     },
 
     logoutAndRedirect(): void {
@@ -443,7 +321,7 @@ export const authService = {
         if (!stored) return null;
         try {
             return JSON.parse(stored);
-        } catch (e) {
+        } catch {
             return null;
         }
     }
