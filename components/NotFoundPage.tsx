@@ -89,6 +89,12 @@ export default function NotFoundPage() {
           reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
           <button
+            onClick={() => navigate('/')}
+            className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-white/10 backdrop-blur-sm text-white font-body text-sm font-bold border border-white/10 hover:bg-white/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+          >
+            Página inicial
+          </button>
+          <button
             onClick={() => navigate('/map')}
             className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-amber-warm text-blue-deep font-display text-sm tracking-widest uppercase shadow-button hover:bg-amber-dark hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
           >

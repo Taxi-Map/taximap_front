@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
     ArrowLeft, Camera, Check, Phone, User, Shield, Edit2, Mail, LogOut, Loader2, X, AlertTriangle,
     TrendingUp, MapPin, CreditCard, ChevronRight, Navigation, Coins
@@ -8,7 +8,6 @@ import { authService, AuthUser } from '../services/authService';
 import { cloudinaryService } from '../services/cloudinaryService';
 import { useTmCoins, valorEmKz } from '../hooks/useTmCoins';
 import { Button } from './ui/Button';
-import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { Tabs } from './ui/Tabs';
 import { Skeleton, SkeletonContributionRow } from './ui/Skeleton';
@@ -154,8 +153,14 @@ export default function ProfilePage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-sand">
-                <div className="bg-white border-b border-slate-100">
+            <div className="min-h-screen bg-blue-deep relative">
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                    style={{
+                        backgroundImage: 'linear-gradient(rgba(109, 183, 226, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 183, 226, 0.3) 1px, transparent 1px)',
+                        backgroundSize: '60px 60px',
+                    }}
+                />
+                <div className="bg-blue-deep/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-10">
                     <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
                         <Skeleton variant="block" width={40} height={40} />
                         <Skeleton variant="text" width={120} height={20} />
@@ -185,28 +190,42 @@ export default function ProfilePage() {
     const fullName = `${user.firstName} ${user.lastName}`;
 
     return (
-        <div className="min-h-screen bg-sand">
+        <div className="min-h-screen bg-blue-deep relative">
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{
+                    backgroundImage: 'linear-gradient(rgba(109, 183, 226, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 183, 226, 0.3) 1px, transparent 1px)',
+                    backgroundSize: '60px 60px',
+                }}
+            />
             <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/gif,image/webp" onChange={handlePhotoChange} className="hidden" />
 
             {/* Header */}
-            <div className="bg-white border-b border-slate-100 sticky top-0 z-10">
+            <div className="bg-blue-deep/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-10">
                 <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
-                    <a href="/map" className="p-2 hover:bg-sand rounded-full transition-colors">
-                        <ArrowLeft className="w-6 h-6 text-storm" />
-                    </a>
-                    <h1 className="text-lg font-bold text-storm">Meu Perfil</h1>
+                    <div className="flex items-center gap-2">
+                        <Link to="/map" className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                            <ArrowLeft className="w-6 h-6 text-white" />
+                        </Link>
+                        <Link to="/" className="p-2 hover:bg-white/10 rounded-full transition-colors" title="Página inicial">
+                            <svg className="w-5 h-5 text-white/60 hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                <polyline points="9 22 9 12 15 12 15 22" />
+                            </svg>
+                        </Link>
+                    </div>
+                    <h1 className="text-lg font-bold text-white">Meu Perfil</h1>
                     {isEditing ? (
                         <div className="flex gap-1">
-                            <button onClick={handleCancelEdit} className="p-2 hover:bg-sand rounded-full transition-colors" disabled={saving}>
-                                <X className="w-6 h-6 text-slate-mid" />
+                            <button onClick={handleCancelEdit} className="p-2 hover:bg-white/10 rounded-full transition-colors" disabled={saving}>
+                                <X className="w-6 h-6 text-white/60" />
                             </button>
-                            <button onClick={handleSave} className="p-2 hover:bg-sand rounded-full transition-colors" disabled={saving}>
-                                {saving ? <Loader2 className="w-6 h-6 text-blue-atlantic animate-spin" /> : <Check className="w-6 h-6 text-blue-atlantic" />}
+                            <button onClick={handleSave} className="p-2 hover:bg-white/10 rounded-full transition-colors" disabled={saving}>
+                                {saving ? <Loader2 className="w-6 h-6 text-blue-sky animate-spin" /> : <Check className="w-6 h-6 text-blue-sky" />}
                             </button>
                         </div>
                     ) : (
-                        <button onClick={() => setIsEditing(true)} className="p-2 hover:bg-sand rounded-full transition-colors">
-                            <Edit2 className="w-6 h-6 text-slate-mid" />
+                        <button onClick={() => setIsEditing(true)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                            <Edit2 className="w-6 h-6 text-white/60 hover:text-white transition-colors" />
                         </button>
                     )}
                 </div>
@@ -223,12 +242,12 @@ export default function ProfilePage() {
 
             {/* Email verification banner */}
             {!user.verified && (
-                <div className="bg-amber-light border-b border-amber-warm/20">
+                <div className="bg-amber-warm/10 border-b border-amber-warm/20">
                     <div className="max-w-lg mx-auto px-4 py-3 flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-amber-dark shrink-0 mt-0.5" />
+                        <AlertTriangle className="w-5 h-5 text-amber-warm shrink-0 mt-0.5" />
                         <div className="flex-1">
-                            <p className="text-sm text-amber-dark font-medium">O teu email ainda não foi verificado.</p>
-                            <p className="text-xs text-amber-dark/70 mt-0.5">Verifica a tua caixa de entrada ou pasta de spam.</p>
+                            <p className="text-sm text-amber-warm font-medium">O teu email ainda não foi verificado.</p>
+                            <p className="text-xs text-amber-warm/70 mt-0.5">Verifica a tua caixa de entrada ou pasta de spam.</p>
                         </div>
                         <button
                             onClick={async () => {
@@ -238,7 +257,7 @@ export default function ProfilePage() {
                                 finally { setResendingVerification(false); }
                             }}
                             disabled={resendingVerification}
-                            className="text-xs font-bold text-amber-dark bg-amber-warm/20 hover:bg-amber-warm/30 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+                            className="text-xs font-bold text-amber-warm bg-amber-warm/20 hover:bg-amber-warm/30 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
                         >
                             {resendingVerification ? 'A enviar...' : 'Reenviar'}
                         </button>
@@ -247,38 +266,37 @@ export default function ProfilePage() {
             )}
 
             {/* Profile Content */}
-            <div className="max-w-lg mx-auto px-4 py-8">
+            <div className="max-w-lg mx-auto px-4 py-8 relative z-[1]">
                 {/* Profile Photo */}
                 <div className="flex flex-col items-center mb-8">
                     <div className="relative">
-                        <div className="w-32 h-32 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden border-4 border-white shadow-xl">
+                        <div className="w-32 h-32 rounded-full bg-white/10 flex items-center justify-center overflow-hidden border-2 border-white/20 shadow-[0_0_30px_rgba(109,183,226,0.15)]">
                             {uploading ? (
-                                <Loader2 className="w-10 h-10 animate-spin text-blue-atlantic" />
+                                <Loader2 className="w-10 h-10 animate-spin text-blue-sky" />
                             ) : user.picture ? (
                                 <img src={user.picture} alt={fullName} className="w-full h-full object-cover" referrerPolicy="no-referrer" crossOrigin="anonymous"
                                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                             ) : (
-                                <User className="w-16 h-16 text-slate-light" />
+                                <User className="w-16 h-16 text-white/30" />
                             )}
                         </div>
-                        <button onClick={handlePhotoClick} disabled={uploading} className="absolute bottom-0 right-0 w-10 h-10 bg-blue-atlantic rounded-full flex items-center justify-center shadow-lg hover:bg-blue-atlantic/90 transition-colors disabled:opacity-50">
+                        <button onClick={handlePhotoClick} disabled={uploading} className="absolute bottom-0 right-0 w-10 h-10 bg-blue-atlantic rounded-full flex items-center justify-center shadow-lg hover:bg-blue-atlantic/90 transition-colors disabled:opacity-50 ring-2 ring-blue-deep">
                             <Camera className="w-5 h-5 text-white" />
                         </button>
                     </div>
 
                     <div className="mt-4 flex flex-wrap gap-2 justify-center">
                         {user.providers?.map((provider) => (
-                            <Badge key={provider} color="slate" className="flex items-center gap-2">
-                                {provider === 'google' && <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />}
-
-                                {provider === 'local' && <Mail className="w-4 h-4" />}
+                            <div key={provider} className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full text-xs font-bold text-white/70">
+                                {provider === 'google' && <img src="https://www.google.com/favicon.ico" alt="Google" className="w-3.5 h-3.5" />}
+                                {provider === 'local' && <Mail className="w-3.5 h-3.5 text-white/50" />}
                                 <span className="font-medium capitalize">{provider === 'local' ? 'Email' : provider}</span>
-                            </Badge>
+                            </div>
                         ))}
                     </div>
 
                     {user.verified && (
-                        <div className="mt-3 flex items-center gap-2 px-4 py-2 bg-success-bg rounded-full">
+                        <div className="mt-3 flex items-center gap-2 px-4 py-2 bg-success/20 rounded-full ring-1 ring-success/30">
                             <Shield className="w-4 h-4 text-success" />
                             <span className="text-sm font-bold text-success">Utilizador Verificado</span>
                         </div>
@@ -293,6 +311,7 @@ export default function ProfilePage() {
                     activeTab={activeTab}
                     onChange={setActiveTab}
                     variant="pills"
+                    dark
                     className="mb-8"
                 />
 
@@ -301,18 +320,18 @@ export default function ProfilePage() {
                         <div className="mb-8 w-full max-w-sm mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="flex flex-col items-center">
                                 <div className="w-full grid grid-cols-2 gap-4">
-                                    <div className="bg-blue-deep text-white p-5 rounded-2xl flex flex-col items-center justify-center shadow-lg">
+                                    <div className="bg-blue-deep text-white p-5 rounded-2xl flex flex-col items-center justify-center shadow-lg border border-white/10">
                                         <Coins className="w-6 h-6 text-amber-warm mb-2" />
                                         <span className="text-xs font-bold text-blue-horizon uppercase tracking-wider mb-1">Saldo TM Coin</span>
                                         <span className="text-2xl font-bold flex items-center gap-1">
                                             {tmCoins.toLocaleString()} <span className="text-amber-warm text-sm">TM</span>
                                         </span>
                                     </div>
-                                    <div className="bg-white border border-slate-200 p-5 rounded-2xl flex flex-col items-center justify-center shadow-sm">
-                                        <CreditCard className="w-6 h-6 text-blue-atlantic mb-2" />
-                                        <span className="text-xs font-bold text-slate-mid uppercase tracking-wider mb-1">Valor em Kz</span>
-                                        <span className="text-2xl font-bold text-storm">
-                                            {balanceKz.toLocaleString()} <span className="text-xs text-slate-mid">Kz</span>
+                                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-5 rounded-2xl flex flex-col items-center justify-center shadow-sm">
+                                        <CreditCard className="w-6 h-6 text-blue-sky mb-2" />
+                                        <span className="text-xs font-bold text-white/50 uppercase tracking-wider mb-1">Valor em Kz</span>
+                                        <span className="text-2xl font-bold text-white">
+                                            {balanceKz.toLocaleString()} <span className="text-xs text-white/50">Kz</span>
                                         </span>
                                     </div>
                                 </div>
@@ -326,29 +345,29 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        <Card className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100 mt-6">
+                        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100 mt-6">
                             <div className="flex items-center justify-between mb-4">
-                                <span className="text-xs font-bold text-slate-mid uppercase tracking-wider">Contribuições Recentes</span>
-                                <TrendingUp className="w-4 h-4 text-slate-mid" />
+                                <span className="text-xs font-bold text-white/50 uppercase tracking-wider">Contribuições Recentes</span>
+                                <TrendingUp className="w-4 h-4 text-white/30" />
                             </div>
                             <div>
                                 {coinsLoading ? (
-                                    <div className="divide-y divide-slate-50">
+                                    <div className="divide-y divide-white/5">
                                         <SkeletonContributionRow />
                                         <SkeletonContributionRow />
                                         <SkeletonContributionRow />
                                     </div>
                                 ) : contribuicoes.length > 0 ? (
                                     contribuicoes.map((contribution, index) => (
-                                        <div key={contribution._id} className={`flex items-center justify-between py-3 ${index !== contribuicoes.length - 1 ? 'border-b border-slate-50' : ''}`}>
+                                        <div key={contribution._id} className={`flex items-center justify-between py-3 ${index !== contribuicoes.length - 1 ? 'border-b border-white/5' : ''}`}>
                                             <div className="flex items-center gap-3">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${contribution.tipo === 'paragem' ? 'bg-blue-horizon/20 text-blue-atlantic' : 'bg-purple-100 text-purple-700'}`}>
+                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${contribution.tipo === 'paragem' ? 'bg-white/10 text-blue-sky' : 'bg-white/10 text-purple-300'}`}>
                                                     {contribution.tipo === 'paragem' ? <MapPin className="w-5 h-5" /> : <TrendingUp className="w-5 h-5" />}
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-storm text-sm">{contribution.nome}</p>
+                                                    <p className="font-bold text-white text-sm">{contribution.nome}</p>
                                                     <div className="flex items-center gap-2 mt-0.5">
-                                                        <p className="text-xs text-slate-mid">{contribution.tipo === 'paragem' ? 'Nova Paragem' : 'Nova Rota'}</p>
+                                                        <p className="text-xs text-white/50">{contribution.tipo === 'paragem' ? 'Nova Paragem' : 'Nova Rota'}</p>
                                                         <Badge color={contribution.status === 'aprovada' ? 'green' : contribution.status === 'rejeitada' ? 'red' : 'amber'} size="sm">
                                                             {contribution.status}
                                                         </Badge>
@@ -356,71 +375,71 @@ export default function ProfilePage() {
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className={`font-bold text-sm ${contribution.status === 'aprovada' ? 'text-success' : 'text-slate-mid'}`}>+{contribution.tmCoinsGanhos}</p>
-                                                <p className="text-xs text-slate-light">{new Date(contribution.createdAt).toLocaleDateString('pt-AO')}</p>
+                                                <p className={`font-bold text-sm ${contribution.status === 'aprovada' ? 'text-success' : 'text-white/50'}`}>+{contribution.tmCoinsGanhos}</p>
+                                                <p className="text-xs text-white/30">{new Date(contribution.createdAt).toLocaleDateString('pt-AO')}</p>
                                             </div>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="py-8 text-center text-slate-mid">Sem contribuições ainda.</div>
+                                    <div className="py-8 text-center text-white/30">Sem contribuições ainda.</div>
                                 )}
                             </div>
-                        </Card>
+                        </div>
                     </>
                 )}
 
                 {activeTab === 'profile' && (
-                    <div className="bg-white rounded-3xl shadow-card border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <div className="p-5 border-b border-slate-100">
-                            <span className="text-xs font-bold text-slate-mid uppercase tracking-wider">Nome Completo</span>
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="p-5 border-b border-white/10">
+                            <span className="text-xs font-bold text-white/50 uppercase tracking-wider">Nome Completo</span>
                             {isEditing ? (
                                 <div className="grid grid-cols-2 gap-2 mt-2">
                                     <input type="text" value={editedFirstName} onChange={(e) => setEditedFirstName(e.target.value)} placeholder="Nome"
-                                        className="w-full px-4 py-3 bg-sand rounded-xl text-storm font-semibold outline-none focus:ring-2 focus:ring-blue-sky" />
+                                        className="w-full px-4 py-3 bg-white/10 rounded-xl text-white font-semibold outline-none focus:ring-2 focus:ring-blue-sky placeholder:text-white/30" />
                                     <input type="text" value={editedLastName} onChange={(e) => setEditedLastName(e.target.value)} placeholder="Apelido"
-                                        className="w-full px-4 py-3 bg-sand rounded-xl text-storm font-semibold outline-none focus:ring-2 focus:ring-blue-sky" />
+                                        className="w-full px-4 py-3 bg-white/10 rounded-xl text-white font-semibold outline-none focus:ring-2 focus:ring-blue-sky placeholder:text-white/30" />
                                 </div>
                             ) : (
-                                <p className="mt-2 text-lg font-bold text-storm flex items-center gap-2">
-                                    <User className="w-5 h-5 text-slate-mid" />
+                                <p className="mt-2 text-lg font-bold text-white flex items-center gap-2">
+                                    <User className="w-5 h-5 text-white/40" />
                                     {fullName}
                                 </p>
                             )}
                         </div>
 
-                        <div className="p-5 border-b border-slate-100">
-                            <span className="text-xs font-bold text-slate-mid uppercase tracking-wider">Email</span>
-                            <p className="mt-2 text-lg font-bold text-storm flex items-center gap-2">
-                                <Mail className="w-5 h-5 text-slate-mid" />
+                        <div className="p-5 border-b border-white/10">
+                            <span className="text-xs font-bold text-white/50 uppercase tracking-wider">Email</span>
+                            <p className="mt-2 text-lg font-bold text-white flex items-center gap-2">
+                                <Mail className="w-5 h-5 text-white/40" />
                                 {user.email}
                             </p>
-                            <p className="text-xs text-slate-light mt-1">O email não pode ser alterado</p>
+                            <p className="text-xs text-white/30 mt-1">O email não pode ser alterado</p>
                         </div>
 
-                        <div className="p-5 border-b border-slate-100">
-                            <span className="text-xs font-bold text-slate-mid uppercase tracking-wider">Número de Telefone</span>
+                        <div className="p-5 border-b border-white/10">
+                            <span className="text-xs font-bold text-white/50 uppercase tracking-wider">Número de Telefone</span>
                             {isEditing ? (
                                 <input type="tel" value={editedPhone} onChange={(e) => setEditedPhone(e.target.value)} placeholder="+244923456789"
-                                    className="w-full mt-2 px-4 py-3 bg-sand rounded-xl text-storm font-semibold outline-none focus:ring-2 focus:ring-blue-sky" />
+                                    className="w-full mt-2 px-4 py-3 bg-white/10 rounded-xl text-white font-semibold outline-none focus:ring-2 focus:ring-blue-sky placeholder:text-white/30" />
                             ) : (
-                                <p className="mt-2 text-lg font-bold text-storm flex items-center gap-2">
-                                    <Phone className="w-5 h-5 text-slate-mid" />
+                                <p className="mt-2 text-lg font-bold text-white flex items-center gap-2">
+                                    <Phone className="w-5 h-5 text-white/40" />
                                     {user.phoneNumber || 'Não definido'}
                                 </p>
                             )}
                         </div>
 
                         <div className="p-5">
-                            <span className="text-xs font-bold text-slate-mid uppercase tracking-wider">Estado de Verificação</span>
+                            <span className="text-xs font-bold text-white/50 uppercase tracking-wider">Estado de Verificação</span>
                             <div className="mt-2 flex items-center gap-3">
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${user.verified ? 'bg-success-bg' : 'bg-slate-100'}`}>
-                                    <Shield className={`w-5 h-5 ${user.verified ? 'text-success' : 'text-slate-mid'}`} />
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${user.verified ? 'bg-success/20' : 'bg-white/10'}`}>
+                                    <Shield className={`w-5 h-5 ${user.verified ? 'text-success' : 'text-white/40'}`} />
                                 </div>
                                 <div>
-                                    <p className={`font-bold ${user.verified ? 'text-success' : 'text-slate-mid'}`}>
+                                    <p className={`font-bold ${user.verified ? 'text-success' : 'text-white/60'}`}>
                                         {user.verified ? 'Verificado' : 'Não Verificado'}
                                     </p>
-                                    <p className="text-xs text-slate-light">
+                                    <p className="text-xs text-white/40">
                                         {user.verified ? 'A sua conta foi verificada' : 'Complete a verificação para desbloquear recursos'}
                                     </p>
                                 </div>
@@ -430,9 +449,10 @@ export default function ProfilePage() {
                 )}
 
                 <div className="mt-6">
-                    <Button variant="primary" size="lg" className="w-full" icon={<LogOut className="w-5 h-5" />} onClick={handleLogout}>
+                    <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2.5 px-6 py-4 text-base font-semibold rounded-xl text-white/50 hover:text-white hover:bg-white/5 border border-white/10 transition-all duration-200 active:scale-[0.97]">
+                        <LogOut className="w-5 h-5" />
                         Terminar Sessão
-                    </Button>
+                    </button>
                 </div>
             </div>
 

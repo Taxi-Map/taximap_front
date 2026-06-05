@@ -13,6 +13,7 @@ interface TabsProps {
   onChange: (key: string) => void;
   variant?: 'underline' | 'pills';
   className?: string;
+  dark?: boolean;
 }
 
 export const Tabs: React.FC<TabsProps> = ({
@@ -21,10 +22,11 @@ export const Tabs: React.FC<TabsProps> = ({
   onChange,
   variant = 'underline',
   className = '',
+  dark = false,
 }) => {
   if (variant === 'pills') {
     return (
-      <div className={`flex bg-slate-100 p-1 rounded-xl gap-0.5 ${className}`}>
+      <div className={`flex ${dark ? 'bg-white/10' : 'bg-slate-100'} p-1 rounded-xl gap-0.5 ${className}`}>
         {tabs.map((tab) => {
           const isActive = tab.key === activeTab;
           return (
@@ -33,8 +35,12 @@ export const Tabs: React.FC<TabsProps> = ({
               onClick={() => onChange(tab.key)}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-bold rounded-lg transition-all duration-200 ${
                 isActive
-                  ? 'bg-white text-storm shadow-sm'
-                  : 'text-slate-mid hover:text-storm hover:bg-white/50'
+                  ? dark
+                    ? 'bg-white/20 text-white shadow-sm'
+                    : 'bg-white text-storm shadow-sm'
+                  : dark
+                    ? 'text-white/50 hover:text-white hover:bg-white/10'
+                    : 'text-slate-mid hover:text-storm hover:bg-white/50'
               }`}
             >
               {tab.icon && <span className="shrink-0">{tab.icon}</span>}
@@ -43,8 +49,12 @@ export const Tabs: React.FC<TabsProps> = ({
                 <span
                   className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
                     isActive
-                      ? 'bg-blue-horizon/20 text-blue-atlantic'
-                      : 'bg-slate-200 text-slate-mid'
+                      ? dark
+                        ? 'bg-white/20 text-white/80'
+                        : 'bg-blue-horizon/20 text-blue-atlantic'
+                      : dark
+                        ? 'bg-white/10 text-white/40'
+                        : 'bg-slate-200 text-slate-mid'
                   }`}
                 >
                   {tab.badge}

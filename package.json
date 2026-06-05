@@ -1,37 +1,37 @@
 {
-  "name": "taxi-map---luanda",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@react-oauth/google": "^0.13.5",
-    "@types/dagre": "^0.7.53",
-    "axios": "^1.17.0",
-    "dagre": "^0.8.5",
-    "leaflet": "^1.9.4",
-    "lucide-react": "^0.562.0",
-    "maplibre-gl": "^5.16.0",
-    "openrouteservice-js": "^0.4.1",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "react-leaflet": "^5.0.0",
-    "react-router-dom": "^7.12.0",
-    "reactflow": "^11.11.4",
-    "styled-components": "^6.3.8",
-    "zustand": "^5.0.14"
-  },
-  "devDependencies": {
-    "@tailwindcss/vite": "^4.3.0",
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "tailwindcss": "^4.3.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0",
-    "vite-plugin-mkcert": "^1.17.9"
-  }
+	"name": "taxi-map---luanda",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite --host",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@react-oauth/google": "^0.13.5",
+		"@types/dagre": "^0.7.53",
+		"axios": "^1.17.0",
+		"dagre": "^0.8.5",
+		"leaflet": "^1.9.4",
+		"lucide-react": "^0.562.0",
+		"maplibre-gl": "^5.16.0",
+		"openrouteservice-js": "^0.4.1",
+		"react": "^19.2.3",
+		"react-dom": "^19.2.3",
+		"react-leaflet": "^5.0.0",
+		"react-router-dom": "^7.12.0",
+		"reactflow": "^11.11.4",
+		"styled-components": "^6.3.8",
+		"zustand": "^5.0.14"
+	},
+	"devDependencies": {
+		"@tailwindcss/vite": "^4.3.0",
+		"@types/node": "^22.14.0",
+		"@vitejs/plugin-react": "^5.0.0",
+		"tailwindcss": "^4.3.0",
+		"typescript": "~5.8.2",
+		"vite": "^6.2.0",
+		"vite-plugin-mkcert": "^1.17.9"
+	}
 }

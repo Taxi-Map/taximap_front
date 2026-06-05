@@ -353,9 +353,9 @@ export default function MapcnPage() {
                         <Link to="/builder" className="p-2 bg-white rounded-full shadow-lg hover:bg-sand transition-all duration-200 active:scale-90" title="Route Builder">
                             <Route className="w-6 h-6 text-storm" />
                         </Link>
-                        <a href="/profile" className="p-2 bg-white rounded-full shadow-lg hover:bg-sand transition-all duration-200 active:scale-90">
-                            <User className="w-6 h-6 text-storm" />
-                        </a>
+                        <Link to="/profile" className="p-2 bg-white rounded-full shadow-lg hover:bg-sand transition-all duration-200 active:scale-90">
+                                    <User className="w-6 h-6 text-storm" />
+                                </Link>
                     </div>
                 </>
             )}
@@ -368,9 +368,9 @@ export default function MapcnPage() {
                         <button onClick={() => setIsMenuOpen(false)} className="hidden lg:block p-2 bg-white/10 rounded-full shadow-md hover:bg-white/20 transition-colors">
                             <X className="w-6 h-6 text-white" />
                         </button>
-                        <div className="flex items-center gap-2">
+                        <Link to="/" className="flex items-center gap-2">
                             <img src="/icon/logo.png" alt="Taxi Map" className="h-9 w-auto hidden lg:block" />
-                        </div>
+                        </Link>
                     </div>
                     <div className="hidden lg:flex items-center gap-2">
                         {isAdmin && (
@@ -381,9 +381,9 @@ export default function MapcnPage() {
                         <Link to="/builder" className="p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200 active:scale-90" title="Route Builder">
                             <Route className="w-5 h-5 text-white" />
                         </Link>
-                        <a href="/profile" className="p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200 active:scale-90">
-                            <User className="w-5 h-5 text-white" />
-                        </a>
+                        <Link to="/profile" className="p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200 active:scale-90">
+                                    <User className="w-5 h-5 text-white" />
+                                </Link>
                     </div>
                 </div>
 
@@ -540,9 +540,9 @@ export default function MapcnPage() {
                             <Link to="/builder" className="p-3 hover:bg-white/10 rounded-xl transition-all duration-200 active:scale-90" title="Route Builder">
                                 <Route className="w-5 h-5 text-white" />
                             </Link>
-                            <a href="/profile" className="p-3 hover:bg-white/10 rounded-xl transition-all duration-200 active:scale-90" title="Perfil">
+                            <Link to="/profile" className="p-3 hover:bg-white/10 rounded-xl transition-all duration-200 active:scale-90" title="Perfil">
                                 <User className="w-5 h-5 text-white" />
-                            </a>
+                            </Link>
                         <button className="p-3 hover:bg-white/10 rounded-xl transition-all duration-200 active:scale-90" title="Partilhar">
                             <Share2 className="w-5 h-5 text-white" />
                         </button>
