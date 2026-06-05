@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff, AlertCircle, Navigation } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 import { authService, AuthError } from '../services/authService';
+import { authStore } from '../stores/authStore';
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -19,6 +21,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [googleLoading, setGoogleLoading] = useState(false);
 
     if (!isOpen) return null;
 
@@ -42,6 +45,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                 });
             }
 
+            await authStore.getState().initialize();
+
             onClose();
             if (onSuccess) {
                 onSuccess();
@@ -58,6 +63,32 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleGoogleSuccess = async (credentialResponse: any) => {
+        setError(null);
+        setGoogleLoading(true);
+
+        try {
+            await authService.loginWithGoogleCredential(credentialResponse.credential);
+            await authStore.getState().initialize();
+
+            onClose();
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                window.location.href = '/map';
+            }
+        } catch (err) {
+            const authError = err as AuthError;
+            setError(authError.message || 'Erro ao autenticar com Google. Tenta novamente.');
+        } finally {
+            setGoogleLoading(false);
+        }
+    };
+
+    const handleGoogleError = () => {
+        setError('Autenticação com Google falhou. Tenta novamente.');
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,25 +236,21 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                         </div>
                     </div>
 
-                    <div className="flex gap-3">
-                        <button
-                            type="button"
-                            onClick={() => authService.loginWithGoogle()}
-                            className="flex-1 py-3 px-4 border-2 border-slate-200 rounded-xl font-bold text-slate-mid hover:bg-sand hover:border-slate-300 transition-all flex items-center justify-center gap-2 text-sm"
-                        >
-                            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
-                            Google
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => authService.loginWithFacebook()}
-                            className="flex-1 py-3 px-4 border-2 border-slate-200 rounded-xl font-bold text-slate-mid hover:bg-sand hover:border-slate-300 transition-all flex items-center justify-center gap-2 text-sm"
-                        >
-                            <svg className="w-5 h-5 fill-[#1877F2]" viewBox="0 0 24 24">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                            </svg>
-                            Facebook
-                        </button>
+                    <div className="flex justify-center">
+                        {googleLoading ? (
+                            <div className="flex items-center gap-2 py-3 px-6 border-2 border-slate-200 rounded-xl bg-sand">
+                                <div className="w-5 h-5 border-2 border-blue-atlantic/30 border-t-blue-atlantic rounded-full animate-spin" />
+                                <span className="text-sm text-slate-mid font-medium">A autenticar...</span>
+                            </div>
+                        ) : (
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={handleGoogleError}
+                                size="large"
+                                shape="pill"
+                                text="signin_with"
+                            />
+                        )}
                     </div>
                 </form>
 
