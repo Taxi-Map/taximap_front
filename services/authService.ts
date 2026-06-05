@@ -1,4 +1,5 @@
 import api from './api';
+import { authStore } from '../stores/authStore';
 
 // ==================== TIPOS ====================
 
@@ -307,8 +308,7 @@ export const authService = {
     // ==================== LOGOUT ====================
 
     logout(): void {
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('auth_provider');
+        authStore.getState().logout();
     },
 
     logoutAndRedirect(): void {
