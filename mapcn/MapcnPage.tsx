@@ -714,9 +714,9 @@ export default function MapcnPage() {
                         >
                             <Route className="w-6 h-6 text-slate-900" />
                         </Link>
-                        <a href="/profile" className="p-2 bg-white rounded-full shadow-lg hover:bg-slate-50 transition-colors">
+                        <Link to="/profile" className="p-2 bg-white rounded-full shadow-lg hover:bg-slate-50 transition-colors">
                             <User className="w-6 h-6 text-slate-900" />
-                        </a>
+                        </Link>
                     </div>
                 </>
             )}
@@ -749,9 +749,9 @@ export default function MapcnPage() {
                         >
                             <Route className="w-6 h-6 text-slate-900" />
                         </Link>
-                        <a href="/profile" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors">
+                        <Link to="/profile" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors">
                             <User className="w-6 h-6 text-slate-900" />
-                        </a>
+                        </Link>
                     </div>
                 </div>
 
@@ -939,9 +939,9 @@ export default function MapcnPage() {
                         <Link to="/builder" className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Route Builder">
                             <Route className="w-5 h-5 text-slate-600" />
                         </Link>
-                        <a href="/profile" className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Perfil">
+                        <Link to="/profile" className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Perfil">
                             <User className="w-5 h-5 text-slate-600" />
-                        </a>
+                        </Link>
                         <button className="p-3 hover:bg-slate-100 rounded-xl transition-all" title="Partilhar">
                             <Share2 className="w-5 h-5 text-slate-600" />
                         </button>

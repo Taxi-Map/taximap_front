@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { ArrowLeft, Camera, Check, Phone, User, Shield, Edit2, Mail, LogOut, Loader2, X, AlertTriangle, TrendingUp, MapPin, CreditCard, ChevronRight } from 'lucide-react';
 import { authService, AuthUser } from '../services/authService';
@@ -209,9 +209,9 @@ export default function ProfilePage() {
             {/* Header */}
             <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
                 <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
-                    <a href="/map" className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                    <Link to="/map" className="p-2 hover:bg-slate-100 rounded-full transition-colors">
                         <ArrowLeft className="w-6 h-6 text-slate-900" />
-                    </a>
+                    </Link>
                     <h1 className="text-lg font-bold text-slate-900">Meu Perfil</h1>
                     {isEditing ? (
                         <div className="flex gap-1">
