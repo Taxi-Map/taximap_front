@@ -1,6 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { Toaster } from 'react-hot-toast';
 import LandingPage from './components/LandingPage';
 import MapPageLeaflet from './components/MapPage';
 import MapPage from './mapcn/MapcnPage';
@@ -12,36 +10,13 @@ import AuthCallback from './components/AuthCallback';
 import VerifyEmailPage from './components/VerifyEmailPage';
 import ForgotPasswordPage from './components/ForgotPasswordPage';
 import ResetPasswordPage from './components/ResetPasswordPage';
-import NotFoundPage from './components/NotFoundPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/useAuth';
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
-
 export default function App() {
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <AuthProvider>
       <BrowserRouter>
-        <Toaster
-          position="top-right"
-          gutter={8}
-          toastOptions={{
-            duration: 4000,
-            style: {
-              fontSize: '14px',
-              fontWeight: 600,
-              borderRadius: '12px',
-              padding: '12px 16px',
-            },
-            success: {
-              iconTheme: { primary: '#22C55E', secondary: '#fff' },
-            },
-            error: {
-              iconTheme: { primary: '#EF4444', secondary: '#fff' },
-            },
-          }}
-        />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/map" element={<MapPage />} />
@@ -70,10 +45,8 @@ export default function App() {
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
-    </GoogleOAuthProvider>
   );
 }

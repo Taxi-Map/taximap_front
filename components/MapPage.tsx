@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { useSearchParams } from 'react-router-dom';
 import { MapComponent } from './MapComponent';
 import { Header } from './Header';
 import { ArrowLeft, Navigation, Share2, Users, User } from 'lucide-react';
@@ -56,7 +55,7 @@ export default function MapPage() {
 
         try {
             if (!userLocation) {
-                toast.error("Por favor, active a localização primeiro.");
+                alert("Por favor, active a localização primeiro.");
                 setIsLoadingRoute(false);
                 return;
             }
@@ -105,26 +104,26 @@ export default function MapPage() {
                             console.warn("ORS could not calculate path between these stops.");
                         }
                     } else {
-                        toast.error("A rota retornada pelo backend não tem paragens.");
+                        alert("A rota retornada pelo backend não tem paragens.");
                     }
                 } else {
                     console.warn("Rota principal não encontrada no backend");
                     // Check if it's a walking route or error
                     if (backendData.dados.analise.podeIrAPe) {
-                        toast.success(`Pode ir a pé! Distância: ${backendData.dados.analise.distanciaAPeMetros}m`);
+                        alert(`Pode ir a pé! Distância: ${backendData.dados.analise.distanciaAPeMetros}m`);
                     } else {
-                        toast.error("Rota principal não encontrada. " + (backendData.dados.analise.avisos[0] || ""));
+                        alert("Rota principal não encontrada. " + (backendData.dados.analise.avisos[0] || ""));
                     }
                 }
 
             } else {
                 console.warn("Rota falhou ou dados vazios do backend");
-                toast.error("Erro ao buscar rota no backend.");
+                alert("Erro ao buscar rota no backend.");
             }
 
         } catch (e) {
             console.error("Exception in handleStartRoute:", e);
-            toast.error("Erro ao buscar rota. Verifique o console.");
+            alert("Erro ao buscar rota. Verifique o console.");
         }
         setIsLoadingRoute(false);
     };
@@ -172,9 +171,9 @@ export default function MapPage() {
                 {/* Header: Back Button & Profile Button */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
-                        <Link to="/" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors">
+                        <a href="/" className="p-2 bg-white rounded-full shadow-md hover:bg-slate-50 transition-colors">
                             <ArrowLeft className="w-6 h-6 text-slate-900" />
-                        </Link>
+                        </a>
                         <h1 className="text-xl font-bold text-slate-900 lg:hidden">Rota</h1>
                     </div>
 

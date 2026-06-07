@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, XCircle, Navigation } from 'lucide-react';
 import { authService } from '../services/authService';
 
 export default function AuthCallback() {
@@ -15,48 +14,74 @@ export default function AuthCallback() {
             const provider = searchParams.get('provider');
             const error = searchParams.get('error');
 
-            if (error) { setStatus('error'); setMessage(getErrorMessage(error)); setTimeout(() => navigate('/'), 3000); return; }
+            if (error) {
+                setStatus('error');
+                setMessage(getErrorMessage(error));
+                setTimeout(() => navigate('/'), 3000);
+                return;
+            }
 
             if (token && provider) {
+                // Save token
                 authService.setToken(token, provider);
+
+                // Verify token is valid
                 const isValid = await authService.verifyToken();
-                if (isValid) { setStatus('success'); setMessage('Login realizado com sucesso!'); setTimeout(() => navigate('/map'), 1500); }
-                else { setStatus('error'); setMessage('Token inválido. Tenta novamente.'); authService.logout(); setTimeout(() => navigate('/'), 3000); }
-            } else { setStatus('error'); setMessage('Erro ao processar autenticação.'); setTimeout(() => navigate('/'), 3000); }
+
+                if (isValid) {
+                    setStatus('success');
+                    setMessage('Login realizado com sucesso!');
+                    setTimeout(() => navigate('/map'), 1500);
+                } else {
+                    setStatus('error');
+                    setMessage('Token inválido. Tenta novamente.');
+                    authService.logout();
+                    setTimeout(() => navigate('/'), 3000);
+                }
+            } else {
+                setStatus('error');
+                setMessage('Erro ao processar autenticação.');
+                setTimeout(() => navigate('/'), 3000);
+            }
         };
+
         handleCallback();
     }, [searchParams, navigate]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-deep via-blue-ocean to-blue-deep flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-modal">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
                 {status === 'loading' && (
                     <>
-                        <div className="w-20 h-20 mx-auto mb-6 bg-blue-horizon/20 rounded-2xl flex items-center justify-center">
-                            <div className="w-10 h-10 border-4 border-blue-atlantic/30 border-t-blue-atlantic rounded-full animate-spin" />
+                        <div className="w-16 h-16 mx-auto mb-6">
+                            <div className="w-full h-full border-4 border-slate-200 border-t-yellow-400 rounded-full animate-spin" />
                         </div>
-                        <h2 className="text-xl font-bold text-storm mb-2">{message}</h2>
-                        <p className="text-slate-mid">Por favor aguarda...</p>
+                        <h2 className="text-xl font-bold text-slate-900 mb-2">{message}</h2>
+                        <p className="text-slate-500">Por favor aguarda...</p>
                     </>
                 )}
 
                 {status === 'success' && (
                     <>
-                        <div className="w-20 h-20 mx-auto mb-6 bg-success-bg rounded-full flex items-center justify-center">
-                            <CheckCircle className="w-8 h-8 text-success" />
+                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
                         </div>
-                        <h2 className="text-xl font-bold text-storm mb-2">{message}</h2>
-                        <p className="text-slate-mid">A redirecionar...</p>
+                        <h2 className="text-xl font-bold text-slate-900 mb-2">{message}</h2>
+                        <p className="text-slate-500">A redirecionar...</p>
                     </>
                 )}
 
                 {status === 'error' && (
                     <>
-                        <div className="w-20 h-20 mx-auto mb-6 bg-error-bg rounded-full flex items-center justify-center">
-                            <XCircle className="w-8 h-8 text-error" />
+                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
                         </div>
-                        <h2 className="text-xl font-bold text-storm mb-2">Erro</h2>
-                        <p className="text-slate-mid">{message}</p>
+                        <h2 className="text-xl font-bold text-slate-900 mb-2">Erro</h2>
+                        <p className="text-slate-500">{message}</p>
                     </>
                 )}
             </div>
