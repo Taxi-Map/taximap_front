@@ -12,6 +12,7 @@ import { fuzzySearch } from '../utils/fuzzySearch';
 import { LoginModal } from '../components/LoginModal';
 import { authService } from '../services/authService';
 import { useAuth } from '../hooks/useAuth';
+import toast from 'react-hot-toast';
 
 export default function MapcnPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -207,7 +208,7 @@ export default function MapcnPage() {
             );
 
             if (!routeData?.sucesso) {
-                alert('Erro ao obter rota do servidor.');
+                toast.error('Erro ao obter rota do servidor.');
                 setIsLoadingRoute(false);
                 return;
             }
@@ -386,7 +387,7 @@ export default function MapcnPage() {
 
         } catch (e) {
             console.error("Error:", e);
-            alert('Erro ao calcular rota.');
+            toast.error('Erro ao calcular rota.');
         }
         setIsLoadingRoute(false);
     };

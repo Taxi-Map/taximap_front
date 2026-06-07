@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { X, Mail, Lock, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { authService, AuthError } from '../services/authService';
+import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { authService } from '../services/authService';
+import { authStore } from '../stores/authStore';
+import { extractApiError } from '../services/api';
+import { GoogleLogin } from '@react-oauth/google';
+import toast from 'react-hot-toast';
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -18,13 +22,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
         password: '',
     });
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
         setIsLoading(true);
 
         try {
@@ -42,28 +44,24 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                 });
             }
 
+            await authStore.getState().initialize();
+            toast.success(isLoginMode ? 'Login efetuado com sucesso!' : 'Conta criada com sucesso!');
+
             // Success - close modal and notify parent
             onClose();
             if (onSuccess) {
                 onSuccess();
             } else {
-                // Redirect to map if no callback
                 window.location.href = '/map';
             }
         } catch (err) {
-            const authError = err as AuthError;
-            if (Array.isArray(authError.message)) {
-                setError(authError.message.join('. '));
-            } else {
-                setError(authError.message || 'Erro ao processar. Tenta novamente.');
-            }
+            toast.error(extractApiError(err, 'Erro ao processar.'));
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setError(null); // Clear error on input change
         setFormData(prev => ({
             ...prev,
             [e.target.name]: e.target.value
@@ -72,7 +70,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
 
     const switchMode = () => {
         setIsLoginMode(!isLoginMode);
-        setError(null);
         setFormData({ firstName: '', lastName: '', email: '', password: '' });
     };
 
@@ -111,14 +108,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
 
                 {/* Form - Smaller padding on mobile */}
                 <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                    {/* Error Display */}
-                    {error && (
-                        <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
-                            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                            <span>{error}</span>
-                        </div>
-                    )}
-
                     {!isLoginMode && (
                         <div className="flex gap-2">
                             <div className="relative flex-1">
@@ -216,25 +205,26 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
                         </div>
                     </div>
 
-                    <div className="flex gap-2 sm:gap-3">
-                        <button
-                            type="button"
-                            onClick={() => authService.loginWithGoogle()}
-                            className="flex-1 py-2.5 sm:py-3 px-3 sm:px-4 border-2 border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
-                        >
-                            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4 sm:w-5 sm:h-5" />
-                            Google
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => authService.loginWithFacebook()}
-                            className="flex-1 py-2.5 sm:py-3 px-3 sm:px-4 border-2 border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
-                        >
-                            <svg className="w-4 h-4 sm:w-5 sm:h-5 fill-[#1877F2]" viewBox="0 0 24 24">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                            </svg>
-                            Facebook
-                        </button>
+                    <div className="flex justify-center">
+                        <GoogleLogin
+                            theme="outline"
+                            size="large"
+                            shape="rectangular"
+                            text="signin_with"
+                            width="350"
+                            onSuccess={async (credentialResponse) => {
+                                try {
+                                    await authService.loginWithGoogleCredential(credentialResponse.credential!);
+                                    await authStore.getState().initialize();
+                                    toast.success('Login efetuado com sucesso!');
+                                    onClose();
+                                    onSuccess?.();
+                                } catch (err) {
+                                    toast.error(extractApiError(err, 'Autenticação com Google falhou.'));
+                                }
+                            }}
+                            onError={() => toast.error('Autenticação com Google falhou.')}
+                        />
                     </div>
                 </form>
 

@@ -5,6 +5,7 @@ import {
     Clock, CreditCard, AlertTriangle, RefreshCw, Ban,
     Users, Search, ChevronUp, ChevronDown, Crown, UserCheck
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { routeService, PendingStopResponse, PendingLineResponse } from '../services/routeService';
 import { authService, AuthUser, Pagamento } from '../services/authService';
 import { useAuth } from '../hooks/useAuth';
@@ -49,9 +50,6 @@ export default function AdminPanelPage() {
     const [totalUsers, setTotalUsers] = useState(0);
     const [userSearch, setUserSearch] = useState('');
     const [roleMenuOpen, setRoleMenuOpen] = useState<string | null>(null);
-
-    // Message state
-    const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
     // Check admin/staff access
     useEffect(() => {
@@ -116,25 +114,17 @@ export default function AdminPanelPage() {
         return () => clearTimeout(timer);
     }, [userSearch, fetchUsers]);
 
-    // Auto-clear messages
-    useEffect(() => {
-        if (message) {
-            const timer = setTimeout(() => setMessage(null), 4000);
-            return () => clearTimeout(timer);
-        }
-    }, [message]);
-
     // ===== ACTIONS =====
 
     const handleApproveStop = async (id: number, name: string) => {
         setActionLoading(`stop-approve-${id}`);
         const success = await routeService.approveStop(id);
         if (success) {
-            setMessage({ type: 'success', text: `Paragem "${name}" aprovada ✅` });
+            toast.success(`Paragem "${name}" aprovada`);
             setApprovalHistory(prev => [{ id, type: 'paragem', name, action: 'aprovada', date: new Date().toISOString() }, ...prev]);
             setPendingStops(prev => prev.filter(s => s.paragem.id !== id));
         } else {
-            setMessage({ type: 'error', text: `Erro ao aprovar paragem "${name}"` });
+            toast.error(`Erro ao aprovar paragem "${name}"`);
         }
         setActionLoading(null);
     };
@@ -143,11 +133,11 @@ export default function AdminPanelPage() {
         setActionLoading(`stop-reject-${id}`);
         const success = await routeService.rejectStop(id);
         if (success) {
-            setMessage({ type: 'success', text: `Paragem "${name}" rejeitada` });
+            toast.success(`Paragem "${name}" rejeitada`);
             setApprovalHistory(prev => [{ id, type: 'paragem', name, action: 'rejeitada', date: new Date().toISOString() }, ...prev]);
             setPendingStops(prev => prev.filter(s => s.paragem.id !== id));
         } else {
-            setMessage({ type: 'error', text: `Erro ao rejeitar paragem "${name}"` });
+            toast.error(`Erro ao rejeitar paragem "${name}"`);
         }
         setActionLoading(null);
     };
@@ -156,11 +146,11 @@ export default function AdminPanelPage() {
         setActionLoading(`line-approve-${id}`);
         const success = await routeService.approveLine(id);
         if (success) {
-            setMessage({ type: 'success', text: `Linha "${name}" aprovada ✅` });
+            toast.success(`Linha "${name}" aprovada`);
             setApprovalHistory(prev => [{ id, type: 'linha', name, action: 'aprovada', date: new Date().toISOString() }, ...prev]);
             setPendingLines(prev => prev.filter(l => l.linha.id !== id));
         } else {
-            setMessage({ type: 'error', text: `Erro ao aprovar linha "${name}"` });
+            toast.error(`Erro ao aprovar linha "${name}"`);
         }
         setActionLoading(null);
     };
@@ -169,11 +159,11 @@ export default function AdminPanelPage() {
         setActionLoading(`line-reject-${id}`);
         const success = await routeService.rejectLine(id);
         if (success) {
-            setMessage({ type: 'success', text: `Linha "${name}" rejeitada` });
+            toast.success(`Linha "${name}" rejeitada`);
             setApprovalHistory(prev => [{ id, type: 'linha', name, action: 'rejeitada', date: new Date().toISOString() }, ...prev]);
             setPendingLines(prev => prev.filter(l => l.linha.id !== id));
         } else {
-            setMessage({ type: 'error', text: `Erro ao rejeitar linha "${name}"` });
+            toast.error(`Erro ao rejeitar linha "${name}"`);
         }
         setActionLoading(null);
     };
@@ -182,10 +172,10 @@ export default function AdminPanelPage() {
         setActionLoading(`pay-process-${payment._id}`);
         const success = await authService.processPayment(payment._id);
         if (success) {
-            setMessage({ type: 'success', text: `Pagamento de ${payment.valorKz} Kz via ${payment.metodo.toUpperCase()} processado!` });
+            toast.success(`Pagamento de ${payment.valorKz} Kz via ${payment.metodo.toUpperCase()} processado!`);
             setPayments(prev => prev.map(p => p._id === payment._id ? { ...p, status: 'processado' as const } : p));
         } else {
-            setMessage({ type: 'error', text: 'Erro ao processar pagamento' });
+            toast.error('Erro ao processar pagamento');
         }
         setActionLoading(null);
     };
@@ -194,23 +184,23 @@ export default function AdminPanelPage() {
         setActionLoading(`pay-cancel-${payment._id}`);
         const success = await authService.cancelPayment(payment._id);
         if (success) {
-            setMessage({ type: 'success', text: `Pagamento cancelado. TM Coins devolvidos ao utilizador.` });
+            toast.success('Pagamento cancelado. TM Coins devolvidos ao utilizador.');
             setPayments(prev => prev.map(p => p._id === payment._id ? { ...p, status: 'cancelado' as const } : p));
         } else {
-            setMessage({ type: 'error', text: 'Erro ao cancelar pagamento' });
+            toast.error('Erro ao cancelar pagamento');
         }
         setActionLoading(null);
     };
 
     const handleChangeRole = async (targetUser: AuthUser, novoRole: 'user' | 'staff' | 'admin') => {
         if (targetUser._id === user?._id) {
-            setMessage({ type: 'error', text: 'Não podes alterar o teu próprio papel' });
+            toast.error('Não podes alterar o teu próprio papel');
             return;
         }
         setActionLoading(`role-${targetUser._id}`);
         const success = await authService.changeUserRole(targetUser._id, novoRole);
         if (success) {
-            setMessage({ type: 'success', text: `${targetUser.firstName} agora é ${ROLE_CONFIG[novoRole].label}` });
+            toast.success(`${targetUser.firstName} agora é ${ROLE_CONFIG[novoRole].label}`);
             setAllUsers(prev => prev.map(u => u._id === targetUser._id ? { ...u, role: novoRole } : u));
         } else {
             setMessage({ type: 'error', text: 'Erro ao alterar papel do utilizador' });
@@ -291,15 +281,6 @@ export default function AdminPanelPage() {
                     ))}
                 </div>
             </div>
-
-            {/* Message Toast */}
-            {message && (
-                <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-semibold flex items-center gap-2 animate-in slide-in-from-right-5 duration-300 ${message.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'
-                    }`}>
-                    {message.type === 'success' ? <Check className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
-                    {message.text}
-                </div>
-            )}
 
             {/* Content */}
             <div className="max-w-4xl mx-auto px-4 py-6">

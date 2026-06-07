@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { MapComponent } from './MapComponent';
 import { Header } from './Header';
 import { ArrowLeft, Navigation, Share2, Users, User } from 'lucide-react';
@@ -55,7 +56,7 @@ export default function MapPage() {
 
         try {
             if (!userLocation) {
-                alert("Por favor, active a localização primeiro.");
+                toast.error("Por favor, active a localização primeiro.");
                 setIsLoadingRoute(false);
                 return;
             }
@@ -104,26 +105,26 @@ export default function MapPage() {
                             console.warn("ORS could not calculate path between these stops.");
                         }
                     } else {
-                        alert("A rota retornada pelo backend não tem paragens.");
+                        toast.error("A rota retornada pelo backend não tem paragens.");
                     }
                 } else {
                     console.warn("Rota principal não encontrada no backend");
                     // Check if it's a walking route or error
                     if (backendData.dados.analise.podeIrAPe) {
-                        alert(`Pode ir a pé! Distância: ${backendData.dados.analise.distanciaAPeMetros}m`);
+                        toast.success(`Pode ir a pé! Distância: ${backendData.dados.analise.distanciaAPeMetros}m`);
                     } else {
-                        alert("Rota principal não encontrada. " + (backendData.dados.analise.avisos[0] || ""));
+                        toast.error("Rota principal não encontrada. " + (backendData.dados.analise.avisos[0] || ""));
                     }
                 }
 
             } else {
                 console.warn("Rota falhou ou dados vazios do backend");
-                alert("Erro ao buscar rota no backend.");
+                toast.error("Erro ao buscar rota no backend.");
             }
 
         } catch (e) {
             console.error("Exception in handleStartRoute:", e);
-            alert("Erro ao buscar rota. Verifique o console.");
+            toast.error("Erro ao buscar rota. Verifique o console.");
         }
         setIsLoadingRoute(false);
     };
