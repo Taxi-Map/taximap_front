@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import LandingPage from './components/LandingPage';
 import MapPageLeaflet from './components/MapPage';
 import MapPage from './mapcn/MapcnPage';
@@ -13,6 +13,8 @@ import VerifyEmailPage from './components/VerifyEmailPage';
 import ForgotPasswordPage from './components/ForgotPasswordPage';
 import ResetPasswordPage from './components/ResetPasswordPage';
 import NotFoundPage from './components/NotFoundPage';
+import ScrollToTop from './components/ScrollToTop';
+import TitleManager from './components/TitleManager';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/useAuth';
 
@@ -23,25 +25,8 @@ export default function App() {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <AuthProvider>
       <BrowserRouter>
-        <Toaster
-          position="top-right"
-          gutter={8}
-          toastOptions={{
-            duration: 4000,
-            style: {
-              fontSize: '14px',
-              fontWeight: 600,
-              borderRadius: '12px',
-              padding: '12px 16px',
-            },
-            success: {
-              iconTheme: { primary: '#22C55E', secondary: '#fff' },
-            },
-            error: {
-              iconTheme: { primary: '#EF4444', secondary: '#fff' },
-            },
-          }}
-        />
+        <ScrollToTop />
+        <TitleManager />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/map" element={<MapPage />} />
@@ -72,6 +57,26 @@ export default function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <Toaster
+          position="top-right"
+          gutter={8}
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#1e293b',
+              color: '#f8fafc',
+              borderRadius: '12px',
+              fontSize: '14px',
+              fontWeight: 600,
+            },
+            success: {
+              iconTheme: { primary: '#22c55e', secondary: '#f0fdf4' },
+            },
+            error: {
+              iconTheme: { primary: '#ef4444', secondary: '#fef2f2' },
+            },
+          }}
+        />
       </BrowserRouter>
     </AuthProvider>
     </GoogleOAuthProvider>
