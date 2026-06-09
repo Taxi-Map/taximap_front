@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import LandingPage from './components/LandingPage';
-import MapPageLeaflet from './components/MapPage';
 import MapPage from './mapcn/MapcnPage';
 import ProfilePage from './components/ProfilePage';
 import RouteBuilderPage from './components/RouteBuilderPage';
@@ -30,7 +29,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/map" element={<MapPage />} />
-          <Route path="/map-leaflet" element={<MapPageLeaflet />} />
+
           <Route path="/profile" element={
             <ProtectedRoute>
               <ProfilePage />

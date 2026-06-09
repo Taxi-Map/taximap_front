@@ -2,8 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import { ensureGoogleMapsLoaded } from '../lib/gmaps-init';
 import { routeService, Stop } from '../services/routeService';
 import { authService } from '../services/authService';
 import { useAuth } from '../hooks/useAuth';
@@ -26,9 +25,11 @@ export default function MapRouteBuilder() {
     const { user, loading: authLoading } = useAuth();
     const isAdminOrStaff = user?.role === 'admin' || user?.role === 'staff';
     const mapContainerRef = useRef<HTMLDivElement>(null);
-    const mapRef = useRef<maplibregl.Map | null>(null);
-    const markersRef = useRef<maplibregl.Marker[]>([]);
-    const tempMarkerRef = useRef<maplibregl.Marker | null>(null);
+    const mapRef = useRef<google.maps.Map | null>(null);
+    const markersRef = useRef<google.maps.Marker[]>([]);
+    const polylinesRef = useRef<google.maps.Polyline[]>([]);
+    const tempMarkerRef = useRef<google.maps.Marker | null>(null);
+    const mapReadyRef = useRef(false);
 
     const [isLoading, setIsLoading] = useState(true);
     const [stops, setStops] = useState<Stop[]>([]);
@@ -36,7 +37,6 @@ export default function MapRouteBuilder() {
     const [selectedStop, setSelectedStop] = useState<Stop | null>(null);
     const [selectedLine, setSelectedLine] = useState<LineData | null>(null);
 
-    // Notification State
     const [notification, setNotification] = useState<{
         isOpen: boolean;
         title: string;
@@ -75,22 +75,17 @@ export default function MapRouteBuilder() {
         setNotification(prev => ({ ...prev, isOpen: false }));
     };
 
-
-
-    // Edit mode state
     const [editMode, setEditMode] = useState<EditMode>('view');
     const [newStopPosition, setNewStopPosition] = useState<{ lng: number; lat: number } | null>(null);
     const [newStopName, setNewStopName] = useState('');
     const [showStopModal, setShowStopModal] = useState(false);
 
-    // Route creation state
     const [routeStops, setRouteStops] = useState<Stop[]>([]);
     const [newRouteName, setNewRouteName] = useState('');
     const [newRouteDesc, setNewRouteDesc] = useState('');
     const [showRouteModal, setShowRouteModal] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
-    // Edit existing stop/line state
     const [showEditStopModal, setShowEditStopModal] = useState(false);
     const [editStopName, setEditStopName] = useState('');
     const [editStopLat, setEditStopLat] = useState('');
@@ -99,9 +94,8 @@ export default function MapRouteBuilder() {
     const [editLineName, setEditLineName] = useState('');
     const [editLineDesc, setEditLineDesc] = useState('');
     const [showLinesList, setShowLinesList] = useState(false);
-    const [editLineStops, setEditLineStops] = useState<Stop[]>([]); // Stops being edited for a line
+    const [editLineStops, setEditLineStops] = useState<Stop[]>([]);
 
-    // Show loading state while authenticating
     if (authLoading) {
         return (
             <div className="w-full h-screen bg-slate-50 flex items-center justify-center">
@@ -113,30 +107,22 @@ export default function MapRouteBuilder() {
         );
     }
 
-    // Define fetchData before using it in useEffects
     const fetchData = useCallback(async () => {
         setIsLoading(true);
         try {
-            // Admin/Staff: single endpoint returns everything (approved + pending)
-            // Regular user: approved stops + own pending stops
             let mergedStops: Stop[];
             if (isAdminOrStaff) {
                 const all = await routeService.getAllStopsIncludingPending();
-                console.log('--- DADOS DA API: PARAGENS (ADMIN) ---', all);
                 mergedStops = (all || []).map(s => {
-                    // Safe extractor: handle both flat objects and nested {paragem, metadata} formats
                     const isNested = (s as any).paragem !== undefined;
                     const stopData = isNested ? (s as any).paragem : s;
                     const metaStatus = isNested ? (s as any).metadata?.status : undefined;
-
                     const isPending = stopData.pendente === true ||
                         metaStatus === 'pendente' ||
                         stopData.status === 'pendente' ||
                         (s as any).pendente === true ||
                         (s as any).status === 'pendente';
-
                     const finalStatus = metaStatus || stopData.status || (s as any).status || (isPending ? 'pendente' : 'aprovada');
-
                     return {
                         ...stopData,
                         status: finalStatus === 'pendente' ? 'pendente' : finalStatus,
@@ -146,20 +132,14 @@ export default function MapRouteBuilder() {
             } else {
                 const approved = await routeService.getAllStops();
                 mergedStops = approved || [];
-
-                // Merge user's own pending stops
                 if (authService.isAuthenticated()) {
                     const myStops = await routeService.getMyStops();
                     if (myStops) {
                         const myPendingMap = new Map(myStops.filter(s => s.status === 'pendente').map(s => [s.id, s]));
-
-                        // Update status on existing stops
                         mergedStops = mergedStops.map(s => {
                             const p = myPendingMap.get(s.id);
                             return p ? { ...s, status: p.status, criadoPor: p.criadoPor, criadoEm: p.criadoEm } : s;
                         });
-
-                        // Add new pending stops not in approved list
                         const ids = new Set(mergedStops.map(s => s.id));
                         const newPending = myStops.filter(s => s.status === 'pendente' && !ids.has(s.id));
                         mergedStops = [...mergedStops, ...newPending];
@@ -168,21 +148,13 @@ export default function MapRouteBuilder() {
             }
             setStops(mergedStops);
 
-            // Lines: admin/staff get full data including pending
             if (isAdminOrStaff) {
-                // We fetch both: the general inclusive list and the specific pending list,
-                // because getAllLinesIncludingPending might omit "percurso" for pending lines,
-                // while getPendingLines() explicitly returns the "percurso" array needed to draw the map.
                 const [allLinesData, pendingSpecificData] = await Promise.all([
                     routeService.getAllLinesIncludingPending(),
                     routeService.getPendingLines()
                 ]);
-                console.log('--- DADOS DA API: LINHAS (ADMIN) ---', allLinesData);
-                console.log('--- DADOS PENDENTES ESPECÍFICOS (ADMIN) ---', pendingSpecificData);
-
                 if (allLinesData) {
                     const lineDetails: LineData[] = [];
-                    // Create a lookup map for pending lines coordinates so we don't draw empty lines
                     const pendingPathsMap = new Map<number, Stop[]>();
                     if (pendingSpecificData) {
                         pendingSpecificData.forEach(pLine => {
@@ -192,48 +164,32 @@ export default function MapRouteBuilder() {
                             }
                         });
                     }
-
                     for (const rawLine of allLinesData) {
-                        // Safe extractor: handle both flat objects and nested {linha, metadata} formats
                         const isNested = (rawLine as any).linha !== undefined;
                         const lineData = isNested ? (rawLine as any).linha : (rawLine as any);
                         const metaStatus = isNested ? (rawLine as any).metadata?.status : undefined;
-
                         let isPending = lineData.pendente === true ||
                             metaStatus === 'pendente' ||
                             lineData.status === 'pendente' ||
                             (rawLine as any).pendente === true ||
                             (rawLine as any).status === 'pendente';
-
                         const statusFinal = metaStatus || lineData.status || (rawLine as any).status || (isPending ? 'pendente' : 'aprovada');
-
-                        // Force isPending true if statusFinal resolved to pendente
                         if (statusFinal === 'pendente') isPending = true;
-
                         let percursoFinal: Stop[] = [];
-
-                        // 1. If response already includes percurso natively, use it
                         if ((rawLine as any).percurso && (rawLine as any).percurso.length > 0) {
                             percursoFinal = (rawLine as any).percurso;
-                        }
-                        // 2. If it is a pending line, grab the populated path from our specific fetch
-                        else if (isPending && pendingPathsMap.has(lineData.id)) {
+                        } else if (isPending && pendingPathsMap.has(lineData.id)) {
                             percursoFinal = pendingPathsMap.get(lineData.id) || [];
-                        }
-                        // 3. If it is approved, try to fetch its full routing dictionary
-                        else if (!isPending) {
+                        } else if (!isPending) {
                             try {
                                 const details = await routeService.getLineDetails(lineData.id);
                                 if (details && details.percurso) {
                                     percursoFinal = details.percurso;
                                 }
                             } catch (err) {
-                                // Explicitly ignore 404s for approved lines that might be missing details
                                 console.warn(`Silent skip: Details not found for line ${lineData.id}`);
                             }
                         }
-
-                        // Finally, register the line to be drawn!
                         lineDetails.push({
                             id: lineData.id,
                             nome: lineData.nome,
@@ -261,14 +217,11 @@ export default function MapRouteBuilder() {
                         }
                     }
                 }
-
-                // Merge user's own pending lines
                 if (authService.isAuthenticated()) {
                     const myLines = await routeService.getMyLines();
                     if (myLines) {
                         const pendingLines = myLines.filter(l => (l as any).metadata?.status === 'pendente' || l.linha?.status === 'pendente' || l.status === 'pendente');
                         for (const lr of pendingLines) {
-                            // Check if it's not already in lineDetails
                             if (!lineDetails.some(ml => ml.id === lr.linha.id)) {
                                 lineDetails.push({
                                     id: lr.linha.id,
@@ -289,197 +242,186 @@ export default function MapRouteBuilder() {
         } finally {
             setIsLoading(false);
         }
-    }, [isAdminOrStaff]); // VERY IMPORTANT: Re-create fetchData if role changes!
+    }, [isAdminOrStaff]);
 
-    // Initialize map
     useEffect(() => {
         if (!mapContainerRef.current || mapRef.current) return;
 
-        const map = new maplibregl.Map({
-            container: mapContainerRef.current,
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-            center: [13.2345, -8.839],
-            zoom: 12,
-        });
+        ensureGoogleMapsLoaded().then(() => {
+            if (!mapContainerRef.current || mapRef.current) return;
 
-        map.on('load', () => {
+            const map = new google.maps.Map(mapContainerRef.current, {
+                center: { lat: -8.839, lng: 13.2345 },
+                zoom: 12,
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.BOTTOM_RIGHT,
+                },
+                streetViewControl: false,
+                mapTypeControl: false,
+                fullscreenControl: false,
+                clickableIcons: false,
+            });
+
             mapRef.current = map;
-            // Only fetch data if auth has finished loading
-            if (!authLoading) {
-                fetchData();
-            }
-        });
 
-        map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
+            const listener = map.addListener('idle', () => {
+                mapReadyRef.current = true;
+                if (!authLoading) {
+                    fetchData();
+                }
+                google.maps.event.removeListener(listener);
+            });
+        });
 
         return () => {
-            map.remove();
+            mapRef.current = null;
+            mapReadyRef.current = false;
         };
     }, [authLoading, fetchData]);
 
-    // Reload data when auth state changes
     useEffect(() => {
         if (mapRef.current && !authLoading) {
             fetchData();
         }
     }, [authLoading, isAdminOrStaff, fetchData]);
 
-    // Handle map clicks for adding stops
     useEffect(() => {
         const map = mapRef.current;
         if (!map) return;
 
-        const handleClick = (e: maplibregl.MapMouseEvent) => {
+        const handleClick = (e: google.maps.MapMouseEvent) => {
             if (editMode === 'add-stop') {
-                const { lng, lat } = e.lngLat;
+                const lat = e.latLng ? e.latLng.lat() : 0;
+                const lng = e.latLng ? e.latLng.lng() : 0;
                 setNewStopPosition({ lng, lat });
                 setShowStopModal(true);
 
-                // Show temporary marker
                 if (tempMarkerRef.current) {
-                    tempMarkerRef.current.remove();
+                    tempMarkerRef.current.setMap(null);
                 }
-                const el = document.createElement('div');
-                el.style.cssText = `
-                width: 24px; height: 24px;
-                background: #22c55e;
-                border: 3px solid white;
-                border-radius: 50%;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-                `;
-                tempMarkerRef.current = new maplibregl.Marker({ element: el })
-                    .setLngLat([lng, lat])
-                    .addTo(map);
+                const marker = new google.maps.Marker({
+                    position: { lat, lng },
+                    map,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        fillColor: '#22c55e',
+                        fillOpacity: 1,
+                        strokeColor: '#FFFFFF',
+                        strokeWeight: 3,
+                        scale: 12,
+                        anchor: new google.maps.Point(0, 0),
+                    },
+                });
+                tempMarkerRef.current = marker;
             }
         };
 
-        map.on('click', handleClick);
-        return () => { map.off('click', handleClick); };
+        map.addListener('click', handleClick);
+        return () => { };
     }, [editMode]);
 
-    // Render markers when stops change
+    const clearMapOverlays = useCallback(() => {
+        markersRef.current.forEach(marker => marker.setMap(null));
+        markersRef.current = [];
+        polylinesRef.current.forEach(p => p.setMap(null));
+        polylinesRef.current = [];
+    }, []);
+
     useEffect(() => {
         const map = mapRef.current;
-        if (!map || stops.length === 0) return;
+        if (!map || stops.length === 0 || !mapReadyRef.current) return;
 
-        markersRef.current.forEach(marker => marker.remove());
-        markersRef.current = [];
+        clearMapOverlays();
 
         stops.forEach((stop) => {
-            const el = document.createElement('div');
             const isInRoute = routeStops.some(s => s.id === stop.id);
             const isInEditLine = editLineStops.some(s => s.id === stop.id);
-
             const isPending = stop.status === 'pendente';
 
-            // Color priority: edit-line (purple) > create-route (green) > pending (orange) > default (yellow)
-            let bgColor = '#EAB308';
-            let borderColor = '#1e293b';
-            if (isInEditLine) {
-                bgColor = '#a855f7';
-                borderColor = '#6b21a8';
-            } else if (isInRoute) {
-                bgColor = '#22c55e';
-                borderColor = '#166534';
-            } else if (isPending) {
-                bgColor = '#f97316';
-                borderColor = '#c2410c';
-            }
+            let fillColor = '#EAB308';
+            let strokeColor = '#1e293b';
+            let scale = 10;
+            if (isInEditLine) { fillColor = '#a855f7'; strokeColor = '#6b21a8'; }
+            else if (isInRoute) { fillColor = '#22c55e'; strokeColor = '#166534'; }
+            else if (isPending) { fillColor = '#f97316'; strokeColor = '#c2410c'; }
 
-            el.style.cssText = `
-                width: 18px; height: 18px;
-                background: ${bgColor};
-                border: 3px solid ${borderColor};
-                border-radius: 50%;
-                cursor: pointer;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-                transition: box-shadow 0.2s, border-color 0.2s;
-                ${isPending ? 'animation: pulse 2s infinite;' : ''}
-                `;
-            el.title = stop.nome;
+            const marker = new google.maps.Marker({
+                position: { lat: stop.latitude, lng: stop.longitude },
+                map,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor,
+                    fillOpacity: 1,
+                    strokeColor,
+                    strokeWeight: 3,
+                    scale,
+                    anchor: new google.maps.Point(0, 0),
+                },
+                title: stop.nome,
+            });
 
-            el.addEventListener('mouseenter', () => {
-                el.style.boxShadow = '0 0 0 4px rgba(234, 179, 8, 0.4), 0 2px 8px rgba(0,0,0,0.4)';
-            });
-            el.addEventListener('mouseleave', () => {
-                el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
-            });
-            el.addEventListener('click', (e) => {
-                e.stopPropagation();
+            marker.addListener('click', () => {
                 if (editMode === 'create-route') {
-                    // Toggle stop in route
                     if (routeStops.some(s => s.id === stop.id)) {
                         setRouteStops(prev => prev.filter(s => s.id !== stop.id));
                     } else {
                         setRouteStops(prev => [...prev, stop]);
                     }
                 } else if (editMode === 'edit-line') {
-                    // Add stop to line being edited
                     addStopToLine(stop);
                 } else {
                     setSelectedStop(stop);
                 }
             });
 
-            const marker = new maplibregl.Marker({ element: el })
-                .setLngLat([stop.longitude, stop.latitude])
-                .addTo(map);
             markersRef.current.push(marker);
         });
 
-        // Add line connections
+        const colors = ['#22c55e', '#3b82f6', '#ef4444', '#a855f7', '#f97316', '#06b6d4'];
         lines.forEach((line, lineIndex) => {
             if (line.percurso.length < 2) return;
 
-            const coordinates = line.percurso.map(stop => [stop.longitude, stop.latitude]);
-            const sourceId = `line-${line.id}`;
-            const layerId = `line-layer-${line.id}`;
-            const arrowLayerId = `arrow-layer-${line.id}`;
-
-            const colors = ['#22c55e', '#3b82f6', '#ef4444', '#a855f7', '#f97316', '#06b6d4'];
             let color = colors[lineIndex % colors.length];
-
             if (line.pendente || line.status === 'pendente') {
-                color = '#f97316'; // orange for pending lines
+                color = '#f97316';
             }
 
-            if (map.getLayer(arrowLayerId)) map.removeLayer(arrowLayerId);
-            if (map.getLayer(layerId)) map.removeLayer(layerId);
-            if (map.getSource(sourceId)) map.removeSource(sourceId);
+            const path = line.percurso.map(s => ({ lat: s.latitude, lng: s.longitude } as google.maps.LatLngLiteral));
 
-            map.addSource(sourceId, {
-                type: 'geojson',
-                data: {
-                    type: 'Feature',
-                    properties: { name: line.nome },
-                    geometry: { type: 'LineString', coordinates },
-                },
+            const polyline = new google.maps.Polyline({
+                path,
+                strokeColor: color,
+                strokeWeight: 4,
+                strokeOpacity: 0.8,
+                map,
             });
 
-            map.addLayer({
-                id: layerId,
-                type: 'line',
-                source: sourceId,
-                layout: { 'line-join': 'round', 'line-cap': 'round' },
-                paint: { 'line-color': color, 'line-width': 4, 'line-opacity': 0.8 },
+            const arrowPolyline = new google.maps.Polyline({
+                path,
+                strokeColor: color,
+                strokeWeight: 4,
+                strokeOpacity: 0,
+                icons: [{
+                    icon: {
+                        path: 'M 0 -1 0 1',
+                        strokeColor: color,
+                        strokeOpacity: 0.8,
+                        scale: 2,
+                    },
+                    offset: '0',
+                    repeat: '100px',
+                }],
+                map,
             });
 
-            map.addLayer({
-                id: arrowLayerId,
-                type: 'symbol',
-                source: sourceId,
-                layout: {
-                    'symbol-placement': 'line',
-                    'symbol-spacing': 100,
-                    'text-field': '▶',
-                    'text-size': 14,
-                    'text-keep-upright': false,
-                    'text-allow-overlap': true,
-                },
-                paint: { 'text-color': color, 'text-halo-color': '#ffffff', 'text-halo-width': 2 },
+            polyline.addListener('click', () => {
+                setSelectedLine(line);
             });
+
+            polylinesRef.current.push(polyline, arrowPolyline);
         });
-    }, [stops, lines, editMode, routeStops, editLineStops]);
+    }, [stops, lines, editMode, routeStops, editLineStops, clearMapOverlays]);
 
     const handleSaveStop = async () => {
         if (!newStopPosition || !newStopName.trim()) return;
@@ -498,14 +440,10 @@ export default function MapRouteBuilder() {
                 setNewStopName('');
                 setNewStopPosition(null);
                 if (tempMarkerRef.current) {
-                    tempMarkerRef.current.remove();
+                    tempMarkerRef.current.setMap(null);
                     tempMarkerRef.current = null;
                 }
 
-                // Check for pending status (if backend returns it immediately or if we infer it)
-                // For now, if the stop is created but not showing up for others, it might be pending.
-                // The current API returns the created stop object.
-                // We'll assume if it has a status field and it's 'pendente', we notify.
                 if (newStop.status === 'pendente') {
                     showNotification('Sucesso', 'Paragem criada! Ela ficará pendente até aprovação.', 'success');
                 } else {
@@ -561,12 +499,11 @@ export default function MapRouteBuilder() {
         setNewStopName('');
         setNewStopPosition(null);
         if (tempMarkerRef.current) {
-            tempMarkerRef.current.remove();
+            tempMarkerRef.current.setMap(null);
             tempMarkerRef.current = null;
         }
     };
 
-    // ===== EDIT STOP =====
     const handleEditStop = () => {
         if (!selectedStop) return;
         setEditStopName(selectedStop.nome);
@@ -578,7 +515,6 @@ export default function MapRouteBuilder() {
     const handleSaveEditStop = async () => {
         if (!selectedStop || !editStopName.trim()) return;
 
-        // Sanitize name - remove potentially dangerous characters
         const sanitizedName = editStopName.trim().replace(/[<>"'&;]/g, '');
         if (sanitizedName.length === 0 || sanitizedName.length > 100) {
             showNotification('Aviso', 'Nome da paragem inválido (máximo 100 caracteres).', 'warning');
@@ -588,13 +524,11 @@ export default function MapRouteBuilder() {
         const lat = parseFloat(editStopLat);
         const lng = parseFloat(editStopLng);
 
-        // Validate numbers
         if (isNaN(lat) || isNaN(lng)) {
             showNotification('Aviso', 'Latitude e longitude devem ser números válidos.', 'warning');
             return;
         }
 
-        // Validate coordinate ranges
         if (lat < -90 || lat > 90) {
             showNotification('Aviso', 'Latitude deve estar entre -90 e 90.', 'warning');
             return;
@@ -653,17 +587,15 @@ export default function MapRouteBuilder() {
         );
     };
 
-    // ===== EDIT LINE =====
     const handleEditLine = (line: LineData) => {
         setSelectedLine(line);
         setEditLineName(line.nome);
         setEditLineDesc('');
-        setEditLineStops([...line.percurso]); // Copy the stops for editing
+        setEditLineStops([...line.percurso]);
         setEditMode('edit-line');
         setShowLinesList(false);
     };
 
-    // Move stop up in the order
     const moveStopUp = (index: number) => {
         if (index === 0) return;
         const newStops = [...editLineStops];
@@ -671,7 +603,6 @@ export default function MapRouteBuilder() {
         setEditLineStops(newStops);
     };
 
-    // Move stop down in the order
     const moveStopDown = (index: number) => {
         if (index === editLineStops.length - 1) return;
         const newStops = [...editLineStops];
@@ -679,12 +610,10 @@ export default function MapRouteBuilder() {
         setEditLineStops(newStops);
     };
 
-    // Remove stop from line
     const removeStopFromLine = (stopId: number) => {
         setEditLineStops(prev => prev.filter(s => s.id !== stopId));
     };
 
-    // Add stop to line (called when clicking on a marker in edit-line mode)
     const addStopToLine = (stop: Stop) => {
         if (!editLineStops.some(s => s.id === stop.id)) {
             setEditLineStops(prev => [...prev, stop]);
@@ -763,7 +692,6 @@ export default function MapRouteBuilder() {
                 confirmText={notification.confirmText}
                 cancelText={notification.cancelText}
             />
-            {/* Header - Responsive */}
             <div className="absolute top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b px-2 py-2 md:px-4 md:py-3 flex items-center justify-between z-20 shadow-sm gap-2">
                 <div className="flex items-center gap-1 md:gap-3 min-w-0 flex-shrink-0">
                     <button onClick={() => navigate('/map')} className="p-1.5 md:p-2 hover:bg-slate-100 rounded-full flex-shrink-0">
@@ -825,17 +753,14 @@ export default function MapRouteBuilder() {
                 </div>
             </div>
 
-            {/* Map Container */}
             <div ref={mapContainerRef} className="flex-1 w-full h-full" />
 
-            {/* Edit Mode Instructions */}
             {editMode === 'add-stop' && !showStopModal && (
                 <div className="absolute top-24 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-full shadow-lg z-20 animate-pulse">
                     Clique no mapa para adicionar uma paragem
                 </div>
             )}
 
-            {/* Route Builder Panel */}
             {editMode === 'create-route' && (
                 <div className="absolute top-14 md:top-20 left-2 right-2 md:left-4 md:right-auto md:w-80 bg-white rounded-2xl shadow-xl p-3 md:p-4 z-20 max-h-[50vh] md:max-h-[70vh] overflow-auto">
                     <h3 className="font-bold text-slate-900 text-lg mb-3 flex items-center gap-2">
@@ -873,14 +798,12 @@ export default function MapRouteBuilder() {
                 </div>
             )}
 
-            {/* Edit Line Panel (Interactive) */}
             {editMode === 'edit-line' && selectedLine && (
                 <div className="absolute top-14 md:top-20 left-2 right-2 md:left-4 md:right-auto md:w-96 bg-white rounded-2xl shadow-xl p-3 md:p-4 z-20 max-h-[60vh] md:max-h-[80vh] overflow-auto">
                     <h3 className="font-bold text-slate-900 text-lg mb-3 flex items-center gap-2">
                         <Edit2 className="w-5 h-5 text-purple-500" /> Editar Linha
                     </h3>
 
-                    {/* Line name input */}
                     <input
                         type="text"
                         value={editLineName}
@@ -893,7 +816,6 @@ export default function MapRouteBuilder() {
                         Clique nas paragens no mapa para adicionar à linha
                     </p>
 
-                    {/* Stops list with reorder controls */}
                     <div className="space-y-2 mb-4 max-h-[40vh] overflow-auto">
                         {editLineStops.map((stop, idx) => (
                             <div key={stop.id} className="flex items-center gap-2 bg-purple-50 p-2 rounded-lg border border-purple-200">
@@ -902,7 +824,6 @@ export default function MapRouteBuilder() {
                                 </span>
                                 <span className="flex-1 text-sm text-slate-700 truncate">{stop.nome}</span>
 
-                                {/* Reorder buttons */}
                                 <div className="flex flex-col gap-0.5">
                                     <button
                                         onClick={() => moveStopUp(idx)}
@@ -922,7 +843,6 @@ export default function MapRouteBuilder() {
                                     </button>
                                 </div>
 
-                                {/* Remove button */}
                                 <button
                                     onClick={() => removeStopFromLine(stop.id)}
                                     className="p-1 hover:bg-red-100 rounded"
@@ -938,7 +858,6 @@ export default function MapRouteBuilder() {
                         <p className="text-sm text-amber-600 mb-3">⚠️ Mínimo 2 paragens necessárias</p>
                     )}
 
-                    {/* Action buttons */}
                     <div className="flex gap-2">
                         <button
                             onClick={cancelEditLine}
@@ -958,7 +877,6 @@ export default function MapRouteBuilder() {
                 </div>
             )}
 
-            {/* Add Stop Modal */}
             {showStopModal && (
                 <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
@@ -997,7 +915,6 @@ export default function MapRouteBuilder() {
                 </div>
             )}
 
-            {/* Save Route Modal */}
             {showRouteModal && (
                 <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
@@ -1041,7 +958,6 @@ export default function MapRouteBuilder() {
                 </div>
             )}
 
-            {/* Stop Info Panel */}
             {selectedStop && editMode === 'view' && (
                 <div className="absolute bottom-20 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-white rounded-2xl shadow-xl p-4 z-20">
                     <div className="flex items-start justify-between mb-3">
@@ -1082,7 +998,6 @@ export default function MapRouteBuilder() {
                 </div>
             )}
 
-            {/* Legend - Smaller on mobile */}
             <div className="absolute bottom-2 md:bottom-4 left-2 md:left-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-2 md:p-3 z-10">
                 <p className="text-[10px] md:text-xs font-bold text-slate-700 mb-1 md:mb-2">Legenda</p>
                 <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-slate-600">
@@ -1103,7 +1018,6 @@ export default function MapRouteBuilder() {
                 </div>
             </div>
 
-            {/* Stats - Hidden on mobile when panels are open */}
             <div className="absolute top-16 md:top-20 right-2 md:right-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-2 md:p-3 z-10">
                 <p className="text-[10px] md:text-xs font-bold text-slate-700">Estatísticas</p>
                 <p className="text-xs md:text-sm text-slate-600">{stops.length} paragens</p>
@@ -1113,7 +1027,6 @@ export default function MapRouteBuilder() {
                 <p className="text-xs md:text-sm text-slate-600">{lines.length} linhas</p>
             </div>
 
-            {/* Loading overlay */}
             {isLoading && (
                 <div className="absolute inset-0 bg-white/50 z-50 flex items-center justify-center">
                     <div className="bg-white rounded-2xl p-6 shadow-xl flex flex-col items-center">
@@ -1123,7 +1036,6 @@ export default function MapRouteBuilder() {
                 </div>
             )}
 
-            {/* Lines List Panel */}
             {showLinesList && editMode === 'view' && (
                 <div className="absolute top-14 md:top-20 left-2 right-2 md:left-4 md:right-auto md:w-80 bg-white rounded-2xl shadow-xl p-3 md:p-4 z-20 max-h-[60vh] md:max-h-[70vh] overflow-auto">
                     <div className="flex items-center justify-between mb-3">
@@ -1167,7 +1079,6 @@ export default function MapRouteBuilder() {
                 </div>
             )}
 
-            {/* Edit Stop Modal */}
             {showEditStopModal && selectedStop && (
                 <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
@@ -1183,7 +1094,6 @@ export default function MapRouteBuilder() {
                             autoFocus
                         />
 
-                        {/* Combined coordinates input with parser */}
                         <div className="mb-3">
                             <label className="text-xs text-slate-500 mb-1 block">Coordenadas (cola aqui)</label>
                             <input
@@ -1192,14 +1102,11 @@ export default function MapRouteBuilder() {
                                 className="w-full p-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    // SECURITY: Only allow valid coordinate characters
-                                    // Removes everything except: digits, minus, period, comma, space
                                     const sanitized = value.replace(/[^0-9.\-,\s]/g, '');
                                     const parts = sanitized.split(/[,\s]+/).filter(p => p.length > 0);
                                     if (parts.length >= 2) {
                                         const lat = parseFloat(parts[0]);
                                         const lng = parseFloat(parts[1]);
-                                        // Validate ranges before setting
                                         if (!isNaN(lat) && !isNaN(lng) &&
                                             lat >= -90 && lat <= 90 &&
                                             lng >= -180 && lng <= 180) {
@@ -1255,7 +1162,6 @@ export default function MapRouteBuilder() {
                 </div>
             )}
 
-            {/* Edit Line Modal */}
             {showEditLineModal && selectedLine && (
                 <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">

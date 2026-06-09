@@ -1,12 +1,33 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
-import maplibregl, { Map as MapLibreMap, MapOptions } from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import { createRoot } from 'react-dom/client';
+import { TaxiPhysics } from '../utils/TaxiPhysics';
+import { ensureGoogleMapsLoaded, getControlPosition } from '../lib/gmaps-init';
 
-// Context for Map instance
+const DARK_STYLES: google.maps.MapOptions['styles'] = [
+    { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+    { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#d59563' }] },
+    { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#d59563' }] },
+    { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#263c3f' }] },
+    { featureType: 'poi.park', elementType: 'labels.text.fill', stylers: [{ color: '#6b9a76' }] },
+    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#38414e' }] },
+    { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#212a37' }] },
+    { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#9ca5b3' }] },
+    { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#746855' }] },
+    { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#1f2835' }] },
+    { featureType: 'road.highway', elementType: 'labels.text.fill', stylers: [{ color: '#f3d19c' }] },
+    { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#2f3948' }] },
+    { featureType: 'transit.station', elementType: 'labels.text.fill', stylers: [{ color: '#d59563' }] },
+    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#17263c' }] },
+    { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#515c6d' }] },
+    { featureType: 'water', elementType: 'labels.text.stroke', stylers: [{ color: '#17263c' }] },
+];
+
 interface MapContextType {
-    map: MapLibreMap | null;
+    map: google.maps.Map | null;
     isLoaded: boolean;
 }
 
@@ -14,10 +35,42 @@ const MapContext = createContext<MapContextType>({ map: null, isLoaded: false })
 
 export const useMap = () => useContext(MapContext);
 
-// Map Component
+function toLatLng(lngLat: number[]): google.maps.LatLngLiteral {
+    return { lat: lngLat[1], lng: lngLat[0] };
+}
+
+function toLatLngArray(coords: number[][]): google.maps.LatLngLiteral[] {
+    return coords.map(c => ({ lat: c[1], lng: c[0] }));
+}
+
+function createColorIcon(color: string, scale: number = 10): google.maps.Symbol {
+    return {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: color,
+        fillOpacity: 1,
+        strokeColor: '#FFFFFF',
+        strokeWeight: 3,
+        scale: scale,
+        anchor: new google.maps.Point(0, 0),
+    };
+}
+
+function createRotatedIcon(rotation: number): google.maps.Icon {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-20 -20 40 40">
+        <g transform="rotate(${rotation.toFixed(1)})">
+            <image href="/icon/taxi_icon.ico" width="36" height="36" x="-18" y="-18" />
+        </g>
+    </svg>`;
+    return {
+        url: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg),
+        scaledSize: new google.maps.Size(40, 40),
+        anchor: new google.maps.Point(20, 20),
+    };
+}
+
 interface MapcnProps {
     children?: ReactNode;
-    center?: [number, number]; // [lng, lat]
+    center?: [number, number];
     zoom?: number;
     className?: string;
     theme?: 'light' | 'dark';
@@ -25,47 +78,59 @@ interface MapcnProps {
 
 export const Mapcn: React.FC<MapcnProps> = ({
     children,
-    center = [13.2345, -8.839],  // Luanda default
+    center = [13.2345, -8.839],
     zoom = 13,
     className = '',
     theme = 'light'
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const mapRef = useRef<MapLibreMap | null>(null);
+    const mapRef = useRef<google.maps.Map | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
-
-    const styleUrl = theme === 'dark'
-        ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
-        : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
 
     useEffect(() => {
         if (!containerRef.current || mapRef.current) return;
 
-        const map = new maplibregl.Map({
-            container: containerRef.current,
-            style: styleUrl,
-            center: center as [number, number],
-            zoom: zoom,
-        });
+        ensureGoogleMapsLoaded().then(() => {
+            if (!containerRef.current || mapRef.current) return;
 
-        map.on('load', () => {
-            setIsLoaded(true);
-        });
+            const map = new google.maps.Map(containerRef.current, {
+                center: toLatLng(center),
+                zoom: zoom,
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM,
+                },
+                streetViewControl: false,
+                mapTypeControl: false,
+                fullscreenControl: false,
+                styles: theme === 'dark' ? DARK_STYLES : undefined,
+                clickableIcons: false,
+            });
 
-        mapRef.current = map;
+            mapRef.current = map;
+
+            const listener = map.addListener('idle', () => {
+                setIsLoaded(true);
+                google.maps.event.removeListener(listener);
+            });
+        });
 
         return () => {
-            map.remove();
             mapRef.current = null;
         };
     }, []);
 
-    // Update center when props change
     useEffect(() => {
         if (mapRef.current && isLoaded) {
-            mapRef.current.flyTo({ center, zoom, duration: 2000 });
+            mapRef.current.panTo(toLatLng(center));
         }
-    }, [center, zoom, isLoaded]);
+    }, [center, isLoaded]);
+
+    useEffect(() => {
+        if (mapRef.current && isLoaded) {
+            mapRef.current.setZoom(zoom);
+        }
+    }, [zoom, isLoaded]);
 
     return (
         <MapContext.Provider value={{ map: mapRef.current, isLoaded }}>
@@ -75,7 +140,6 @@ export const Mapcn: React.FC<MapcnProps> = ({
     );
 };
 
-// MapControls Component
 interface MapcnControlsProps {
     position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
     showZoom?: boolean;
@@ -92,47 +156,52 @@ export const MapcnControls: React.FC<MapcnControlsProps> = ({
     onLocate
 }) => {
     const { map, isLoaded } = useMap();
-    const navControlRef = useRef<maplibregl.NavigationControl | null>(null);
-    const geoControlRef = useRef<maplibregl.GeolocateControl | null>(null);
+    const locateControlAdded = useRef(false);
 
     useEffect(() => {
         if (!map || !isLoaded) return;
 
-        // Add NavigationControl (zoom) only if not already added
-        if (showZoom && !navControlRef.current) {
-            navControlRef.current = new maplibregl.NavigationControl({ showCompass });
-            map.addControl(navControlRef.current, position);
-        }
+        if (showLocate && navigator.geolocation && !locateControlAdded.current) {
+            locateControlAdded.current = true;
 
-        // Add GeolocateControl only if not already added
-        if (showLocate && navigator.geolocation && !geoControlRef.current) {
-            geoControlRef.current = new maplibregl.GeolocateControl({
-                positionOptions: { enableHighAccuracy: true },
-                trackUserLocation: true
+            const locateDiv = document.createElement('div');
+            locateDiv.className = 'mapcn-geolocate-control';
+            locateDiv.innerHTML = `<div style="width: 40px; height: 40px; background: white; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M22 12h-2"/><path d="M4 12H2"/>
+                </svg>
+            </div>`;
+
+            locateDiv.addEventListener('click', () => {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+                        map.panTo({ lat, lng });
+                        map.setZoom(16);
+                        if (onLocate) {
+                            onLocate({ longitude: lng, latitude: lat });
+                        }
+                    },
+                    (err) => console.error('Geolocation error:', err),
+                    { enableHighAccuracy: true }
+                );
             });
-            map.addControl(geoControlRef.current, position);
+
+            map.controls[getControlPosition(position)].push(locateDiv);
         }
 
-        // Cleanup on unmount
         return () => {
-            if (navControlRef.current && map) {
-                try { map.removeControl(navControlRef.current); } catch (e) { }
-                navControlRef.current = null;
-            }
-            if (geoControlRef.current && map) {
-                try { map.removeControl(geoControlRef.current); } catch (e) { }
-                geoControlRef.current = null;
-            }
+            locateControlAdded.current = false;
         };
-    }, [map, isLoaded, showZoom, showCompass, showLocate, position]);
+    }, [map, isLoaded, showLocate, position, onLocate]);
 
     return null;
 };
 
-// MapRoute Component
 interface MapcnRouteProps {
     id?: string;
-    coordinates: [number, number][]; // [lng, lat][]
+    coordinates: [number, number][];
     color?: string;
     width?: number;
     opacity?: number;
@@ -141,7 +210,6 @@ interface MapcnRouteProps {
 }
 
 export const MapcnRoute: React.FC<MapcnRouteProps> = ({
-    id = `route-${Math.random().toString(36).substr(2, 9)}`,
     coordinates,
     color = '#22C55E',
     width = 5,
@@ -150,73 +218,60 @@ export const MapcnRoute: React.FC<MapcnRouteProps> = ({
     onClick
 }) => {
     const { map, isLoaded } = useMap();
+    const polylineRef = useRef<google.maps.Polyline | null>(null);
 
     useEffect(() => {
         if (!map || !isLoaded || coordinates.length < 2) return;
 
-        const sourceId = `${id}-source`;
-        const layerId = `${id}-layer`;
+        if (polylineRef.current) {
+            polylineRef.current.setMap(null);
+        }
 
-        // Add source
-        if (!map.getSource(sourceId)) {
-            map.addSource(sourceId, {
-                type: 'geojson',
-                data: {
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {
-                        type: 'LineString',
-                        coordinates: coordinates
-                    }
-                }
-            });
-        } else {
-            (map.getSource(sourceId) as maplibregl.GeoJSONSource).setData({
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                    type: 'LineString',
-                    coordinates: coordinates
-                }
+        const path = toLatLngArray(coordinates);
+
+        const polyline = new google.maps.Polyline({
+            path,
+            strokeColor: color,
+            strokeWeight: width,
+            strokeOpacity: dashArray ? 0 : opacity,
+            clickable: !!onClick,
+        });
+
+        if (dashArray) {
+            const totalRepeat = dashArray[0] + dashArray[1];
+            polyline.setOptions({
+                strokeOpacity: 0,
+                icons: [{
+                    icon: {
+                        path: 'M 0 -1 0 1',
+                        strokeOpacity: opacity,
+                        strokeColor: color,
+                        scale: width * 0.4,
+                    },
+                    offset: '0',
+                    repeat: `${totalRepeat}px`,
+                }],
             });
         }
 
-        // Add layer
-        if (!map.getLayer(layerId)) {
-            map.addLayer({
-                id: layerId,
-                type: 'line',
-                source: sourceId,
-                layout: {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                paint: {
-                    'line-color': color,
-                    'line-width': width,
-                    'line-opacity': opacity,
-                    ...(dashArray ? { 'line-dasharray': dashArray } : {})
-                }
-            });
+        polyline.setMap(map);
 
-            if (onClick) {
-                map.on('click', layerId, onClick);
-            }
+        if (onClick) {
+            polyline.addListener('click', onClick);
         }
+
+        polylineRef.current = polyline;
 
         return () => {
-            if (map && map.getStyle()) {
-                if (map.getLayer(layerId)) map.removeLayer(layerId);
-                if (map.getSource(sourceId)) map.removeSource(sourceId);
+            if (polylineRef.current) {
+                polylineRef.current.setMap(null);
+                polylineRef.current = null;
             }
         };
-    }, [map, isLoaded, coordinates, color, width, opacity, dashArray, id, onClick]);
+    }, [map, isLoaded, coordinates, color, width, opacity, dashArray, onClick]);
 
     return null;
 };
-
-// MapPopup Component - Standalone popup on the map
-import { createRoot } from 'react-dom/client';
 
 interface MapcnPopupProps {
     longitude: number;
@@ -234,73 +289,46 @@ export const MapcnPopup: React.FC<MapcnPopupProps> = ({
     latitude,
     children,
     onClose,
-    closeButton = true,
-    closeOnClick = false,
-    focusAfterOpen = false,
     className = ''
 }) => {
     const { map, isLoaded } = useMap();
-    const popupRef = useRef<maplibregl.Popup | null>(null);
+    const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const rootRef = useRef<ReturnType<typeof createRoot> | null>(null);
     const isUnmounting = useRef(false);
-    const childrenRef = useRef(children); // Keep children in ref
+    const childrenRef = useRef(children);
 
-    // Always update childrenRef when children change
     childrenRef.current = children;
 
-    console.log('[MapcnPopup] Render - isLoaded:', isLoaded, 'map:', !!map, 'children:', children);
-
     useEffect(() => {
-        console.log('[MapcnPopup] Mount effect running - map:', !!map, 'isLoaded:', isLoaded);
         isUnmounting.current = false;
 
-        if (!map || !isLoaded) {
-            console.log('[MapcnPopup] Map not ready, skipping');
-            return;
-        }
+        if (!map || !isLoaded) return;
 
-        // Create container for React content
         const container = document.createElement('div');
         container.className = 'mapcn-popup-container ' + className;
         containerRef.current = container;
 
-        // Create React root and render using the ref (current children)
         const root = createRoot(container);
         rootRef.current = root;
-
-        // Use childrenRef.current to get the most up-to-date children
-        console.log('[MapcnPopup] Rendering children:', childrenRef.current);
         root.render(<>{childrenRef.current}</>);
 
-        console.log('[MapcnPopup] Creating popup at:', longitude, latitude);
+        const infoWindow = new google.maps.InfoWindow({
+            content: container,
+            position: { lat: latitude, lng: longitude },
+            disableAutoPan: false,
+        });
 
-        const popup = new maplibregl.Popup({
-            closeButton: closeButton,
-            closeOnClick: closeOnClick,
-            focusAfterOpen: focusAfterOpen,
-            className: 'mapcn-popup',
-            maxWidth: '320px'
-        })
-            .setLngLat([longitude, latitude])
-            .setDOMContent(container)
-            .addTo(map);
-
-        popup.on('close', () => {
-            console.log('[MapcnPopup] Popup close event fired! isUnmounting:', isUnmounting.current);
+        infoWindow.addListener('closeclick', () => {
             if (!isUnmounting.current && onClose) {
-                console.log('[MapcnPopup] User closed popup - calling onClose callback');
                 onClose();
-            } else {
-                console.log('[MapcnPopup] Ignoring close event (React unmounting)');
             }
         });
 
-        popupRef.current = popup;
-        console.log('[MapcnPopup] Popup added to map successfully');
+        infoWindow.open(map);
+        infoWindowRef.current = infoWindow;
 
         return () => {
-            console.log('[MapcnPopup] Cleanup - setting isUnmounting=true and removing popup');
             isUnmounting.current = true;
             if (rootRef.current) {
                 setTimeout(() => {
@@ -310,30 +338,28 @@ export const MapcnPopup: React.FC<MapcnPopupProps> = ({
                     }
                 }, 0);
             }
-            popup.remove();
+            if (infoWindowRef.current) {
+                infoWindowRef.current.close();
+                infoWindowRef.current = null;
+            }
         };
     }, [map, isLoaded]);
 
-    // Update children when they change (after mount)
     useEffect(() => {
-        if (rootRef.current && !isUnmounting.current && popupRef.current) {
-            console.log('[MapcnPopup] Updating children in existing popup');
+        if (rootRef.current && !isUnmounting.current && infoWindowRef.current) {
             rootRef.current.render(<>{children}</>);
         }
     }, [children]);
 
-    // Update position if it changes
     useEffect(() => {
-        if (popupRef.current) {
-            console.log('[MapcnPopup] Updating position to:', longitude, latitude);
-            popupRef.current.setLngLat([longitude, latitude]);
+        if (infoWindowRef.current) {
+            infoWindowRef.current.setPosition({ lat: latitude, lng: longitude });
         }
     }, [longitude, latitude]);
 
     return null;
 };
 
-// MapMarker Component
 interface MapcnMarkerProps {
     longitude: number;
     latitude: number;
@@ -347,61 +373,58 @@ interface MapcnMarkerProps {
 export const MapcnMarker: React.FC<MapcnMarkerProps> = ({
     longitude,
     latitude,
-    children,
     color = '#3B82F6',
     onClick,
     draggable = false,
     onDragEnd
 }) => {
     const { map, isLoaded } = useMap();
-    const markerRef = useRef<maplibregl.Marker | null>(null);
+    const markerRef = useRef<google.maps.Marker | null>(null);
 
     useEffect(() => {
         if (!map || !isLoaded) return;
 
-        // Create marker element
-        const el = document.createElement('div');
-        el.className = 'mapcn-marker';
-
-        if (children) {
-            // Render children as marker content would need ReactDOM
-            // For simplicity, use color circle
-            el.innerHTML = `<div style="width: 24px; height: 24px; background: ${color}; border: 3px solid white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;"></div>`;
-        } else {
-            el.innerHTML = `<div style="width: 24px; height: 24px; background: ${color}; border: 3px solid white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;"></div>`;
+        if (markerRef.current) {
+            markerRef.current.setMap(null);
         }
+
+        const marker = new google.maps.Marker({
+            position: { lat: latitude, lng: longitude },
+            map,
+            draggable,
+            icon: createColorIcon(color),
+            clickable: !!onClick,
+        });
 
         if (onClick) {
-            el.addEventListener('click', onClick);
+            marker.addListener('click', onClick);
         }
 
-        const marker = new maplibregl.Marker({ element: el, draggable })
-            .setLngLat([longitude, latitude])
-            .addTo(map);
-
         if (draggable && onDragEnd) {
-            marker.on('dragend', () => {
-                const lngLat = marker.getLngLat();
-                onDragEnd({ lng: lngLat.lng, lat: lngLat.lat });
+            marker.addListener('dragend', () => {
+                const pos = marker.getPosition();
+                if (pos) {
+                    onDragEnd({ lng: pos.lng(), lat: pos.lat() });
+                }
             });
         }
 
         markerRef.current = marker;
 
         return () => {
-            marker.remove();
+            if (markerRef.current) {
+                markerRef.current.setMap(null);
+                markerRef.current = null;
+            }
         };
     }, [map, isLoaded, longitude, latitude, color, onClick, draggable, onDragEnd]);
 
     return null;
 };
 
-// TaxiAnimator Component for MapLibre with physics-based movement
-import { TaxiPhysics } from '../utils/TaxiPhysics';
-
 interface MapcnTaxiAnimatorProps {
-    startPos: [number, number]; // [lng, lat]
-    path: [number, number][];   // [lng, lat][]
+    startPos: [number, number];
+    path: [number, number][];
     isStarted: boolean;
     onStart?: () => void;
     onArrival?: () => void;
@@ -415,15 +438,13 @@ export const MapcnTaxiAnimator: React.FC<MapcnTaxiAnimatorProps> = ({
     onArrival
 }) => {
     const { map, isLoaded } = useMap();
-    const markerRef = useRef<maplibregl.Marker | null>(null);
-    const taxiRef = useRef(new TaxiPhysics(0.000025)); // 5x faster
+    const markerRef = useRef<google.maps.Marker | null>(null);
+    const taxiRef = useRef(new TaxiPhysics(0.000025));
     const requestRef = useRef<number>();
     const currentTargetIndex = useRef(0);
-    const [rotation, setRotation] = useState(0);
     const hasArrived = useRef(false);
     const onArrivalRef = useRef(onArrival);
 
-    // Keep onArrival ref updated
     useEffect(() => {
         onArrivalRef.current = onArrival;
     }, [onArrival]);
@@ -431,58 +452,49 @@ export const MapcnTaxiAnimator: React.FC<MapcnTaxiAnimatorProps> = ({
     useEffect(() => {
         if (!map || !isLoaded) return;
 
-        // Calculate initial rotation based on first path segment
         let initialRotation = 0;
         if (path && path.length > 1) {
-            const dx = path[1][0] - path[0][0]; // lng
-            const dy = path[1][1] - path[0][1]; // lat
+            const dx = path[1][0] - path[0][0];
+            const dy = path[1][1] - path[0][1];
             const angle = Math.atan2(dy, dx);
             initialRotation = (-angle * 180 / Math.PI) + 90;
         }
 
-        // Create taxi element
-        const el = document.createElement('div');
-        el.className = 'mapcn-taxi-marker';
-        el.style.cssText = 'cursor: pointer; transition: transform 0.1s linear;';
-        el.innerHTML = `
-            <div style="width: 40px; height: 40px; transform: rotate(${initialRotation}deg); transition: transform 0.1s linear;">
-                <img src="/icon/taxi_icon.ico" style="width: 100%; height: 100%; object-fit: contain;" />
-            </div>
-        `;
+        const marker = new google.maps.Marker({
+            position: { lat: startPos[1], lng: startPos[0] },
+            map,
+            icon: createRotatedIcon(initialRotation),
+            title: !isStarted && onStart ? 'Clique para iniciar viagem' : undefined,
+            zIndex: 1000,
+        });
 
         if (!isStarted && onStart) {
-            el.addEventListener('click', onStart);
-            // Show "click to start" hint
-            el.title = 'Clique para iniciar viagem';
+            marker.addListener('click', onStart);
         }
-
-        const marker = new maplibregl.Marker({ element: el })
-            .setLngLat(startPos)
-            .addTo(map);
 
         markerRef.current = marker;
 
         return () => {
-            marker.remove();
+            if (markerRef.current) {
+                markerRef.current.setMap(null);
+                markerRef.current = null;
+            }
         };
-    }, [map, isLoaded, startPos, onStart, path]); // Added path dependency
+    }, [map, isLoaded, startPos, onStart, path]);
 
-    // Animation loop
     useEffect(() => {
         if (!isStarted || !markerRef.current || path.length < 2) return;
 
         const taxi = taxiRef.current;
-        taxi.setPosition(startPos[1], startPos[0]); // lat, lng
+        taxi.setPosition(startPos[1], startPos[0]);
         currentTargetIndex.current = 0;
         hasArrived.current = false;
 
         const animate = () => {
             const targetIdx = currentTargetIndex.current;
             if (targetIdx >= path.length) {
-                // Arrived at destination!
                 if (!hasArrived.current) {
                     hasArrived.current = true;
-                    console.log("Taxi arrived at destination!");
                     if (onArrivalRef.current) {
                         onArrivalRef.current();
                     }
@@ -491,10 +503,9 @@ export const MapcnTaxiAnimator: React.FC<MapcnTaxiAnimatorProps> = ({
             }
 
             const target = path[targetIdx];
-            const targetLat = target[1]; // path is [lng, lat]
+            const targetLat = target[1];
             const targetLng = target[0];
 
-            // Check if close enough to target
             const distToTarget = Math.sqrt(
                 Math.pow(taxi.x - targetLng, 2) + Math.pow(taxi.y - targetLat, 2)
             );
@@ -502,10 +513,8 @@ export const MapcnTaxiAnimator: React.FC<MapcnTaxiAnimatorProps> = ({
             if (distToTarget < 0.0001) {
                 currentTargetIndex.current++;
                 if (currentTargetIndex.current >= path.length) {
-                    // Arrived at destination!
                     if (!hasArrived.current) {
                         hasArrived.current = true;
-                        console.log("Taxi arrived at destination!");
                         if (onArrivalRef.current) {
                             onArrivalRef.current();
                         }
@@ -514,23 +523,13 @@ export const MapcnTaxiAnimator: React.FC<MapcnTaxiAnimatorProps> = ({
                 }
             }
 
-            // Drive towards target
             taxi.driveTowards(targetLat, targetLng);
             taxi.update();
 
-            // Update marker position
             if (markerRef.current) {
-                markerRef.current.setLngLat([taxi.x, taxi.y]);
-
-                // Update rotation (convert from math angle to map bearing)
+                markerRef.current.setPosition({ lat: taxi.y, lng: taxi.x });
                 const bearing = (-taxi.angle * 180 / Math.PI) + 90;
-                setRotation(bearing);
-
-                const el = markerRef.current.getElement();
-                const innerDiv = el.querySelector('div');
-                if (innerDiv) {
-                    innerDiv.style.transform = `rotate(${bearing}deg)`;
-                }
+                markerRef.current.setIcon(createRotatedIcon(bearing));
             }
 
             requestRef.current = requestAnimationFrame(animate);
@@ -543,7 +542,7 @@ export const MapcnTaxiAnimator: React.FC<MapcnTaxiAnimatorProps> = ({
                 cancelAnimationFrame(requestRef.current);
             }
         };
-    }, [isStarted, path, startPos]); // REMOVED onArrival from dependencies
+    }, [isStarted, path, startPos]);
 
     return null;
 };
