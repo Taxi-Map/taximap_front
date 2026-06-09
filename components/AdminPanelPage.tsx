@@ -203,7 +203,7 @@ export default function AdminPanelPage() {
             toast.success(`${targetUser.firstName} agora é ${ROLE_CONFIG[novoRole].label}`);
             setAllUsers(prev => prev.map(u => u._id === targetUser._id ? { ...u, role: novoRole } : u));
         } else {
-            setMessage({ type: 'error', text: 'Erro ao alterar papel do utilizador' });
+            toast.error('Erro ao alterar papel do utilizador');
         }
         setActionLoading(null);
         setRoleMenuOpen(null);

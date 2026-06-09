@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
-import type { ToastType } from '../components/ui/Toast';
+
+type ToastType = 'info' | 'success' | 'warning' | 'error';
 
 interface ToastState {
   isOpen: boolean;
