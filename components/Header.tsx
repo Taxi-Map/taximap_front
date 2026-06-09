@@ -20,9 +20,9 @@ export const Header: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-8">
-            <a href="#sobre" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">Sobre</a>
-            <a href="#vantagens" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">Vantagens</a>
-            <a href="#impacto" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">Impacto</a>
+            <button onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })} className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">Sobre</button>
+            <button onClick={() => document.getElementById('vantagens')?.scrollIntoView({ behavior: 'smooth' })} className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">Vantagens</button>
+            <button onClick={() => document.getElementById('impacto')?.scrollIntoView({ behavior: 'smooth' })} className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">Impacto</button>
             <Link
               to="/map?login=true"
               className="bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-black hover:bg-slate-800 hover:scale-105 active:scale-95 transition-all shadow-lg"
@@ -49,9 +49,9 @@ export const Header: React.FC = () => {
       {/* Mobile Menu Content - Inline */}
       <div className={`md:hidden flex flex-col gap-2 px-6 pb-6 transition-opacity duration-300 delay-100 ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}>
         <div className="h-px w-full bg-slate-100 mb-2" />
-        <a onClick={() => setIsMenuOpen(false)} href="#sobre" className="text-xl font-bold text-slate-600 hover:text-slate-900 py-3 px-4 hover:bg-slate-50 rounded-2xl transition-colors">Sobre</a>
-        <a onClick={() => setIsMenuOpen(false)} href="#vantagens" className="text-xl font-bold text-slate-600 hover:text-slate-900 py-3 px-4 hover:bg-slate-50 rounded-2xl transition-colors">Vantagens</a>
-        <a onClick={() => setIsMenuOpen(false)} href="#impacto" className="text-xl font-bold text-slate-600 hover:text-slate-900 py-3 px-4 hover:bg-slate-50 rounded-2xl transition-colors">Impacto</a>
+        <button onClick={() => { setIsMenuOpen(false); document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-xl font-bold text-slate-600 hover:text-slate-900 py-3 px-4 hover:bg-slate-50 rounded-2xl transition-colors text-left">Sobre</button>
+        <button onClick={() => { setIsMenuOpen(false); document.getElementById('vantagens')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-xl font-bold text-slate-600 hover:text-slate-900 py-3 px-4 hover:bg-slate-50 rounded-2xl transition-colors text-left">Vantagens</button>
+        <button onClick={() => { setIsMenuOpen(false); document.getElementById('impacto')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-xl font-bold text-slate-600 hover:text-slate-900 py-3 px-4 hover:bg-slate-50 rounded-2xl transition-colors text-left">Impacto</button>
         <Link
           to="/map?login=true"
           onClick={() => setIsMenuOpen(false)}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { authStore } from '../stores/authStore';
 import { extractApiError } from '../services/api';
@@ -171,13 +172,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSucce
 
                     {isLoginMode && (
                         <div className="text-right">
-                            <a
-                                href="/forgot-password"
+                            <Link
+                                to="/forgot-password"
                                 onClick={onClose}
                                 className="text-xs sm:text-sm text-slate-500 hover:text-slate-700 font-medium hover:underline"
                             >
                                 Esqueceste a palavra-passe?
-                            </a>
+                            </Link>
                         </div>
                     )}
 
