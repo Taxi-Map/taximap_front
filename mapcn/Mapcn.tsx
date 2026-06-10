@@ -58,7 +58,7 @@ function createColorIcon(color: string, scale: number = 10): google.maps.Symbol 
 function createRotatedIcon(rotation: number): google.maps.Icon {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-20 -20 40 40">
         <g transform="rotate(${rotation.toFixed(1)})">
-            <image href="/icon/taxi_icon.ico" width="36" height="36" x="-18" y="-18" />
+            <image href="/img/taxi.png" width="36" height="36" x="-18" y="-18" />
         </g>
     </svg>`;
     return {

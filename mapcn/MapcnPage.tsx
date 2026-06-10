@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Mapcn, MapcnRoute, MapcnMarker, MapcnControls, MapcnTaxiAnimator } from './Mapcn';
 import { ArrowLeft, Navigation, User, Play, Share2, Users, Menu, X, Bookmark, Clock, MapPin, Footprints, Route, CarTaxiFront, UserPlus, Shield } from 'lucide-react';
@@ -77,31 +77,31 @@ export default function MapcnPage() {
     const [showNoRouteModal, setShowNoRouteModal] = useState(false);
     const [noRouteMessage, setNoRouteMessage] = useState('');
 
-    const handleStartTrip = () => {
+    const handleStartTrip = useCallback(() => {
         setIsTripStarted(true);
         setSelectedRouteType('primary');
-    };
+    }, []);
 
-    const handleStartAltTrip = () => {
+    const handleStartAltTrip = useCallback(() => {
         setIsAltTripStarted(true);
         setSelectedRouteType('alternative');
-    };
+    }, []);
 
-    const handlePrimaryArrival = () => {
+    const handlePrimaryArrival = useCallback(() => {
         console.log('[TestPage] handlePrimaryArrival called!');
         console.log('[TestPage] Setting showArrivalPopup to true');
         setShowArrivalPopup(true);
         setArrivalDestination(route?.paragens[route.paragens.length - 1]?.nome || 'Destino');
         // Don't reset trip yet - wait for popup close
-    };
+    }, [route]);
 
-    const handleAltArrival = () => {
+    const handleAltArrival = useCallback(() => {
         console.log('[TestPage] handleAltArrival called!');
         console.log('[TestPage] Setting showArrivalPopup to true');
         setShowArrivalPopup(true);
         setArrivalDestination(alternativeRoute?.paragens[alternativeRoute.paragens.length - 1]?.nome || 'Destino');
         // Don't reset trip yet - wait for popup close
-    };
+    }, [alternativeRoute]);
 
     // Request location
     useEffect(() => {
@@ -252,6 +252,7 @@ export default function MapcnPage() {
 
             // Process each taxi segment individually
             const segmentPaths: [number, number][][] = [];
+            let orsFallbackUsed = false;
             for (const segmento of principal.segmentos) {
                 if (segmento.paragensPercurso && segmento.paragensPercurso.length > 0) {
                     const segmentWaypoints: [number, number][] = segmento.paragensPercurso.map(
@@ -260,8 +261,20 @@ export default function MapcnPage() {
                     const segPath = await orsService.getRoute(segmentWaypoints);
                     if (segPath) {
                         segmentPaths.push(segPath.map(([lat, lng]) => [lng, lat]));
+                    } else {
+                        // Fallback: linha reta entre primeira e última paragem
+                        const first = segmento.paragensPercurso[0];
+                        const last = segmento.paragensPercurso[segmento.paragensPercurso.length - 1];
+                        segmentPaths.push([
+                            [first.longitude, first.latitude],
+                            [last.longitude, last.latitude],
+                        ]);
+                        orsFallbackUsed = true;
                     }
                 }
+            }
+            if (orsFallbackUsed) {
+                toast('Mapa de estradas indisponível — algumas rotas podem aparecer como linha reta.', { icon: '⚠️', duration: 5000 });
             }
 
             setPrimarySegmentPaths(segmentPaths);
@@ -338,6 +351,14 @@ export default function MapcnPage() {
                         const segPath = await orsService.getRoute(segmentWaypoints);
                         if (segPath) {
                             altSegmentPaths.push(segPath.map(([lat, lng]) => [lng, lat]));
+                        } else {
+                            // Fallback: linha reta entre primeira e última paragem
+                            const first = segmento.paragensPercurso[0];
+                            const last = segmento.paragensPercurso[segmento.paragensPercurso.length - 1];
+                            altSegmentPaths.push([
+                                [first.longitude, first.latitude],
+                                [last.longitude, last.latitude],
+                            ]);
                         }
                     }
                 }
