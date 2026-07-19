@@ -13,11 +13,24 @@
       "community": "Comunidade",
       "news": "Notícias",
       "faq": "FAQ",
-      "login": "Entrar"
+      "login": "Entrar",
+      "solution": "Solução",
+      "features": "Funcionalidades",
+      "plans": "Planos",
+      "about": "Quem Somos",
+      "history": "Nossa História",
+      "impact": "Impacto",
+      "contact": "Contacto",
+      "partners": "Parceiros",
+      "becomePartner": "Tornar-se parceiro",
+      "apis": "APIs",
+      "integrations": "Integrações",
+      "advertising": "Publicidade"
     },
     "hero": {
       "title": "O que é Lorem Ipsum",
-      "description": "Lorem Ipsum é simplesmente texto fictício da indústria tipográfica e de impressão."
+      "description": "Lorem Ipsum é simplesmente texto fictício da indústria tipográfica e de impressão.",
+      "cta": "Começar agora"
     }
   }
 }

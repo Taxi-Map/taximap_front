@@ -1,0 +1,47 @@
+{
+  "tabs": [
+    {
+      "id": "particulares",
+      "links": [
+        { "labelKey": "nav.app", "fallback": "Aplicação", "url": "#", "isPrimary": true },
+        { "labelKey": "nav.howItWorks", "fallback": "Como Funciona", "url": "#" },
+        { "labelKey": "nav.community", "fallback": "Comunidade", "url": "#" },
+        { "labelKey": "nav.news", "fallback": "Notícias", "url": "#" },
+        { "labelKey": "nav.faq", "fallback": "FAQ", "url": "#" },
+        { "labelKey": "nav.login", "fallback": "Entrar", "url": "#", "isAction": true }
+      ]
+    },
+    {
+      "id": "empresas",
+      "links": [
+        { "labelKey": "nav.solution", "fallback": "Solução", "url": "#", "isPrimary": true },
+        { "labelKey": "nav.features", "fallback": "Funcionalidades", "url": "#" },
+        { "labelKey": "nav.plans", "fallback": "Planos", "url": "#" },
+        { "labelKey": "nav.news", "fallback": "Notícias", "url": "#" },
+        { "labelKey": "nav.faq", "fallback": "FAQ", "url": "#" },
+        { "labelKey": "nav.login", "fallback": "Entrar", "url": "#", "isAction": true }
+      ]
+    },
+    {
+      "id": "institucional",
+      "links": [
+        { "labelKey": "nav.about", "fallback": "Quem Somos", "url": "#", "isPrimary": true },
+        { "labelKey": "nav.history", "fallback": "Nossa História", "url": "#" },
+        { "labelKey": "nav.impact", "fallback": "Impacto", "url": "#" },
+        { "labelKey": "nav.news", "fallback": "Notícias", "url": "#" },
+        { "labelKey": "nav.faq", "fallback": "FAQ", "url": "#" },
+        { "labelKey": "nav.contact", "fallback": "Contacto", "url": "#", "isAction": true }
+      ]
+    },
+    {
+      "id": "parceiros",
+      "links": [
+        { "labelKey": "nav.partners", "fallback": "Parceiros", "url": "#", "isPrimary": true },
+        { "labelKey": "nav.becomePartner", "fallback": "Tornar-se parceiro", "url": "#" },
+        { "labelKey": "nav.apis", "fallback": "APIs", "url": "#" },
+        { "labelKey": "nav.integrations", "fallback": "Integrações", "url": "#" },
+        { "labelKey": "nav.advertising", "fallback": "Publicidade", "url": "#" }
+      ]
+    }
+  ]
+}

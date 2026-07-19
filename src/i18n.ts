@@ -16,6 +16,10 @@ i18n
       pt: ptTranslation,
     },
     fallbackLng: 'pt', // Default to Portuguese
+    detection: {
+      order: ['localStorage', 'cookie', 'htmlTag'],
+      caches: ['localStorage', 'cookie'],
+    },
     debug: true, // Remove in production
     interpolation: {
       escapeValue: false, // React already safeguards from xss

@@ -1,0 +1,43 @@
+{
+  "slides": [
+    {
+      "image": "/src/assets/1.jpg",
+      "titleKey": "hero.slides.0.title",
+      "titleFallback": "Sempre perto, sempre rápido",
+      "descriptionKey": "hero.slides.0.description",
+      "descriptionFallback": "O mapa inteligente para todas as suas necessidades de transporte. Peça um táxi em segundos.",
+      "descriptionCharLimit": 80,
+      "cta": {
+        "labelKey": "hero.slides.0.cta",
+        "fallback": "Começar agora",
+        "url": "/reservar"
+      }
+    },
+    {
+      "image": "/src/assets/3.jpg",
+      "titleKey": "hero.slides.1.title",
+      "titleFallback": "Transferes de Aeroporto",
+      "descriptionKey": "hero.slides.1.description",
+      "descriptionFallback": "Chegue a tempo e com conforto ao seu voo. Reserve o seu táxi com antecedência.",
+      "descriptionCharLimit": 80,
+      "cta": {
+        "labelKey": "hero.slides.1.cta",
+        "fallback": "Agendar viagem",
+        "url": "/aeroporto"
+      }
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=2000&auto=format&fit=crop",
+      "titleKey": "hero.slides.2.title",
+      "titleFallback": "Soluções para Empresas",
+      "descriptionKey": "hero.slides.2.description",
+      "descriptionFallback": "Faça a gestão das viagens da sua equipa com uma conta empresarial dedicada.",
+      "descriptionCharLimit": 80,
+      "cta": {
+        "labelKey": "hero.slides.2.cta",
+        "fallback": "Saber mais",
+        "url": "/empresas"
+      }
+    }
+  ]
+}

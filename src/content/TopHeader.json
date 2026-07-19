@@ -1,0 +1,11 @@
+{
+  "leftLinks": [
+    { "labelKey": "header.individuals", "fallback": "Particulares", "url": "#" },
+    { "labelKey": "header.businesses", "fallback": "Empresas", "url": "#" },
+    { "labelKey": "header.institutional", "fallback": "Instituições", "url": "#" },
+    { "labelKey": "header.partners", "fallback": "Parceiros", "url": "#" }
+  ],
+  "rightLinks": [
+    { "labelKey": "header.customerSupport", "fallback": "Apoio ao Cliente", "url": "#" }
+  ]
+}

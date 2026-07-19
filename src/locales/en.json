@@ -13,11 +13,24 @@
       "community": "Community",
       "news": "News",
       "faq": "FAQ",
-      "login": "Login"
+      "login": "Login",
+      "solution": "Solution",
+      "features": "Features",
+      "plans": "Plans",
+      "about": "About Us",
+      "history": "Our History",
+      "impact": "Impact",
+      "contact": "Contact",
+      "partners": "Partners",
+      "becomePartner": "Become a Partner",
+      "apis": "APIs",
+      "integrations": "Integrations",
+      "advertising": "Advertising"
     },
     "hero": {
       "title": "What is Lorem Ipsum",
-      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "cta": "Get started"
     }
   }
 }
