@@ -1,0 +1,23 @@
+{
+  "translation": {
+    "header": {
+      "individuals": "Particulares",
+      "businesses": "Empresas",
+      "institutional": "Institucional",
+      "customerSupport": "Apoio ao cliente",
+      "partners": "Parceiros"
+    },
+    "nav": {
+      "app": "Aplicação",
+      "howItWorks": "Como Funciona",
+      "community": "Comunidade",
+      "news": "Notícias",
+      "faq": "FAQ",
+      "login": "Entrar"
+    },
+    "hero": {
+      "title": "O que é Lorem Ipsum",
+      "description": "Lorem Ipsum é simplesmente texto fictício da indústria tipográfica e de impressão."
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "translation": {
+    "header": {
+      "individuals": "Individuals",
+      "businesses": "Businesses",
+      "institutional": "Institutional",
+      "customerSupport": "Customer Support",
+      "partners": "Partners"
+    },
+    "nav": {
+      "app": "Application",
+      "howItWorks": "How It Works",
+      "community": "Community",
+      "news": "News",
+      "faq": "FAQ",
+      "login": "Login"
+    },
+    "hero": {
+      "title": "What is Lorem Ipsum",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+    }
+  }
+}
