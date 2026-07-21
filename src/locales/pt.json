@@ -33,9 +33,23 @@
 			"team": "Equipa"
 		},
 		"hero": {
-			"title": "O que é Lorem Ipsum",
-			"description": "Lorem Ipsum é simplesmente texto fictício da indústria tipográfica e de impressão.",
-			"cta": "Começar agora"
+			"slides": {
+				"0": {
+					"title": "Sempre perto, sempre rápido",
+					"description": "O mapa inteligente para todas as suas necessidades de transporte. Peça um táxi em segundos.",
+					"cta": "Começar agora"
+				},
+				"1": {
+					"title": "Transferes de Aeroporto",
+					"description": "Chegue a tempo e com conforto ao seu voo. Reserve o seu táxi com antecedência.",
+					"cta": "Agendar viagem"
+				},
+				"2": {
+					"title": "Soluções para Empresas",
+					"description": "Faça a gestão das viagens da sua equipa com uma conta empresarial dedicada.",
+					"cta": "Saber mais"
+				}
+			}
 		},
 		"presentation": {
 			"cover": {

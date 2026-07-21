@@ -33,9 +33,23 @@
 			"team": "Team"
 		},
 		"hero": {
-			"title": "What is Lorem Ipsum",
-			"description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-			"cta": "Get started"
+			"slides": {
+				"0": {
+					"title": "Always close, always fast",
+					"description": "The smart map for all your transport needs. Order a taxi in seconds.",
+					"cta": "Get started"
+				},
+				"1": {
+					"title": "Airport Transfers",
+					"description": "Arrive on time and comfortably for your flight. Book your taxi in advance.",
+					"cta": "Book now"
+				},
+				"2": {
+					"title": "Business Solutions",
+					"description": "Manage your team's trips with a dedicated business account.",
+					"cta": "Learn more"
+				}
+			}
 		},
 		"presentation": {
 			"cover": {

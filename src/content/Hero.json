@@ -1,7 +1,7 @@
 {
 	"slides": [
 		{
-			"image": "/src/assets/1.jpg",
+			"image": "/1.jpg",
 			"titleKey": "hero.slides.0.title",
 			"titleFallback": "Sempre perto, sempre rápido",
 			"descriptionKey": "hero.slides.0.description",
@@ -14,7 +14,7 @@
 			}
 		},
 		{
-			"image": "/src/assets/3.jpg",
+			"image": "/3.jpg",
 			"titleKey": "hero.slides.1.title",
 			"titleFallback": "Transferes de Aeroporto",
 			"descriptionKey": "hero.slides.1.description",
