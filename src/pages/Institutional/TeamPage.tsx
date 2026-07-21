@@ -7,12 +7,6 @@ const avatarGradients = [
 	"from-emerald-400 to-teal-500",
 ];
 
-const accentColors = [
-	"border-l-primary",
-	"border-l-rose-400",
-	"border-l-emerald-400",
-];
-
 export function TeamPage() {
 	const { t } = useTranslation();
 	const { ref, isInView } = useInView();

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { SLUG_TO_PAGE_ID, PAGE_SLUGS } from "../pages/routeConfig";
+import { SLUG_TO_PAGE_ID } from "../pages/routeConfig";
 
 const PAGE_TITLE_KEY_MAP: Record<string, string> = {
 	about: "nav.about",
