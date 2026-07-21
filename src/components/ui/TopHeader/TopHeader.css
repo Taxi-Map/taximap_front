@@ -1,48 +1,51 @@
 /* --- Top Header --- */
 .top-header {
-  height: 48px;
+	height: 48px;
 }
 
 .top-header-inner {
-  height: 100%;
+	height: 100%;
 }
 
 .top-links {
-  height: 100%;
+	height: 100%;
 }
 
-.top-links a, .top-links button {
-  display: flex;
-  align-items: center;
-  padding: 0 var(--spacing-6);
-  color: var(--color-gray-800);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
-  text-decoration: none;
-  transition: all 0.2s ease;
+.top-links a,
+.top-links button {
+	display: flex;
+	align-items: center;
+	padding: 0 var(--spacing-6);
+	color: var(--color-gray-800);
+	font-weight: var(--font-weight-medium);
+	font-size: var(--font-size-sm);
+	text-decoration: none;
+	transition: all 0.2s ease;
 }
 
-.top-links a:hover, .top-links button:hover {
-  background-color: var(--color-primary-light);
-  color: var(--color-white);
+.top-links a:hover,
+.top-links button:hover {
+	background-color: var(--color-primary-light);
+	color: var(--color-white);
 }
 
-.top-links a.active, .top-links button.active {
-  background-color: var(--color-white);
-  color: var(--color-black);
-  font-weight: var(--font-weight-bold);
+.top-links a.active,
+.top-links button.active {
+	background-color: var(--color-white);
+	color: var(--color-black);
+	font-weight: var(--font-weight-bold);
 }
 
 .top-links-right a {
-  color: var(--color-gray-900);
-  font-size: var(--font-size-sm);
-  transition: color 0.2s ease;
+	color: var(--color-gray-900);
+	font-size: var(--font-size-sm);
+	transition: color 0.2s ease;
 }
 
 .top-links-right a:hover {
-  color: var(--color-white);
+	color: var(--color-white);
 }
 
 .separator {
-  color: var(--color-gray-800);
+	color: var(--color-gray-800);
 }
