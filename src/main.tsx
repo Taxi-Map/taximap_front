@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./i18n";
 import "./index.css";
 import App from "./App.tsx";
-import { NotFound } from "./components/ui/NotFound";
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
@@ -13,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
 				<Route path="/" element={<App />} />
 				<Route path="/:tabSlug" element={<App />} />
 				<Route path="/:tabSlug/:pageSlug" element={<App />} />
-				<Route path="*" element={<NotFound />} />
+				<Route path="*" element={<App />} />
 			</Routes>
 		</BrowserRouter>
 	</StrictMode>,

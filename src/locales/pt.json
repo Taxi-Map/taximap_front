@@ -220,6 +220,24 @@
 				"email": "geral.taximap@gmail.com"
 			}
 		},
+		"contact": {
+			"infoTitle": "Informações de Contacto",
+			"address": "Luanda, Angola",
+			"phone": "+244 929 782 402",
+			"email": "geral.taximap@gmail.com",
+			"formTitle": "Envie-nos uma Mensagem",
+			"name": "Nome",
+			"emailLabel": "Email",
+			"subject": "Assunto",
+			"message": "Mensagem",
+			"send": "Enviar Mensagem",
+			"sent": "Mensagem enviada com sucesso! Entraremos em contacto brevemente.",
+			"social": "Redes Sociais",
+			"socialFacebook": "Facebook",
+			"socialInstagram": "Instagram",
+			"socialLinkedin": "LinkedIn",
+			"socialWhatsapp": "WhatsApp"
+		},
 		"comingSoon": {
 			"title": "Em Breve",
 			"description": "Estamos a trabalhar nesta página. Volte em breve para novidades."
