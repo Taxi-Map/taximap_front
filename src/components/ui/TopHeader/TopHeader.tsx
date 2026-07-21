@@ -1,16 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import "./TopHeader.css";
 import topHeaderContent from "../../../content/TopHeader.json";
 import languagesConfig from "../../../content/languages.json";
+import { TAB_SLUGS } from "../../../pages/routeConfig";
 
 interface TopHeaderProps {
 	activeTab: number;
-	setActiveTab: (idx: number) => void;
 }
 
-export function TopHeader({ activeTab, setActiveTab }: TopHeaderProps) {
+export function TopHeader({ activeTab }: TopHeaderProps) {
 	const { t, i18n } = useTranslation();
+	const navigate = useNavigate();
 	const [isLangOpen, setIsLangOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -19,7 +21,6 @@ export function TopHeader({ activeTab, setActiveTab }: TopHeaderProps) {
 		setIsLangOpen(false);
 	};
 
-	// Handle click outside to close
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
 			if (
@@ -48,7 +49,7 @@ export function TopHeader({ activeTab, setActiveTab }: TopHeaderProps) {
 					{leftLinks.map((link, idx) => (
 						<button
 							key={idx}
-							onClick={() => setActiveTab(idx)}
+							onClick={() => navigate(`/${TAB_SLUGS[idx]}`)}
 							className={activeTab === idx ? "active" : ""}
 						>
 							{t(link.labelKey, link.fallback)}
@@ -63,7 +64,6 @@ export function TopHeader({ activeTab, setActiveTab }: TopHeaderProps) {
 					))}
 					<span className="separator">|</span>
 
-					{/* Language Selector Dropdown */}
 					<div
 						className="relative h-full flex items-center"
 						ref={dropdownRef}

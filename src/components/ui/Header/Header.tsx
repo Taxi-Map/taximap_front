@@ -1,40 +1,37 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 import headerContent from "../../../content/Header.json";
 import topHeaderContent from "../../../content/TopHeader.json";
 import languagesConfig from "../../../content/languages.json";
+import { TAB_SLUGS, PAGE_SLUGS } from "../../../pages/routeConfig";
 import "./Header.css";
 
 interface HeaderProps {
 	activeTab: number;
-	setActiveTab: (idx: number) => void;
 	activePage: string | null;
-	setActivePage: (pageId: string | null) => void;
 }
 
-export function Header({ activeTab, setActiveTab, activePage, setActivePage }: HeaderProps) {
+export function Header({ activeTab, activePage }: HeaderProps) {
 	const { t, i18n } = useTranslation();
+	const navigate = useNavigate();
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 	const languages = languagesConfig;
 	const leftLinks = topHeaderContent.leftLinks;
 	const rightLinks = topHeaderContent.rightLinks;
+	const currentTabSlug = TAB_SLUGS[activeTab];
 
 	const changeLanguage = (lng: string) => {
 		i18n.changeLanguage(lng);
 	};
 
-	const handleNavClick = (e: React.MouseEvent, pageId?: string) => {
+	const linkTo = (pageId?: string): string => {
 		if (pageId) {
-			e.preventDefault();
-			setActivePage(pageId);
-			setIsMobileMenuOpen(false);
+			const slug = PAGE_SLUGS[pageId];
+			if (slug) return `/${currentTabSlug}/${slug}`;
 		}
-	};
-
-	const handleLogoClick = (e: React.MouseEvent) => {
-		e.preventDefault();
-		setActivePage(null);
+		return "#";
 	};
 
 	return (
@@ -42,26 +39,25 @@ export function Header({ activeTab, setActiveTab, activePage, setActivePage }: H
 			<nav className="main-nav bg-white shadow-sm relative z-40">
 				<div className="container px-8 flex justify-between items-center main-nav-inner">
 					<div className="logo ">
-						<a href="/" className="flex items-center" onClick={handleLogoClick}>
+						<Link to="/" className="flex items-center">
 							<img
 								src="/logo.png"
 								alt="Táxi Map"
 								className="h-20 w-auto -mt-6 relative z-50 drop-shadow-md"
 							/>
-						</a>
+						</Link>
 					</div>
 
 					<div className="hidden md:flex items-center gap-8 nav-links">
 						{headerContent.tabs[activeTab]?.links.map(
 							(link, idx) => (
-								<a
+								<Link
 									key={idx}
-									href={link.url}
-									onClick={(e) => handleNavClick(e, link.pageId)}
+									to={linkTo(link.pageId)}
 									className={`${link.isPrimary || activePage === link.pageId ? "active font-bold" : "font-bold"} ${link.isAction ? "text-primary underline underline-offset-4 decoration-2" : ""}`}
 								>
 									{t(link.labelKey, link.fallback) as string}
-								</a>
+								</Link>
 							),
 						)}
 					</div>
@@ -136,8 +132,8 @@ export function Header({ activeTab, setActiveTab, activePage, setActivePage }: H
 								<button
 									key={idx}
 									onClick={() => {
-										setActiveTab(idx);
-										setActivePage(null);
+										navigate(`/${TAB_SLUGS[idx]}`);
+										setIsMobileMenuOpen(false);
 									}}
 									className={`shrink-0 pb-4 pt-2 text-sm font-semibold transition-colors relative whitespace-nowrap ${
 										activeTab === idx
@@ -159,10 +155,10 @@ export function Header({ activeTab, setActiveTab, activePage, setActivePage }: H
 							{(headerContent.tabs[activeTab]?.links ?? [])
 								.filter((l) => !l.isAction)
 								.map((link, idx) => (
-									<a
+									<Link
 										key={idx}
-										href={link.url}
-										onClick={(e) => handleNavClick(e, link.pageId)}
+										to={linkTo(link.pageId)}
+										onClick={() => setIsMobileMenuOpen(false)}
 										className="text-2xl font-bold text-gray-900 hover:text-primary transition-colors"
 									>
 										{
@@ -171,7 +167,7 @@ export function Header({ activeTab, setActiveTab, activePage, setActivePage }: H
 												link.fallback,
 											) as string
 										}
-									</a>
+									</Link>
 								))}
 						</div>
 
@@ -182,9 +178,9 @@ export function Header({ activeTab, setActiveTab, activePage, setActivePage }: H
 									key={idx}
 									className="mt-4 pt-8 border-t border-gray-100"
 								>
-									<a
-										href={link.url}
-										onClick={(e) => handleNavClick(e, link.pageId)}
+									<Link
+										to={linkTo(link.pageId)}
+										onClick={() => setIsMobileMenuOpen(false)}
 										className="text-xl font-bold text-primary flex items-center gap-2"
 									>
 										{
@@ -206,7 +202,7 @@ export function Header({ activeTab, setActiveTab, activePage, setActivePage }: H
 												d="M14 5l7 7m0 0l-7 7m7-7H3"
 											/>
 										</svg>
-									</a>
+									</Link>
 								</div>
 							))}
 					</div>
