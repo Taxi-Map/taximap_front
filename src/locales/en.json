@@ -239,8 +239,17 @@
 			"socialWhatsapp": "WhatsApp"
 		},
 		"comingSoon": {
-			"title": "Coming Soon",
-			"description": "We are working on this page. Check back soon for updates."
+			"title": "Destination Being Mapped",
+			"description": "We're charting the best route to this page. While it's not ready yet, leave your email and we'll notify you when we arrive.",
+			"notifyCta": "Notify Me",
+			"notifyPlaceholder": "your@email.com",
+			"notifySent": "We'll let you know when this destination is available!",
+			"suggestionTitle": "While You Wait",
+			"suggestions": {
+				"app": "Explore the App",
+				"contact": "Contact Us",
+				"about": "About Us"
+			}
 		},
 		"notFound": {
 			"tagline": "Page not found",

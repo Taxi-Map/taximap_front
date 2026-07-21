@@ -239,8 +239,17 @@
 			"socialWhatsapp": "WhatsApp"
 		},
 		"comingSoon": {
-			"title": "Em Breve",
-			"description": "Estamos a trabalhar nesta página. Volte em breve para novidades."
+			"title": "Destino em Mapeamento",
+			"description": "Estamos a traçar a melhor rota para esta página. Enquanto isso não fica pronto, deixe-nos o seu contacto para receber um aviso quando chegarmos ao destino.",
+			"notifyCta": "Avise-me",
+			"notifyPlaceholder": "seu@email.com",
+			"notifySent": "Vamos avisar quando este destino estiver disponível!",
+			"suggestionTitle": "Enquanto espera",
+			"suggestions": {
+				"app": "Explorar App",
+				"contact": "Fale Connosco",
+				"about": "Quem Somos"
+			}
 		},
 		"notFound": {
 			"tagline": "Página não encontrada",
