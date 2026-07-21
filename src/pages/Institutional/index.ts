@@ -1,0 +1,8 @@
+export { AboutPage } from "./AboutPage";
+export { ChallengesPage } from "./ChallengesPage";
+export { DifferentialPage } from "./DifferentialPage";
+export { BenefitsPage } from "./BenefitsPage";
+export { ImpactPage } from "./ImpactPage";
+export { TargetPage } from "./TargetPage";
+export { TeamPage } from "./TeamPage";
+export { ContactPage } from "./ContactPage";

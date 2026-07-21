@@ -25,12 +25,200 @@
 			"becomePartner": "Tornar-se parceiro",
 			"apis": "APIs",
 			"integrations": "Integrações",
-			"advertising": "Publicidade"
+			"advertising": "Publicidade",
+			"challenges": "Desafios",
+			"differential": "Diferencial",
+			"benefits": "Benefícios",
+			"target": "Público-Alvo",
+			"team": "Equipa"
 		},
 		"hero": {
 			"title": "O que é Lorem Ipsum",
 			"description": "Lorem Ipsum é simplesmente texto fictício da indústria tipográfica e de impressão.",
 			"cta": "Começar agora"
+		},
+		"presentation": {
+			"cover": {
+				"title": "A Plataforma Inteligente para a Mobilidade Urbana em Angola",
+				"subtitle": "Táxi Map",
+				"website": "www.taximap.ao",
+				"email": "geral.taximap@gmail.com",
+				"phone": "+244 929 782 402"
+			},
+			"about": {
+				"title": "Quem Somos",
+				"description": "O Táxi Map é uma plataforma tecnológica desenvolvida pela MURA, dedicada à transformação da mobilidade urbana através da tecnologia.",
+				"mission": "Tornar o transporte público e privado mais acessível, organizado, seguro e eficiente para passageiros, operadores de táxi e empresas.",
+				"missionLabel": "Missão",
+				"footer": "Criamos soluções digitais que aproximam pessoas, empresas e prestadores de serviços de transporte."
+			},
+			"vision": {
+				"title": "Nossa Visão",
+				"description": "Ser a principal plataforma tecnológica de mobilidade em Angola e uma referência em África na digitalização do transporte urbano."
+			},
+			"challenges": {
+				"title": "Os Desafios da Mobilidade Urbana em Angola",
+				"individuals": "Particulares (Passageiros)",
+				"individualsItems": [
+					"Dificuldade em identificar a rota correta para chegar ao destino.",
+					"Falta de informação clara sobre percursos e pontos de embarque.",
+					"Incerteza sobre quais táxis passam por determinado local.",
+					"Dependência de terceiros para obter informações sobre rotas.",
+					"Pouca confiança ao deslocar-se para locais desconhecidos."
+				],
+				"businesses": "Empresas de Táxi",
+				"businessesItems": [
+					"Gestão manual da frota e dos motoristas.",
+					"Dificuldade em acompanhar a operação em tempo real.",
+					"Ausência de indicadores e relatórios para apoiar decisões.",
+					"Baixo nível de digitalização dos processos operacionais.",
+					"Dificuldade em escalar e padronizar a operação."
+				],
+				"conclusion": "O Táxi Map conecta estas duas necessidades através da tecnologia."
+			},
+			"solutions": {
+				"title": "Nossas Soluções",
+				"passenger": {
+					"title": "Táxi Map Passageiro",
+					"subtitle": "Para particulares",
+					"description": "Encontrar rapidamente rotas, táxis, percursos, pontos de embarque e navegação."
+				},
+				"business": {
+					"title": "Táxi Map Empresas",
+					"subtitle": "Sistema de gestão para empresas e frotas",
+					"description": "Permite gestão da frota, gestão dos motoristas, monitorização em tempo real, estatísticas e administração."
+				}
+			},
+			"differential": {
+				"title": "O Nosso Diferencial",
+				"description": "Desenvolvido com foco total na realidade angolana. Funcionalidades pensadas para responder aos desafios locais, com suporte técnico dedicado e integração completa.",
+				"pillars": [
+					{
+						"title": "Tecnologia Local",
+						"description": "Conhecimento profundo do mercado angolano."
+					},
+					{
+						"title": "Digitalização",
+						"description": "Transformação digital do transporte."
+					},
+					{
+						"title": "Escalabilidade",
+						"description": "Preparado para crescer para outras províncias."
+					},
+					{
+						"title": "Dados Inteligentes",
+						"description": "Informações para melhorar a operação."
+					}
+				],
+				"pillarsLabel": "Pilares"
+			},
+			"benefits": {
+				"title": "Benefícios da Plataforma",
+				"items": [
+					{
+						"title": "Redução de Custos",
+						"description": "Otimização de rotas e monitorização reduzem custos de combustível e manutenção."
+					},
+					{
+						"title": "Maior Eficiência",
+						"description": "Gestão inteligente e automatização aumentam a produtividade."
+					},
+					{
+						"title": "Melhor Experiência",
+						"description": "Interface intuitiva com rastreamento em tempo real e suporte integrado."
+					}
+				]
+			},
+			"impact": {
+				"title": "Impacto no Mercado",
+				"items": [
+					{
+						"title": "Transformação Digital da Mobilidade",
+						"description": "Impulsiona a digitalização e eficiência da gestão."
+					},
+					{
+						"title": "Melhoria da Mobilidade Urbana",
+						"description": "Otimiza rotas e reduz o tempo de espera nas cidades angolanas."
+					},
+					{
+						"title": "Expansão do Setor Tecnológico",
+						"description": "Cria um ambiente propício para a inovação e investimento em Angola."
+					}
+				]
+			},
+			"target": {
+				"title": "Público-Alvo",
+				"items": [
+					{
+						"title": "Empresas de Táxi",
+						"description": "Gestão centralizada, monitorização e relatórios de desempenho."
+					},
+					{
+						"title": "Entidades Governamentais",
+						"description": "Solução para regulação, fiscalização e dados estratégicos para planeamento urbano."
+					},
+					{
+						"title": "Clientes Corporativos",
+						"description": "Transporte seguro e rastreável para colaboradores, com faturação integrada e controle de despesas."
+					}
+				]
+			},
+			"businessModel": {
+				"title": "Modelo de Negócio",
+				"items": [
+					{
+						"title": "Licenciamento para Empresas",
+						"description": "Aquisição de licença para utilizar a plataforma de gestão."
+					},
+					{
+						"title": "Parcerias Estratégicas",
+						"description": "Colaboração para serviços integrados e novos projetos."
+					},
+					{
+						"title": "APIs e Integrações",
+						"description": "Disponibilização de interfaces para que parceiros integrem os serviços do Táxi Map."
+					}
+				]
+			},
+			"partnerships": {
+				"title": "Parcerias & Oportunidades",
+				"items": [
+					{
+						"title": "Investidores",
+						"description": "Oportunidade em setor estratégico com modelo de receita escalável."
+					},
+					{
+						"title": "Empresas de Táxi",
+						"description": "Integração de frotas para aumento de eficiência."
+					},
+					{
+						"title": "Entidades Governamentais",
+						"description": "Colaboração para modernizar a mobilidade e promover cidades inteligentes."
+					}
+				]
+			},
+			"team": {
+				"title": "Nossa Equipa",
+				"members": [
+					{
+						"name": "Hudson Mateque",
+						"role": "Fundador"
+					},
+					{
+						"name": "Mariquinha Francisco",
+						"role": "Gestora de Marketing"
+					},
+					{
+						"name": "Lourenço António Dala",
+						"role": "Software Engineer"
+					}
+				]
+			},
+			"closing": {
+				"title": "Obrigado!",
+				"website": "taximap.ao",
+				"email": "geral.taximap@gmail.com"
+			}
 		}
 	}
 }

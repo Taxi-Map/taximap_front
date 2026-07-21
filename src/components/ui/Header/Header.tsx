@@ -8,13 +8,14 @@ import "./Header.css";
 interface HeaderProps {
 	activeTab: number;
 	setActiveTab: (idx: number) => void;
+	activePage: string | null;
+	setActivePage: (pageId: string | null) => void;
 }
 
-export function Header({ activeTab, setActiveTab }: HeaderProps) {
+export function Header({ activeTab, setActiveTab, activePage, setActivePage }: HeaderProps) {
 	const { t, i18n } = useTranslation();
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-	// Settings for the Mobile Menu
 	const languages = languagesConfig;
 	const leftLinks = topHeaderContent.leftLinks;
 	const rightLinks = topHeaderContent.rightLinks;
@@ -23,13 +24,25 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 		i18n.changeLanguage(lng);
 	};
 
+	const handleNavClick = (e: React.MouseEvent, pageId?: string) => {
+		if (pageId) {
+			e.preventDefault();
+			setActivePage(pageId);
+			setIsMobileMenuOpen(false);
+		}
+	};
+
+	const handleLogoClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		setActivePage(null);
+	};
+
 	return (
 		<>
-			{/* Main Navigation */}
 			<nav className="main-nav bg-white shadow-sm relative z-40">
 				<div className="container px-8 flex justify-between items-center main-nav-inner">
 					<div className="logo ">
-						<a href="/" className="flex items-center">
+						<a href="/" className="flex items-center" onClick={handleLogoClick}>
 							<img
 								src="/logo.png"
 								alt="Táxi Map"
@@ -38,14 +51,14 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 						</a>
 					</div>
 
-					{/* Desktop Links (Hidden on Mobile) */}
 					<div className="hidden md:flex items-center gap-8 nav-links">
 						{headerContent.tabs[activeTab]?.links.map(
 							(link, idx) => (
 								<a
 									key={idx}
 									href={link.url}
-									className={`${link.isPrimary ? "active font-bold" : "font-bold"} ${link.isAction ? "text-primary underline underline-offset-4 decoration-2" : ""}`}
+									onClick={(e) => handleNavClick(e, link.pageId)}
+									className={`${link.isPrimary || activePage === link.pageId ? "active font-bold" : "font-bold"} ${link.isAction ? "text-primary underline underline-offset-4 decoration-2" : ""}`}
 								>
 									{t(link.labelKey, link.fallback) as string}
 								</a>
@@ -53,7 +66,6 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 						)}
 					</div>
 
-					{/* Mobile Hamburger Button */}
 					<button
 						className="md:hidden p-2 text-primary"
 						onClick={() => setIsMobileMenuOpen(true)}
@@ -76,12 +88,9 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 				</div>
 			</nav>
 
-			{/* Mobile Menu Overlay */}
 			{isMobileMenuOpen && (
 				<div className="fixed inset-0 bg-white z-50 flex flex-col md:hidden animate-in fade-in slide-in-from-right-8 duration-300 ease-out">
-					{/* Mobile Menu Header */}
 					<div className="flex justify-between items-center px-8 py-5 border-b border-gray-100">
-						{/* Language Segmented Control */}
 						<div className="flex bg-gray-100 p-1.5 rounded-none gap-2">
 							{languages.map((lang) => (
 								<button
@@ -98,7 +107,6 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 							))}
 						</div>
 
-						{/* Close Button */}
 						<button
 							className="p-2 -mr-2 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-full transition-colors"
 							onClick={() => setIsMobileMenuOpen(false)}
@@ -120,16 +128,17 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 						</button>
 					</div>
 
-					{/* Tabs Navigation */}
 					<div className="relative pt-2 border-b border-gray-100">
-						{/* Visual affordance for horizontal scroll */}
 						<div className="absolute right-0 top-0 bottom-0 w-16 bg-linear-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
 						<div className="flex overflow-x-auto hide-scrollbar gap-8 px-8">
 							{leftLinks.map((link, idx) => (
 								<button
 									key={idx}
-									onClick={() => setActiveTab(idx)}
+									onClick={() => {
+										setActiveTab(idx);
+										setActivePage(null);
+									}}
 									className={`shrink-0 pb-4 pt-2 text-sm font-semibold transition-colors relative whitespace-nowrap ${
 										activeTab === idx
 											? "text-primary"
@@ -145,15 +154,15 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 						</div>
 					</div>
 
-					{/* Tab Content (Dynamic body links) */}
 					<div className="flex-1 overflow-y-auto px-8 py-8 flex flex-col gap-8">
 						<div className="flex flex-col gap-6">
-							{headerContent.tabs[activeTab]?.links
-								.filter((l: any) => !l.isAction)
-								.map((link: any, idx: number) => (
+							{(headerContent.tabs[activeTab]?.links ?? [])
+								.filter((l) => !l.isAction)
+								.map((link, idx) => (
 									<a
 										key={idx}
 										href={link.url}
+										onClick={(e) => handleNavClick(e, link.pageId)}
 										className="text-2xl font-bold text-gray-900 hover:text-primary transition-colors"
 									>
 										{
@@ -166,15 +175,16 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 								))}
 						</div>
 
-						{headerContent.tabs[activeTab]?.links
-							.filter((l: any) => l.isAction)
-							.map((link: any, idx: number) => (
+						{(headerContent.tabs[activeTab]?.links ?? [])
+							.filter((l) => l.isAction)
+							.map((link, idx) => (
 								<div
 									key={idx}
 									className="mt-4 pt-8 border-t border-gray-100"
 								>
 									<a
 										href={link.url}
+										onClick={(e) => handleNavClick(e, link.pageId)}
 										className="text-xl font-bold text-primary flex items-center gap-2"
 									>
 										{
@@ -201,7 +211,6 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 							))}
 					</div>
 
-					{/* Bottom Footer Links */}
 					<div className="px-8 py-8 bg-gray-50 flex flex-col gap-5 border-t border-gray-200">
 						{rightLinks.map((link, idx) => (
 							<a
