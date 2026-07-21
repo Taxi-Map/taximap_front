@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { TopHeader } from "./components/ui/TopHeader";
 import { Header } from "./components/ui/Header";
 import { Hero } from "./components/ui/Hero";
+import { NotFound } from "./components/ui/NotFound";
 import { pageRegistry } from "./pages/pageRegistry";
 import { TAB_SLUG_TO_INDEX, SLUG_TO_PAGE_ID } from "./pages/routeConfig";
 import { usePageTitle, useScrollToTop } from "./hooks";
@@ -16,7 +17,8 @@ function App() {
 	const activeTab = tabSlug !== undefined ? (TAB_SLUG_TO_INDEX[tabSlug] ?? 0) : 0;
 	const activePage = pageSlug !== undefined ? (SLUG_TO_PAGE_ID[pageSlug] ?? null) : null;
 
-	const PageComponent = activePage ? pageRegistry[activePage] : null;
+	const PageComponent =
+		activePage !== null ? (pageRegistry[activePage] ?? NotFound) : null;
 
 	return (
 		<div className="app-container flex flex-col min-h-dvh w-full">

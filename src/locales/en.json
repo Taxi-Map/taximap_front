@@ -219,6 +219,15 @@
 				"website": "taximap.ao",
 				"email": "geral.taximap@gmail.com"
 			}
+		},
+		"comingSoon": {
+			"title": "Coming Soon",
+			"description": "We are working on this page. Check back soon for updates."
+		},
+		"notFound": {
+			"tagline": "Page not found",
+			"description": "The destination you're looking for isn't on our map. Check the address or return home.",
+			"cta": "Back to Home"
 		}
 	}
 }

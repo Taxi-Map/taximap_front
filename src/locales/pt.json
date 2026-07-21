@@ -219,6 +219,15 @@
 				"website": "taximap.ao",
 				"email": "geral.taximap@gmail.com"
 			}
+		},
+		"comingSoon": {
+			"title": "Em Breve",
+			"description": "Estamos a trabalhar nesta página. Volte em breve para novidades."
+		},
+		"notFound": {
+			"tagline": "Página não encontrada",
+			"description": "O destino que procuras não está no nosso mapa. Verifica o endereço ou volta ao início.",
+			"cta": "Voltar ao Início"
 		}
 	}
 }

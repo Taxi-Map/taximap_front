@@ -30,6 +30,11 @@ export const PAGE_SLUGS: Record<string, string> = {
 	"become-partner": "tornar-se-parceiro",
 	apis: "apis",
 	integrations: "integracoes",
+	community: "comunidade",
+	news: "noticias",
+	faq: "faq",
+	history: "nossa-historia",
+	advertising: "publicidade",
 };
 
 export const SLUG_TO_PAGE_ID: Record<string, string> = Object.fromEntries(

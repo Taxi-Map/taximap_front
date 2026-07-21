@@ -1,4 +1,6 @@
 import type { ComponentType } from "react";
+import { ComingSoon } from "../components/ui/ComingSoon";
+import { NotFound } from "../components/ui/NotFound";
 import {
 	AboutPage,
 	ChallengesPage,
@@ -31,4 +33,10 @@ export const pageRegistry: Record<string, ComponentType> = {
 	"become-partner": PartnersPage,
 	apis: IntegrationsPage,
 	integrations: IntegrationsPage,
+	community: ComingSoon,
+	news: ComingSoon,
+	faq: ComingSoon,
+	history: ComingSoon,
+	advertising: ComingSoon,
+	_not_found: NotFound,
 };
