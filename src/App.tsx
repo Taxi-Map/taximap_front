@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TopHeader } from './components/ui/TopHeader';
 import { Header } from './components/ui/Header';
 import { Hero } from './components/ui/Hero';
+import { AppShowcase } from './components/ui/AppShowcase';
 import { Footer } from './components/ui/Footer';
 
 import './App.css';
@@ -20,6 +21,7 @@ function App() {
       {/* Main Content Sections */}
       <main className="flex-1 w-full flex flex-col">
         <Hero />
+        <AppShowcase />
       </main>
 
       {/* Footer Component */}

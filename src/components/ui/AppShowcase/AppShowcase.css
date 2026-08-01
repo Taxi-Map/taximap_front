@@ -1,0 +1,112 @@
+/* === AppShowcase Section Styles === */
+.app-showcase-section {
+	width: 100%;
+	padding-top: var(--spacing-16);
+	padding-bottom: var(--spacing-16);
+	background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+	position: relative;
+	overflow: hidden;
+}
+
+.app-showcase-container {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--spacing-12);
+	align-items: center;
+}
+
+@media (min-width: 768px) {
+	.app-showcase-container {
+		grid-template-columns: 1fr 1fr;
+		gap: var(--spacing-16);
+	}
+}
+
+/* Smartphone Mockup Frame */
+.phone-mockup-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.phone-frame {
+	width: 100%;
+	max-width: 320px;
+	height: 560px;
+	border-radius: 40px;
+	border: 8px solid #1e293b;
+	background-color: #0f172a;
+	box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Top Notch / Camera Indicator */
+.phone-notch {
+	width: 120px;
+	height: 24px;
+	background-color: #1e293b;
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 12px;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 20;
+}
+
+.phone-screen {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	z-index: 10;
+}
+
+/* Store Badge Buttons */
+.store-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.625rem 0.75rem;
+	border-radius: 0.75rem;
+	background-color: #0f172a;
+	color: #ffffff;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transition: all 0.2s ease-in-out;
+	cursor: pointer;
+	text-decoration: none;
+	width: 100%;
+}
+
+@media (min-width: 640px) {
+	.store-badge {
+		gap: 0.75rem;
+		padding: 0.75rem 1.25rem;
+	}
+}
+
+.store-badge:hover {
+	background-color: #1e293b;
+	transform: translateY(-2px);
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Skeleton Loading Placeholder */
+.skeleton-pulse {
+	animation: skeletonPulse 1.8s ease-in-out infinite;
+	background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+	background-size: 200% 100%;
+}
+
+@keyframes skeletonPulse {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}

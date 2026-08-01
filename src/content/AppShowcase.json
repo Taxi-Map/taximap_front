@@ -1,0 +1,29 @@
+{
+  "titleKey": "appShowcase.title",
+  "titleFallback": "Mobilidade inteligente na palma da sua mão",
+  "subtitleKey": "appShowcase.subtitle",
+  "subtitleFallback": "Planeie viagens e acompanhe os táxis (candongueiros) em tempo real com a aplicação Táxi Map.",
+  "image": "/app-mockup.png",
+  "benefits": [
+    {
+      "key": "appShowcase.benefits.realtime",
+      "fallback": "Rotas e posições em tempo real dos táxis (candongueiros)."
+    },
+    {
+      "key": "appShowcase.benefits.multimodal",
+      "fallback": "Planeamento multimodal combinando caminhada e transportes."
+    },
+    {
+      "key": "appShowcase.benefits.alerts",
+      "fallback": "Alertas da comunidade sobre trânsito, acidentes e vias cortadas."
+    },
+    {
+      "key": "appShowcase.benefits.offline",
+      "fallback": "Otimizado para baixa conectividade e funcionamento offline."
+    }
+  ],
+  "downloadButtons": {
+    "googlePlayUrl": "#",
+    "appStoreUrl": "#"
+  }
+}

@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .agents
+BaseDeConhecimento/
 
 # Editor directories and files
 .vscode/*
