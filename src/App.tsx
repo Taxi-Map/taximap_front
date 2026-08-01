@@ -3,6 +3,7 @@ import { TopHeader } from './components/ui/TopHeader';
 import { Header } from './components/ui/Header';
 import { Hero } from './components/ui/Hero';
 import { AppShowcase } from './components/ui/AppShowcase';
+import { HowItWorks } from './components/ui/HowItWorks';
 import { Footer } from './components/ui/Footer';
 
 import './App.css';
@@ -22,6 +23,7 @@ function App() {
       <main className="flex-1 w-full flex flex-col">
         <Hero />
         <AppShowcase />
+        <HowItWorks />
       </main>
 
       {/* Footer Component */}

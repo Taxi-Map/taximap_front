@@ -95,10 +95,10 @@ export function AppShowcase({ data, isLoading: externalLoading }: AppShowcasePro
 						) : (
 							<div className="w-full h-full bg-slate-900 p-8 flex flex-col items-center justify-center text-center text-white relative z-10 gap-6">
 								<h3 className="font-bold text-2xl md:text-3xl text-white tracking-wide leading-relaxed">
-									Táxi Map - Passageiros
+									{t("appShowcase.passengerApp", "Táxi Map - Passageiros")}
 								</h3>
 								<span className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-[#6DB7E2]/20 text-[#6DB7E2] border border-[#6DB7E2]/40 text-sm font-bold tracking-widest uppercase shadow-inner whitespace-nowrap">
-									Brevemente
+									{t("appShowcase.comingSoon", "Brevemente")}
 								</span>
 							</div>
 						)}
@@ -133,7 +133,7 @@ export function AppShowcase({ data, isLoading: externalLoading }: AppShowcasePro
 						{/* Google Play Button (Disabled) */}
 						<div
 							className="store-badge opacity-60 cursor-not-allowed select-none pointer-events-none"
-							title="Brevemente disponível no Google Play"
+							title={t("appShowcase.comingSoon", "Brevemente")}
 						>
 							<img
 								src={googlePlayIcon}
@@ -141,9 +141,11 @@ export function AppShowcase({ data, isLoading: externalLoading }: AppShowcasePro
 								className="w-6 h-6 sm:w-7 sm:h-7 object-contain opacity-90 shrink-0"
 							/>
 							<div className="flex flex-col text-left leading-tight min-w-0">
-								<span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-400 font-semibold truncate">Disponível no</span>
+								<span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-400 font-semibold truncate">
+									{t("appShowcase.availableOn", "Disponível no")}
+								</span>
 								<span className="text-xs sm:text-sm font-bold text-slate-300 truncate">
-									Google Play <span className="text-[9px] sm:text-[10px] font-normal text-[#6DB7E2] block sm:inline">(Brevemente)</span>
+									Google Play <span className="text-[9px] sm:text-[10px] font-normal text-[#6DB7E2] block sm:inline">({t("appShowcase.comingSoon", "Brevemente")})</span>
 								</span>
 							</div>
 						</div>
@@ -151,7 +153,7 @@ export function AppShowcase({ data, isLoading: externalLoading }: AppShowcasePro
 						{/* App Store Button (Disabled) */}
 						<div
 							className="store-badge opacity-60 cursor-not-allowed select-none pointer-events-none"
-							title="Brevemente disponível na App Store"
+							title={t("appShowcase.comingSoon", "Brevemente")}
 						>
 							<img
 								src={appleIcon}
@@ -159,9 +161,11 @@ export function AppShowcase({ data, isLoading: externalLoading }: AppShowcasePro
 								className="w-6 h-6 sm:w-7 sm:h-7 object-contain opacity-90 shrink-0"
 							/>
 							<div className="flex flex-col text-left leading-tight min-w-0">
-								<span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-400 font-semibold truncate">Descarregar na</span>
+								<span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-400 font-semibold truncate">
+									{t("appShowcase.downloadOn", "Descarregar na")}
+								</span>
 								<span className="text-xs sm:text-sm font-bold text-slate-300 truncate">
-									App Store <span className="text-[9px] sm:text-[10px] font-normal text-[#6DB7E2] block sm:inline">(Brevemente)</span>
+									App Store <span className="text-[9px] sm:text-[10px] font-normal text-[#6DB7E2] block sm:inline">({t("appShowcase.comingSoon", "Brevemente")})</span>
 								</span>
 							</div>
 						</div>

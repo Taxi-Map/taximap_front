@@ -1,0 +1,121 @@
+/* === HowItWorks Section Styles === */
+.how-it-works-section {
+	width: 100%;
+	min-height: calc(100dvh - 120px);
+	padding-top: var(--spacing-20);
+	padding-bottom: var(--spacing-20);
+	background-color: #ffffff;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@media (min-width: 768px) {
+	.how-it-works-section {
+		padding-top: var(--spacing-24);
+		padding-bottom: var(--spacing-24);
+	}
+}
+
+.how-it-works-header {
+	width: 100%;
+	text-align: center;
+	margin-bottom: var(--spacing-16);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+@media (min-width: 768px) {
+	.how-it-works-header {
+		margin-bottom: var(--spacing-20);
+	}
+}
+
+.how-it-works-title {
+	font-size: var(--font-size-4xl);
+	font-weight: var(--font-weight-bold);
+	color: var(--color-black);
+	line-height: 1.2;
+	margin-bottom: var(--spacing-6);
+	text-align: center;
+	width: 100%;
+}
+
+@media (min-width: 768px) {
+	.how-it-works-title {
+		font-size: var(--font-size-5xl);
+		margin-bottom: var(--spacing-8);
+	}
+}
+
+.how-it-works-subtitle {
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-medium);
+	color: var(--color-gray-600);
+	line-height: 1.6;
+	text-align: center;
+	width: 100%;
+	max-width: 680px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media (min-width: 768px) {
+	.how-it-works-subtitle {
+		font-size: var(--font-size-xl);
+	}
+}
+
+.step-card {
+	background-color: var(--color-gray-50);
+	border: 1px solid var(--color-gray-200);
+	border-radius: var(--border-radius-xl);
+	padding: var(--spacing-8) var(--spacing-6);
+	min-height: 280px;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+.step-card:hover {
+	transform: translateY(-6px);
+	border-color: var(--color-primary);
+	box-shadow: 0 20px 25px -5px rgba(109, 183, 226, 0.18), 0 8px 10px -6px rgba(109, 183, 226, 0.12);
+}
+
+.step-number-badge {
+	font-size: 3rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-primary);
+	opacity: 0.25;
+	position: absolute;
+	top: 1.25rem;
+	right: 1.75rem;
+	line-height: 1;
+	user-select: none;
+}
+
+.step-icon-wrapper {
+	width: 3.75rem;
+	height: 3.75rem;
+	border-radius: var(--border-radius-lg);
+	background-color: rgba(109, 183, 226, 0.14);
+	color: var(--color-primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: var(--spacing-6);
+	transition: all 0.3s ease;
+}
+
+.step-card:hover .step-icon-wrapper {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	transform: scale(1.08);
+}

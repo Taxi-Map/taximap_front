@@ -1,11 +1,22 @@
 /* === AppShowcase Section Styles === */
 .app-showcase-section {
 	width: 100%;
-	padding-top: var(--spacing-16);
-	padding-bottom: var(--spacing-16);
+	min-height: calc(100dvh - 120px);
+	padding-top: 5rem;
+	padding-bottom: 5rem;
 	background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
 	position: relative;
 	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@media (min-width: 768px) {
+	.app-showcase-section {
+		padding-top: 6.5rem;
+		padding-bottom: 6.5rem;
+	}
 }
 
 .app-showcase-container {
@@ -13,6 +24,7 @@
 	grid-template-columns: 1fr;
 	gap: var(--spacing-12);
 	align-items: center;
+	width: 100%;
 }
 
 @media (min-width: 768px) {

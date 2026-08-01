@@ -1,0 +1,32 @@
+{
+  "titleKey": "howItWorksSection.title",
+  "titleFallback": "Como Funciona o Táxi Map",
+  "subtitleKey": "howItWorksSection.subtitle",
+  "subtitleFallback": "Simples, rápido e inteligente: as suas deslocações em 3 passos.",
+  "steps": [
+    {
+      "stepNumber": "01",
+      "icon": "MapPin",
+      "titleKey": "howItWorksSection.steps.0.title",
+      "titleFallback": "Defina o Destino",
+      "descriptionKey": "howItWorksSection.steps.0.description",
+      "descriptionFallback": "Insira onde está e para onde quer ir. O Táxi Map calcula a melhor rota combinando caminhada e transportes."
+    },
+    {
+      "stepNumber": "02",
+      "icon": "Radio",
+      "titleKey": "howItWorksSection.steps.1.title",
+      "titleFallback": "Acompanhe em Tempo Real",
+      "descriptionKey": "howItWorksSection.steps.1.description",
+      "descriptionFallback": "Veja no mapa a localização exata dos táxis (candongueiros) a caminho e o tempo estimado de chegada."
+    },
+    {
+      "stepNumber": "03",
+      "icon": "ShieldCheck",
+      "titleKey": "howItWorksSection.steps.2.title",
+      "titleFallback": "Viaje com Tranquilidade",
+      "descriptionKey": "howItWorksSection.steps.2.description",
+      "descriptionFallback": "Receba alertas da comunidade sobre o trânsito, acidentes e vias cortadas para uma viagem segura e sem surpresas."
+    }
+  ]
+}

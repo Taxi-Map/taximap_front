@@ -31,6 +31,45 @@
       "title": "What is Lorem Ipsum",
       "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
       "cta": "Get started"
+    },
+    "appShowcase": {
+      "title": "Smart mobility in the palm of your hand",
+      "subtitle": "Plan trips and track taxis (candongueiros) in real time with the Táxi Map app.",
+      "passengerApp": "Táxi Map - Passengers",
+      "comingSoon": "Coming Soon",
+      "availableOn": "Available on",
+      "downloadOn": "Download on",
+      "benefits": {
+        "realtime": "Real-time routes and positions for taxis (candongueiros).",
+        "multimodal": "Multimodal planning combining walking and transit.",
+        "alerts": "Community alerts about traffic, accidents, and road closures.",
+        "offline": "Optimized for low connectivity and offline functionality."
+      }
+    },
+    "howItWorksSection": {
+      "title": "How Táxi Map Works",
+      "subtitle": "Simple, fast, and smart: your trips in 3 simple steps.",
+      "steps": {
+        "0": {
+          "title": "Set Destination",
+          "description": "Enter your origin and destination. Táxi Map calculates the best route combining walking and transit."
+        },
+        "1": {
+          "title": "Track in Real Time",
+          "description": "See the exact location of approaching taxis (candongueiros) on the map along with estimated arrival time."
+        },
+        "2": {
+          "title": "Travel with Peace of Mind",
+          "description": "Receive community alerts about traffic, accidents, and road closures for a safe and hassle-free trip."
+        }
+      }
+    },
+    "footer": {
+      "contacts": "Contacts",
+      "phone": "Phone",
+      "email": "General Email",
+      "terms": "Terms and Conditions",
+      "copyright": "© 2026 Táxi Map."
     }
   }
 }

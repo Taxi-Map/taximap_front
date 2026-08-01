@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Phone, Mail } from 'lucide-react';
 import type { FooterProps } from './types';
 import footerContent from '../../../content/Footer.json';
@@ -46,8 +47,27 @@ const SOCIAL_ICONS: Record<string, React.ComponentType> = {
   youtube:   YoutubeIcon,
 };
 
+const HEADER_KEY_MAP: Record<string, string> = {
+  particulares: 'header.individuals',
+  empresas: 'header.businesses',
+  institucional: 'header.institutional',
+  parceiros: 'header.partners',
+};
+
+const NAV_KEY_MAP: Record<string, string> = {
+  '#app': 'nav.app',
+  '#how-it-works': 'nav.howItWorks',
+  '#community': 'nav.community',
+  '#news': 'nav.news',
+  '#faq': 'nav.faq',
+  '#solution': 'nav.solution',
+  '#features': 'nav.features',
+  '#plans': 'nav.plans',
+};
+
 /* ─── Footer Component ────────────────────────────────── */
 export function Footer({ className = '' }: FooterProps) {
+  const { t } = useTranslation();
   const { columns, contacts, social, copyright, termsLabel, termsUrl } = footerContent;
 
   return (
@@ -68,25 +88,35 @@ export function Footer({ className = '' }: FooterProps) {
       <div className="footer-main">
 
         {/* Nav columns — driven by JSON */}
-        {columns.map((col) => (
-          <div key={col.id}>
-            <span className="footer-col-heading">{col.heading}</span>
-            <ul className="footer-nav-list">
-              {col.links.map((link) => (
-                <li key={link.url}>
-                  <a href={link.url} className="footer-nav-link">
-                    <span className="footer-nav-bullet" aria-hidden="true">°</span>
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {columns.map((col) => {
+          const colHeadingKey = HEADER_KEY_MAP[col.id] || '';
+          const headingText = colHeadingKey ? t(colHeadingKey, col.heading) : col.heading;
+
+          return (
+            <div key={col.id}>
+              <span className="footer-col-heading">{headingText}</span>
+              <ul className="footer-nav-list">
+                {col.links.map((link) => {
+                  const navKey = NAV_KEY_MAP[link.url] || '';
+                  const labelText = navKey ? t(navKey, link.label) : link.label;
+
+                  return (
+                    <li key={link.url}>
+                      <a href={link.url} className="footer-nav-link">
+                        <span className="footer-nav-bullet" aria-hidden="true">°</span>
+                        {labelText}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          );
+        })}
 
         {/* Contacts column — driven by JSON */}
         <div>
-          <span className="footer-col-heading">{contacts.heading}</span>
+          <span className="footer-col-heading">{t('footer.contacts', contacts.heading)}</span>
 
           <div className="footer-contact-list">
             {/* Phone */}
@@ -95,7 +125,7 @@ export function Footer({ className = '' }: FooterProps) {
                 <Phone size={18} strokeWidth={2} />
               </span>
               <div>
-                <p className="footer-contact-label">{contacts.phone.label}</p>
+                <p className="footer-contact-label">{t('footer.phone', contacts.phone.label)}</p>
                 <p className="footer-contact-value">{contacts.phone.value}</p>
               </div>
             </a>
@@ -106,7 +136,7 @@ export function Footer({ className = '' }: FooterProps) {
                 <Mail size={18} strokeWidth={2} />
               </span>
               <div>
-                <p className="footer-contact-label">{contacts.email.label}</p>
+                <p className="footer-contact-label">{t('footer.email', contacts.email.label)}</p>
                 <p className="footer-contact-value">{contacts.email.value}</p>
               </div>
             </a>
@@ -119,9 +149,9 @@ export function Footer({ className = '' }: FooterProps) {
       <div className="footer-bottom-bar">
         {/* Copyright — driven by JSON */}
         <p className="footer-copyright">
-          <span>{copyright}</span>
+          <span>{t('footer.copyright', copyright)}</span>
           <span style={{ color: '#d1d5db' }}>·</span>
-          <a href={termsUrl}>{termsLabel}</a>
+          <a href={termsUrl}>{t('footer.terms', termsLabel)}</a>
         </p>
 
         {/* Social icons — driven by JSON */}
