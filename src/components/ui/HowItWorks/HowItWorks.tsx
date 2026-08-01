@@ -78,7 +78,7 @@ export function HowItWorks({ data, isLoading: externalLoading }: HowItWorksProps
 	}
 
 	return (
-		<section className="how-it-works-section">
+		<section id="how-it-works" className="how-it-works-section">
 			<div className="container">
 				{/* Section Header */}
 				<div className="how-it-works-header">

@@ -7,7 +7,6 @@
         { "label": "Aplicação",     "url": "#app"          },
         { "label": "Como Funciona", "url": "#how-it-works" },
         { "label": "Comunidade",    "url": "#community"    },
-        { "label": "Notícias",      "url": "#news"         },
         { "label": "FAQ",           "url": "#faq"          }
       ]
     },
@@ -18,7 +17,6 @@
         { "label": "Solução",          "url": "#solution" },
         { "label": "Funcionalidades",  "url": "#features" },
         { "label": "Planos",           "url": "#plans"    },
-        { "label": "Notícias",         "url": "#news"     },
         { "label": "FAQ",              "url": "#faq"      }
       ]
     }

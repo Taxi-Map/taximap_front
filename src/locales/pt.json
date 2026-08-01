@@ -64,6 +64,48 @@
         }
       }
     },
+    "communitySection": {
+      "title": "Comunidade Activa & Alertas em Tempo Real",
+      "subtitle": "Informação colaborativa criada por passageiros e motoristas para tornar o trânsito em Angola mais previsível e seguro.",
+      "liveBadge": "Feed de Alertas Ao Vivo",
+      "confirmations": "confirmações",
+      "features": {
+        "realtime": "Reporte e receba avisos instantâneos sobre o trânsito e estradas.",
+        "validation": "Informações validadas continuamente pela própria comunidade.",
+        "routes": "Sugestões de rotas alternativas automáticas em caso de engarrafamento."
+      },
+      "stats": {
+        "alerts": "Alertas por Mês",
+        "accuracy": "Precisão da Informação",
+        "users": "Utilizadores Ativos"
+      },
+      "alerts": {
+        "0": {
+          "message": "Fila intensa de candongueiros na paragem principal.",
+          "timeAgo": "Há 2 min"
+        },
+        "1": {
+          "message": "Trânsito lento devido a condicionamento na via.",
+          "timeAgo": "Há 7 min"
+        },
+        "2": {
+          "message": "Via rápida com trânsito fluido e táxis disponíveis.",
+          "timeAgo": "Há 15 min"
+        },
+        "3": {
+          "message": "Fluxo intenso no nó de acesso nas horas de ponta.",
+          "timeAgo": "Há 1 min"
+        },
+        "4": {
+          "message": "Trânsito normalizado na rotunda principal.",
+          "timeAgo": "Há 10 min"
+        },
+        "5": {
+          "message": "Obras pontuais na via secundária, rota alternativa ativa.",
+          "timeAgo": "Há 18 min"
+        }
+      }
+    },
     "footer": {
       "contacts": "Contactos",
       "phone": "Telefone",

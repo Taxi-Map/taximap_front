@@ -4,6 +4,7 @@ import { Header } from './components/ui/Header';
 import { Hero } from './components/ui/Hero';
 import { AppShowcase } from './components/ui/AppShowcase';
 import { HowItWorks } from './components/ui/HowItWorks';
+import { Community } from './components/ui/Community';
 import { Footer } from './components/ui/Footer';
 
 import './App.css';
@@ -24,6 +25,7 @@ function App() {
         <Hero />
         <AppShowcase />
         <HowItWorks />
+        <Community />
       </main>
 
       {/* Footer Component */}

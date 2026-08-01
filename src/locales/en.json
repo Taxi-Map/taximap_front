@@ -64,6 +64,48 @@
         }
       }
     },
+    "communitySection": {
+      "title": "Active Community & Real-Time Alerts",
+      "subtitle": "Collaborative information created by passengers and drivers to make transit in Angola more predictable and safe.",
+      "liveBadge": "Live Alert Feed",
+      "confirmations": "confirmations",
+      "features": {
+        "realtime": "Report and receive instant notifications about traffic and road conditions.",
+        "validation": "Information continuously validated by the community itself.",
+        "routes": "Automatic alternative route suggestions in case of congestion."
+      },
+      "stats": {
+        "alerts": "Alerts per Month",
+        "accuracy": "Information Accuracy",
+        "users": "Active Users"
+      },
+      "alerts": {
+        "0": {
+          "message": "Heavy taxi lineup at main bus stop.",
+          "timeAgo": "2 mins ago"
+        },
+        "1": {
+          "message": "Slow traffic due to lane bottleneck.",
+          "timeAgo": "7 mins ago"
+        },
+        "2": {
+          "message": "Expressway flowing smoothly with taxis available.",
+          "timeAgo": "15 mins ago"
+        },
+        "3": {
+          "message": "Heavy rush hour flow at interchange.",
+          "timeAgo": "1 min ago"
+        },
+        "4": {
+          "message": "Traffic back to normal at the main roundabout.",
+          "timeAgo": "10 mins ago"
+        },
+        "5": {
+          "message": "Roadwork on secondary street, alternative route active.",
+          "timeAgo": "18 mins ago"
+        }
+      }
+    },
     "footer": {
       "contacts": "Contacts",
       "phone": "Phone",

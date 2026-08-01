@@ -80,7 +80,7 @@ export function AppShowcase({ data, isLoading: externalLoading }: AppShowcasePro
 	}
 
 	return (
-		<section className="app-showcase-section">
+		<section id="app" className="app-showcase-section">
 			<div className="container app-showcase-container">
 				{/* Left Column: Phone Mockup Frame */}
 				<div className="phone-mockup-wrapper">

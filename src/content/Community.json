@@ -1,0 +1,93 @@
+{
+  "titleKey": "communitySection.title",
+  "titleFallback": "Comunidade Activa & Alertas em Tempo Real",
+  "subtitleKey": "communitySection.subtitle",
+  "subtitleFallback": "Informação colaborativa criada por passageiros e motoristas para tornar o trânsito em Angola mais previsível e seguro.",
+  "features": [
+    {
+      "key": "communitySection.features.realtime",
+      "fallback": "Reporte e receba avisos instantâneos sobre o trânsito e estradas."
+    },
+    {
+      "key": "communitySection.features.validation",
+      "fallback": "Informações validadas continuamente pela própria comunidade."
+    },
+    {
+      "key": "communitySection.features.routes",
+      "fallback": "Sugestões de rotas alternativas automáticas em caso de engarrafamento."
+    }
+  ],
+  "stats": [
+    {
+      "number": "+10k",
+      "labelKey": "communitySection.stats.alerts",
+      "labelFallback": "Alertas por Mês"
+    },
+    {
+      "number": "99%",
+      "labelKey": "communitySection.stats.accuracy",
+      "labelFallback": "Precisão da Informação"
+    },
+    {
+      "number": "+50k",
+      "labelKey": "communitySection.stats.users",
+      "labelFallback": "Utilizadores Ativos"
+    }
+  ],
+  "sampleAlerts": [
+    {
+      "badgeType": "traffic",
+      "location": "Mutamba, Luanda",
+      "messageKey": "communitySection.alerts.0.message",
+      "messageFallback": "Fila intensa de candongueiros na paragem principal.",
+      "timeAgoKey": "communitySection.alerts.0.timeAgo",
+      "timeAgoFallback": "Há 2 min",
+      "confirmations": 42
+    },
+    {
+      "badgeType": "warning",
+      "location": "Avenida 4 de Fevereiro",
+      "messageKey": "communitySection.alerts.1.message",
+      "messageFallback": "Trânsito lento devido a condicionamento na via.",
+      "timeAgoKey": "communitySection.alerts.1.timeAgo",
+      "timeAgoFallback": "Há 7 min",
+      "confirmations": 28
+    },
+    {
+      "badgeType": "success",
+      "location": "Zango 0 ➔ Viana",
+      "messageKey": "communitySection.alerts.2.message",
+      "messageFallback": "Via rápida com trânsito fluido e táxis disponíveis.",
+      "timeAgoKey": "communitySection.alerts.2.timeAgo",
+      "timeAgoFallback": "Há 15 min",
+      "confirmations": 65
+    },
+    {
+      "badgeType": "traffic",
+      "location": "Talatona (Nó do Patriota)",
+      "messageKey": "communitySection.alerts.3.message",
+      "messageFallback": "Fluxo intenso no nó de acesso nas horas de ponta.",
+      "timeAgoKey": "communitySection.alerts.3.timeAgo",
+      "timeAgoFallback": "Há 1 min",
+      "confirmations": 51
+    },
+    {
+      "badgeType": "success",
+      "location": "Centralidade do Kilamba",
+      "messageKey": "communitySection.alerts.4.message",
+      "messageFallback": "Trânsito normalizado na via principal.",
+      "timeAgoKey": "communitySection.alerts.4.timeAgo",
+      "timeAgoFallback": "Há 10 min",
+      "confirmations": 39
+    },
+    {
+      "badgeType": "warning",
+      "location": "Cazenga (Marco Histórico)",
+      "messageKey": "communitySection.alerts.5.message",
+      "messageFallback": "Obras pontuais na via secundária, rota alternativa ativa.",
+      "timeAgoKey": "communitySection.alerts.5.timeAgo",
+      "timeAgoFallback": "Há 18 min",
+      "confirmations": 24
+    }
+  ]
+}
