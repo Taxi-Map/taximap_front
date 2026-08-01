@@ -51,7 +51,7 @@ export function Hero() {
 
 	if (isLoading) {
 		return (
-			<section className="hero-section relative w-full min-h-[500px] md:min-h-[550px] bg-slate-900 animate-pulse flex items-center">
+			<section className="hero-section relative w-full min-h-[calc(100dvh-80px)] md:min-h-[calc(100dvh-120px)] bg-slate-900 animate-pulse flex items-center">
 				<div className="container hero-content-wrapper h-full relative z-10 flex items-center justify-center">
 					<div className="w-full max-w-xl p-8 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
 						<div className="h-10 bg-white/20 rounded w-3/4 mb-4"></div>
@@ -71,7 +71,7 @@ export function Hero() {
 	const activeSlideIndex = currentSlide % slides.length;
 
 	return (
-		<section className="hero-section relative w-full min-h-[500px] md:min-h-[550px]">
+		<section className="hero-section relative w-full min-h-[calc(100dvh-80px)] md:min-h-[calc(100dvh-120px)]">
 			{slides.map((slide, index) => {
 				const isActive = index === activeSlideIndex;
 				const description = slide.description;

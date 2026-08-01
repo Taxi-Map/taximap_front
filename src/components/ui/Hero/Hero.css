@@ -2,14 +2,14 @@
 .hero-section {
 	position: relative;
 	width: 100%;
-	min-height: 500px;
+	min-height: calc(100dvh - 80px);
 	background-color: var(--color-gray-200);
 	overflow: hidden;
 }
 
 @media (min-width: 768px) {
 	.hero-section {
-		min-height: 550px;
+		min-height: calc(100dvh - 120px);
 	}
 }
 
