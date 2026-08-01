@@ -136,6 +136,22 @@
         }
       }
     },
+    "waitlistModal": {
+      "badge": "Coming Soon",
+      "title": "The app is currently in development",
+      "subtitle": "Join the exclusive waitlist to get early access and try the Beta version first!",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "Enter your name",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "your.email@example.com",
+      "profileLabel": "I am a:",
+      "passengerRole": "Passenger",
+      "driverRole": "Taxi Driver / Partner",
+      "submitButton": "Secure Early Access",
+      "successTitle": "Registration Confirmed!",
+      "successMessage": "Thank you for joining our waitlist. We will send an exclusive invite to your email as soon as the beta version is ready.",
+      "closeButton": "Done"
+    },
     "footer": {
       "contacts": "Contacts",
       "phone": "Phone",

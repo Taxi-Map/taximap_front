@@ -8,9 +8,10 @@ import './Header.css';
 interface HeaderProps {
   activeTab: number;
   setActiveTab: (idx: number) => void;
+  onOpenWaitlist?: () => void;
 }
 
-export function Header({ activeTab, setActiveTab }: HeaderProps) {
+export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps) {
   const { t, i18n } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('app');
@@ -71,7 +72,18 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
   }, []);
 
   // Smooth scroll handler on link click with offset adjustment for sticky header
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    url: string,
+    isAction?: boolean
+  ) => {
+    if (isAction || url === '#login' || url === '#contact') {
+      e.preventDefault();
+      onOpenWaitlist?.();
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     if (url.startsWith('#')) {
       e.preventDefault();
       const targetId = url.substring(1);
@@ -118,8 +130,8 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                 <a
                   key={idx}
                   href={link.url}
-                  onClick={(e) => handleNavClick(e, link.url)}
-                  className={`font-bold transition-colors ${
+                  onClick={(e) => handleNavClick(e, link.url, link.isAction)}
+                  className={`font-bold transition-colors cursor-pointer ${
                     isActive ? 'active' : 'text-gray-900 hover:text-[#6DB7E2]'
                   } ${
                     link.isAction
@@ -226,8 +238,8 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                     <a
                       key={idx}
                       href={link.url}
-                      onClick={(e) => handleNavClick(e, link.url)}
-                      className={`text-2xl font-bold transition-colors ${
+                      onClick={(e) => handleNavClick(e, link.url, link.isAction)}
+                      className={`text-2xl font-bold transition-colors cursor-pointer ${
                         isActive ? 'text-[#6DB7E2]' : 'text-gray-900 hover:text-[#6DB7E2]'
                       }`}
                     >
@@ -243,8 +255,8 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                 <div key={idx} className="mt-4 pt-8 border-t border-gray-100">
                   <a
                     href={link.url}
-                    onClick={(e) => handleNavClick(e, link.url)}
-                    className="text-xl font-bold text-primary flex items-center gap-2"
+                    onClick={(e) => handleNavClick(e, link.url, link.isAction)}
+                    className="text-xl font-bold text-primary flex items-center gap-2 cursor-pointer"
                   >
                     {t(link.labelKey, link.fallback) as string}
                     <svg

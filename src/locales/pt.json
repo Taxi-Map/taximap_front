@@ -136,6 +136,22 @@
         }
       }
     },
+    "waitlistModal": {
+      "badge": "Brevemente Disponível",
+      "title": "A aplicação ainda está em desenvolvimento",
+      "subtitle": "Junte-se à lista de espera exclusiva para ter acesso antecipado e experimentar a versão Beta em primeira mão!",
+      "nameLabel": "Nome Completo",
+      "namePlaceholder": "Introduza o seu nome",
+      "emailLabel": "Endereço de Email",
+      "emailPlaceholder": "seu.email@exemplo.com",
+      "profileLabel": "Eu sou:",
+      "passengerRole": "Passageiro",
+      "driverRole": "Motorista de Candongueiro / Parceiro",
+      "submitButton": "Garantir Acesso Antecipado",
+      "successTitle": "Inscrição Confirmada!",
+      "successMessage": "Obrigado por se juntar à lista de espera. Enviaremos um convite exclusivo para o seu email assim que a versão beta estiver pronta.",
+      "closeButton": "Concluído"
+    },
     "footer": {
       "contacts": "Contactos",
       "phone": "Telefone",
