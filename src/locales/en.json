@@ -1,274 +1,36 @@
 {
-	"translation": {
-		"header": {
-			"individuals": "Individuals",
-			"businesses": "Businesses",
-			"institutional": "Institutional",
-			"customerSupport": "Customer Support",
-			"partners": "Partners"
-		},
-		"nav": {
-			"app": "Application",
-			"howItWorks": "How It Works",
-			"community": "Community",
-			"news": "News",
-			"faq": "FAQ",
-			"login": "Login",
-			"solution": "Solution",
-			"features": "Features",
-			"plans": "Plans",
-			"about": "About Us",
-			"history": "Our History",
-			"impact": "Impact",
-			"contact": "Contact",
-			"partners": "Partners",
-			"becomePartner": "Become a Partner",
-			"apis": "APIs",
-			"integrations": "Integrations",
-			"advertising": "Advertising",
-			"challenges": "Challenges",
-			"differential": "Differentiator",
-			"benefits": "Benefits",
-			"target": "Target Audience",
-			"team": "Team"
-		},
-		"hero": {
-			"slides": {
-				"0": {
-					"title": "Always close, always fast",
-					"description": "The smart map for all your transport needs. Order a taxi in seconds.",
-					"cta": "Get started"
-				},
-				"1": {
-					"title": "Airport Transfers",
-					"description": "Arrive on time and comfortably for your flight. Book your taxi in advance.",
-					"cta": "Book now"
-				},
-				"2": {
-					"title": "Business Solutions",
-					"description": "Manage your team's trips with a dedicated business account.",
-					"cta": "Learn more"
-				}
-			}
-		},
-		"presentation": {
-			"cover": {
-				"title": "The Intelligent Platform for Urban Mobility in Angola",
-				"subtitle": "Táxi Map",
-				"website": "www.taximap.ao",
-				"email": "geral.taximap@gmail.com",
-				"phone": "+244 929 782 402"
-			},
-			"about": {
-				"title": "About Us",
-				"description": "Táxi Map is a technology platform developed by MURA, dedicated to transforming urban mobility through technology.",
-				"mission": "To make public and private transport more accessible, organized, safe, and efficient for passengers, taxi operators, and companies.",
-				"missionLabel": "Mission",
-				"footer": "We create digital solutions that bring people, companies, and transport service providers together."
-			},
-			"vision": {
-				"title": "Our Vision",
-				"description": "To be the leading mobility technology platform in Angola and a reference in Africa for digitalizing urban transport."
-			},
-			"challenges": {
-				"title": "Urban Mobility Challenges in Angola",
-				"individuals": "Individuals (Passengers)",
-				"individualsItems": [
-					"Difficulty identifying the correct route to reach the destination.",
-					"Lack of clear information about routes and boarding points.",
-					"Uncertainty about which taxis pass through a given location.",
-					"Reliance on third parties to obtain route information.",
-					"Low confidence when traveling to unfamiliar places."
-				],
-				"businesses": "Taxi Companies",
-				"businessesItems": [
-					"Manual fleet and driver management.",
-					"Difficulty monitoring operations in real time.",
-					"Lack of indicators and reports to support decisions.",
-					"Low level of digitalization of operational processes.",
-					"Difficulty scaling and standardizing operations."
-				],
-				"conclusion": "Táxi Map connects these two needs through technology."
-			},
-			"solutions": {
-				"title": "Our Solutions",
-				"passenger": {
-					"title": "Táxi Map Passenger",
-					"subtitle": "For individuals",
-					"description": "Quickly find routes, taxis, paths, boarding points, and navigation."
-				},
-				"business": {
-					"title": "Táxi Map Business",
-					"subtitle": "Management system for companies and fleets",
-					"description": "Fleet management, driver management, real-time monitoring, statistics, and administration."
-				}
-			},
-			"differential": {
-				"title": "Our Differentiator",
-				"description": "Developed with a total focus on the Angolan reality. Features designed to respond to local challenges, with dedicated technical support and complete integration.",
-				"pillars": [
-					{
-						"title": "Local Technology",
-						"description": "Deep knowledge of the Angolan market."
-					},
-					{
-						"title": "Digitalization",
-						"description": "Digital transformation of transport."
-					},
-					{
-						"title": "Scalability",
-						"description": "Ready to expand to other provinces."
-					},
-					{
-						"title": "Smart Data",
-						"description": "Information to improve operations."
-					}
-				],
-				"pillarsLabel": "Pillars"
-			},
-			"benefits": {
-				"title": "Platform Benefits",
-				"items": [
-					{
-						"title": "Cost Reduction",
-						"description": "Route optimization and monitoring reduce fuel and maintenance costs."
-					},
-					{
-						"title": "Greater Efficiency",
-						"description": "Intelligent management and automation increase productivity."
-					},
-					{
-						"title": "Better Experience",
-						"description": "Intuitive interface with real-time tracking and integrated support."
-					}
-				]
-			},
-			"impact": {
-				"title": "Market Impact",
-				"items": [
-					{
-						"title": "Digital Transformation of Mobility",
-						"description": "Drives digitalization and management efficiency."
-					},
-					{
-						"title": "Improved Urban Mobility",
-						"description": "Optimizes routes and reduces waiting time in Angolan cities."
-					},
-					{
-						"title": "Technology Sector Expansion",
-						"description": "Creates a favorable environment for innovation and investment in Angola."
-					}
-				]
-			},
-			"target": {
-				"title": "Target Audience",
-				"items": [
-					{
-						"title": "Taxi Companies",
-						"description": "Centralized management, monitoring, and performance reports."
-					},
-					{
-						"title": "Government Entities",
-						"description": "Solution for regulation, inspection, and strategic data for urban planning."
-					},
-					{
-						"title": "Corporate Clients",
-						"description": "Safe and trackable transport for employees, with integrated billing and expense control."
-					}
-				]
-			},
-			"businessModel": {
-				"title": "Business Model",
-				"items": [
-					{
-						"title": "Company Licensing",
-						"description": "License acquisition to use the management platform."
-					},
-					{
-						"title": "Strategic Partnerships",
-						"description": "Collaboration for integrated services and new projects."
-					},
-					{
-						"title": "APIs and Integrations",
-						"description": "Providing interfaces for partners to integrate Táxi Map services."
-					}
-				]
-			},
-			"partnerships": {
-				"title": "Partnerships & Opportunities",
-				"items": [
-					{
-						"title": "Investors",
-						"description": "Opportunity in a strategic sector with a scalable revenue model."
-					},
-					{
-						"title": "Taxi Companies",
-						"description": "Fleet integration for increased efficiency."
-					},
-					{
-						"title": "Government Entities",
-						"description": "Collaboration to modernize mobility and promote smart cities."
-					}
-				]
-			},
-			"team": {
-				"title": "Our Team",
-				"members": [
-					{
-						"name": "Hudson Mateque",
-						"role": "Founder"
-					},
-					{
-						"name": "Mariquinha Francisco",
-						"role": "Marketing Manager"
-					},
-					{
-						"name": "Lourenço António Dala",
-						"role": "Software Engineer"
-					}
-				]
-			},
-			"closing": {
-				"title": "Thank You!",
-				"website": "taximap.ao",
-				"email": "geral.taximap@gmail.com"
-			}
-		},
-		"contact": {
-			"infoTitle": "Contact Information",
-			"address": "Luanda, Angola",
-			"phone": "+244 929 782 402",
-			"email": "geral.taximap@gmail.com",
-			"formTitle": "Send Us a Message",
-			"name": "Name",
-			"emailLabel": "Email",
-			"subject": "Subject",
-			"message": "Message",
-			"send": "Send Message",
-			"sent": "Message sent successfully! We'll get back to you shortly.",
-			"social": "Social Media",
-			"socialFacebook": "Facebook",
-			"socialInstagram": "Instagram",
-			"socialLinkedin": "LinkedIn",
-			"socialWhatsapp": "WhatsApp"
-		},
-		"comingSoon": {
-			"title": "Destination Being Mapped",
-			"description": "We're charting the best route to this page. While it's not ready yet, leave your email and we'll notify you when we arrive.",
-			"notifyCta": "Notify Me",
-			"notifyPlaceholder": "your@email.com",
-			"notifySent": "We'll let you know when this destination is available!",
-			"suggestionTitle": "While You Wait",
-			"suggestions": {
-				"app": "Explore the App",
-				"contact": "Contact Us",
-				"about": "About Us"
-			}
-		},
-		"notFound": {
-			"tagline": "Page not found",
-			"description": "The destination you're looking for isn't on our map. Check the address or return home.",
-			"cta": "Back to Home"
-		}
-	}
+  "translation": {
+    "header": {
+      "individuals": "Individuals",
+      "businesses": "Businesses",
+      "institutional": "Institutional",
+      "customerSupport": "Customer Support",
+      "partners": "Partners"
+    },
+    "nav": {
+      "app": "Application",
+      "howItWorks": "How It Works",
+      "community": "Community",
+      "news": "News",
+      "faq": "FAQ",
+      "login": "Login",
+      "solution": "Solution",
+      "features": "Features",
+      "plans": "Plans",
+      "about": "About Us",
+      "history": "Our History",
+      "impact": "Impact",
+      "contact": "Contact",
+      "partners": "Partners",
+      "becomePartner": "Become a Partner",
+      "apis": "APIs",
+      "integrations": "Integrations",
+      "advertising": "Advertising"
+    },
+    "hero": {
+      "title": "What is Lorem Ipsum",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "cta": "Get started"
+    }
+  }
 }

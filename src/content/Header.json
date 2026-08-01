@@ -1,157 +1,47 @@
 {
-	"tabs": [
-		{
-			"id": "particulares",
-			"links": [
-				{
-					"labelKey": "nav.app",
-					"fallback": "Aplicação",
-					"url": "#",
-					"pageId": "app",
-					"isPrimary": true
-				},
-				{
-					"labelKey": "nav.howItWorks",
-					"fallback": "Como Funciona",
-					"url": "#",
-					"pageId": "how-it-works"
-				},
-				{
-					"labelKey": "nav.community",
-					"fallback": "Comunidade",
-					"url": "#",
-					"pageId": "community"
-				},
-				{ "labelKey": "nav.news", "fallback": "Notícias", "url": "#", "pageId": "news" },
-				{ "labelKey": "nav.faq", "fallback": "FAQ", "url": "#", "pageId": "faq" },
-				{
-					"labelKey": "nav.login",
-					"fallback": "Entrar",
-					"url": "#",
-					"isAction": true
-				}
-			]
-		},
-		{
-			"id": "empresas",
-			"links": [
-				{
-					"labelKey": "nav.solution",
-					"fallback": "Solução",
-					"url": "#",
-					"pageId": "solution",
-					"isPrimary": true
-				},
-				{
-					"labelKey": "nav.features",
-					"fallback": "Funcionalidades",
-					"url": "#",
-					"pageId": "features"
-				},
-				{ "labelKey": "nav.plans", "fallback": "Planos", "url": "#", "pageId": "plans" },
-				{ "labelKey": "nav.news", "fallback": "Notícias", "url": "#", "pageId": "news" },
-				{ "labelKey": "nav.faq", "fallback": "FAQ", "url": "#", "pageId": "faq" },
-				{
-					"labelKey": "nav.login",
-					"fallback": "Entrar",
-					"url": "#",
-					"isAction": true
-				}
-			]
-		},
-		{
-			"id": "institucional",
-			"links": [
-				{
-					"labelKey": "nav.about",
-					"fallback": "Quem Somos",
-					"url": "#",
-					"pageId": "about",
-					"isPrimary": true
-				},
-				{
-					"labelKey": "nav.challenges",
-					"fallback": "Desafios",
-					"url": "#",
-					"pageId": "challenges"
-				},
-				{
-					"labelKey": "nav.differential",
-					"fallback": "Diferencial",
-					"url": "#",
-					"pageId": "differential"
-				},
-				{
-					"labelKey": "nav.benefits",
-					"fallback": "Benefícios",
-					"url": "#",
-					"pageId": "benefits"
-				},
-				{
-					"labelKey": "nav.impact",
-					"fallback": "Impacto",
-					"url": "#",
-					"pageId": "impact"
-				},
-				{
-					"labelKey": "nav.target",
-					"fallback": "Público-Alvo",
-					"url": "#",
-					"pageId": "target"
-				},
-				{
-					"labelKey": "nav.team",
-					"fallback": "Equipa",
-					"url": "#",
-					"pageId": "team"
-				},
-				{
-					"labelKey": "nav.history",
-					"fallback": "Nossa História",
-					"url": "#",
-					"pageId": "history"
-				},
-				{ "labelKey": "nav.news", "fallback": "Notícias", "url": "#", "pageId": "news" },
-				{ "labelKey": "nav.faq", "fallback": "FAQ", "url": "#", "pageId": "faq" },
-				{
-					"labelKey": "nav.contact",
-					"fallback": "Contacto",
-					"url": "#",
-					"pageId": "contact",
-					"isAction": true
-				}
-			]
-		},
-		{
-			"id": "parceiros",
-			"links": [
-				{
-					"labelKey": "nav.partners",
-					"fallback": "Parceiros",
-					"url": "#",
-					"pageId": "partners",
-					"isPrimary": true
-				},
-				{
-					"labelKey": "nav.becomePartner",
-					"fallback": "Tornar-se parceiro",
-					"url": "#",
-					"pageId": "become-partner"
-				},
-				{ "labelKey": "nav.apis", "fallback": "APIs", "url": "#", "pageId": "apis" },
-				{
-					"labelKey": "nav.integrations",
-					"fallback": "Integrações",
-					"url": "#",
-					"pageId": "integrations"
-				},
-				{
-					"labelKey": "nav.advertising",
-					"fallback": "Publicidade",
-					"url": "#",
-					"pageId": "advertising"
-				}
-			]
-		}
-	]
+  "tabs": [
+    {
+      "id": "particulares",
+      "links": [
+        { "labelKey": "nav.app", "fallback": "Aplicação", "url": "#", "isPrimary": true },
+        { "labelKey": "nav.howItWorks", "fallback": "Como Funciona", "url": "#" },
+        { "labelKey": "nav.community", "fallback": "Comunidade", "url": "#" },
+        { "labelKey": "nav.news", "fallback": "Notícias", "url": "#" },
+        { "labelKey": "nav.faq", "fallback": "FAQ", "url": "#" },
+        { "labelKey": "nav.login", "fallback": "Entrar", "url": "#", "isAction": true }
+      ]
+    },
+    {
+      "id": "empresas",
+      "links": [
+        { "labelKey": "nav.solution", "fallback": "Solução", "url": "#", "isPrimary": true },
+        { "labelKey": "nav.features", "fallback": "Funcionalidades", "url": "#" },
+        { "labelKey": "nav.plans", "fallback": "Planos", "url": "#" },
+        { "labelKey": "nav.news", "fallback": "Notícias", "url": "#" },
+        { "labelKey": "nav.faq", "fallback": "FAQ", "url": "#" },
+        { "labelKey": "nav.login", "fallback": "Entrar", "url": "#", "isAction": true }
+      ]
+    },
+    {
+      "id": "institucional",
+      "links": [
+        { "labelKey": "nav.about", "fallback": "Quem Somos", "url": "#", "isPrimary": true },
+        { "labelKey": "nav.history", "fallback": "Nossa História", "url": "#" },
+        { "labelKey": "nav.impact", "fallback": "Impacto", "url": "#" },
+        { "labelKey": "nav.news", "fallback": "Notícias", "url": "#" },
+        { "labelKey": "nav.faq", "fallback": "FAQ", "url": "#" },
+        { "labelKey": "nav.contact", "fallback": "Contacto", "url": "#", "isAction": true }
+      ]
+    },
+    {
+      "id": "parceiros",
+      "links": [
+        { "labelKey": "nav.partners", "fallback": "Parceiros", "url": "#", "isPrimary": true },
+        { "labelKey": "nav.becomePartner", "fallback": "Tornar-se parceiro", "url": "#" },
+        { "labelKey": "nav.apis", "fallback": "APIs", "url": "#" },
+        { "labelKey": "nav.integrations", "fallback": "Integrações", "url": "#" },
+        { "labelKey": "nav.advertising", "fallback": "Publicidade", "url": "#" }
+      ]
+    }
+  ]
 }

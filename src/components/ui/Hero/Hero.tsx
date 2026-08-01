@@ -1,41 +1,87 @@
 import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../Button";
 import "./Hero.css";
-import heroContent from "../../../content/Hero.json";
+import { fetchHeroSlides, type HeroSlideData } from "../../../lib/contentful";
 
 export function Hero() {
-	const { t } = useTranslation();
 	const [currentSlide, setCurrentSlide] = useState(0);
-
-	const slides = heroContent.slides;
-
-	const nextSlide = () =>
-		setCurrentSlide((prev) => (prev + 1) % slides.length);
-	const prevSlide = () =>
-		setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+	const [slides, setSlides] = useState<HeroSlideData[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
+		let isMounted = true;
+		async function loadSlides() {
+			try {
+				const remoteSlides = await fetchHeroSlides();
+				if (isMounted) {
+					setSlides(remoteSlides);
+				}
+			} catch (err) {
+				console.error("Failed to load hero slides:", err);
+			} finally {
+				if (isMounted) {
+					setIsLoading(false);
+				}
+			}
+		}
+		loadSlides();
+		return () => {
+			isMounted = false;
+		};
+	}, []);
+
+	const nextSlide = () => {
+		if (slides.length === 0) return;
+		setCurrentSlide((prev) => (prev + 1) % slides.length);
+	};
+
+	const prevSlide = () => {
+		if (slides.length === 0) return;
+		setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+	};
+
+	useEffect(() => {
+		if (slides.length <= 1) return;
 		const timer = setInterval(() => {
 			setCurrentSlide((prev) => (prev + 1) % slides.length);
 		}, 10000);
 		return () => clearInterval(timer);
 	}, [slides.length]);
 
+	if (isLoading) {
+		return (
+			<section className="hero-section relative w-full min-h-[500px] md:min-h-[550px] bg-slate-900 animate-pulse flex items-center">
+				<div className="container hero-content-wrapper h-full relative z-10 flex items-center justify-center">
+					<div className="w-full max-w-xl p-8 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+						<div className="h-10 bg-white/20 rounded w-3/4 mb-4"></div>
+						<div className="h-5 bg-white/10 rounded w-full mb-2"></div>
+						<div className="h-5 bg-white/10 rounded w-2/3 mb-6"></div>
+						<div className="h-12 bg-white/20 rounded w-36"></div>
+					</div>
+				</div>
+			</section>
+		);
+	}
+
+	if (slides.length === 0) {
+		return null;
+	}
+
+	const activeSlideIndex = currentSlide % slides.length;
+
 	return (
-		<main className="hero-section relative flex-1 w-full min-h-0">
+		<section className="hero-section relative w-full min-h-[500px] md:min-h-[550px]">
 			{slides.map((slide, index) => {
-				const isActive = index === currentSlide;
-				const description = t(
-					slide.descriptionKey,
-					slide.descriptionFallback,
-				) as string;
-				const truncateLimit = slide.descriptionCharLimit || 100;
+				const isActive = index === activeSlideIndex;
+				const description = slide.description;
+				const truncateLimit = 100;
 				const displayDescription =
 					description.length > truncateLimit
 						? description.substring(0, truncateLimit).trim() + "..."
 						: description;
+
+				const bgImage = slide.image || "/1.jpg";
 
 				return (
 					<div
@@ -45,7 +91,7 @@ export function Hero() {
 						<div
 							className="hero-background"
 							style={{
-								backgroundImage: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('${slide.image}')`,
+								backgroundImage: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('${bgImage}')`,
 							}}
 						></div>
 
@@ -54,12 +100,7 @@ export function Hero() {
 								className={`hero-box text-white rounded-xl shadow-2xl backdrop-blur-sm border border-white/20 transition-all duration-1000 delay-100 transform ${isActive ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
 							>
 								<h1 className="text-4xl font-bold hero-title">
-									{
-										t(
-											slide.titleKey,
-											slide.titleFallback,
-										) as string
-									}
+									{slide.title}
 								</h1>
 								<p
 									className="text-xl hero-text mb-4"
@@ -73,12 +114,7 @@ export function Hero() {
 										variant="white"
 										className="pointer-events-auto"
 									>
-										{
-											t(
-												slide.cta.labelKey,
-												slide.cta.fallback,
-											) as string
-										}
+										{slide.cta.label}
 									</Button>
 								</div>
 							</div>
@@ -88,41 +124,43 @@ export function Hero() {
 			})}
 
 			{/* Modern Carousel Controls (Bottom Right) */}
-			<div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 z-20 flex items-center gap-4 bg-black/40 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 shadow-2xl">
-				{/* Prev Button */}
-				<button
-					onClick={prevSlide}
-					aria-label="Slide anterior"
-					className="text-white/70 hover:text-white transition-colors cursor-pointer"
-				>
-					<ChevronLeft size={24} />
-				</button>
+			{slides.length > 1 && (
+				<div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 z-20 flex items-center gap-4 bg-black/40 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 shadow-2xl">
+					{/* Prev Button */}
+					<button
+						onClick={prevSlide}
+						aria-label="Slide anterior"
+						className="text-white/70 hover:text-white transition-colors cursor-pointer"
+					>
+						<ChevronLeft size={24} />
+					</button>
 
-				{/* Indicators */}
-				<div className="flex items-center gap-3 mx-2">
-					{slides.map((_, index) => (
-						<button
-							key={index}
-							onClick={() => setCurrentSlide(index)}
-							aria-label={`Ir para o slide ${index + 1}`}
-							className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-								currentSlide === index
-									? "w-8 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"
-									: "w-2 bg-white/40 hover:bg-white/80"
-							}`}
-						/>
-					))}
+					{/* Indicators */}
+					<div className="flex items-center gap-3 mx-2">
+						{slides.map((_, index) => (
+							<button
+								key={index}
+								onClick={() => setCurrentSlide(index)}
+								aria-label={`Ir para o slide ${index + 1}`}
+								className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+									activeSlideIndex === index
+										? "w-8 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+										: "w-2 bg-white/40 hover:bg-white/80"
+								}`}
+							/>
+						))}
+					</div>
+
+					{/* Next Button */}
+					<button
+						onClick={nextSlide}
+						aria-label="Próximo slide"
+						className="text-white/70 hover:text-white transition-colors cursor-pointer"
+					>
+						<ChevronRight size={24} />
+					</button>
 				</div>
-
-				{/* Next Button */}
-				<button
-					onClick={nextSlide}
-					aria-label="Próximo slide"
-					className="text-white/70 hover:text-white transition-colors cursor-pointer"
-				>
-					<ChevronRight size={24} />
-				</button>
-			</div>
-		</main>
+			)}
+		</section>
 	);
 }

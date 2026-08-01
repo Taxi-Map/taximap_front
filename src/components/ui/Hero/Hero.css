@@ -2,9 +2,15 @@
 .hero-section {
 	position: relative;
 	width: 100%;
+	min-height: 500px;
 	background-color: var(--color-gray-200);
-	/* Fallback before image */
 	overflow: hidden;
+}
+
+@media (min-width: 768px) {
+	.hero-section {
+		min-height: 550px;
+	}
 }
 
 .hero-background {

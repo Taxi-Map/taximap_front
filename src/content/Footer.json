@@ -1,0 +1,48 @@
+{
+  "columns": [
+    {
+      "id": "particulares",
+      "heading": "Particulares",
+      "links": [
+        { "label": "Aplicação",     "url": "#app"          },
+        { "label": "Como Funciona", "url": "#how-it-works" },
+        { "label": "Comunidade",    "url": "#community"    },
+        { "label": "Notícias",      "url": "#news"         },
+        { "label": "FAQ",           "url": "#faq"          }
+      ]
+    },
+    {
+      "id": "empresas",
+      "heading": "Empresas",
+      "links": [
+        { "label": "Solução",          "url": "#solution" },
+        { "label": "Funcionalidades",  "url": "#features" },
+        { "label": "Planos",           "url": "#plans"    },
+        { "label": "Notícias",         "url": "#news"     },
+        { "label": "FAQ",              "url": "#faq"      }
+      ]
+    }
+  ],
+  "contacts": {
+    "heading": "Contactos",
+    "phone": {
+      "label": "Telefone",
+      "value": "929 782 402",
+      "href": "tel:929782402"
+    },
+    "email": {
+      "label": "Email geral",
+      "value": "geral.taximap@gmail.com",
+      "href": "mailto:geral.taximap@gmail.com"
+    }
+  },
+  "social": [
+    { "id": "facebook",  "label": "Facebook",  "url": "https://facebook.com"  },
+    { "id": "instagram", "label": "Instagram", "url": "https://instagram.com" },
+    { "id": "linkedin",  "label": "LinkedIn",  "url": "https://linkedin.com"  },
+    { "id": "youtube",   "label": "YouTube",   "url": "https://youtube.com"   }
+  ],
+  "copyright": "© 2026 Táxi Map.",
+  "termsLabel": "Termos e condições",
+  "termsUrl": "#"
+}
