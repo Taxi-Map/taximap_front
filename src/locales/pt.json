@@ -106,6 +106,36 @@
         }
       }
     },
+    "faqSection": {
+      "title": "Perguntas Frequentes (FAQ)",
+      "subtitle": "Tudo o que precisa de saber sobre o Táxi Map, funcionamento e utilização no seu dia a dia.",
+      "items": {
+        "0": {
+          "question": "Posso solicitar ou chamar um táxi (candongueiro) através do Táxi Map?",
+          "answer": "Não. O Táxi Map não é um serviço de táxi privado sob chamada (TVDE). A plataforma permite-lhe acompanhar em tempo real a posição e a rota dos táxis (candongueiros) públicos que circulam perto de si ou na sua rota, para saber exatamente quando vão passar e planear a sua viagem com antecedência."
+        },
+        "1": {
+          "question": "O Táxi Map é gratuito para os passageiros?",
+          "answer": "Sim! A aplicação Táxi Map é 100% gratuita para os passageiros consultarem rotas, paragens e acompanharem a localização dos táxis em tempo real."
+        },
+        "2": {
+          "question": "Como sei qual é o candongueiro certo para a minha rota?",
+          "answer": "Na aplicação, basta introduzir onde está e para onde quer ir. O Táxi Map indica-lhe as paragens mais próximas, os táxis que fazem esse trajeto e o tempo estimado de chegada."
+        },
+        "3": {
+          "question": "A aplicação funciona com pouca ligação à internet ou dados móveis fracos?",
+          "answer": "Sim. O Táxi Map foi especialmente otimizado para a realidade das redes em Angola, consumindo o mínimo de dados móveis e mantendo o desempenho mesmo em locais de fraca cobertura."
+        },
+        "4": {
+          "question": "Como funcionam os alertas da comunidade?",
+          "answer": "Qualquer utilizador pode reportar em tempo real engarrafamentos, obras, acidentes ou vias cortadas. Os alertas são confirmados pelos próprios passageiros e motoristas para garantir a máxima precisão das informações."
+        },
+        "5": {
+          "question": "O Táxi Map já está disponível em todas as províncias de Angola?",
+          "answer": "A plataforma iniciou as suas operações focada na província de Luanda e está em constante expansão gradual para servir as principais rotas urbanas e interprovinciais de Angola."
+        }
+      }
+    },
     "footer": {
       "contacts": "Contactos",
       "phone": "Telefone",

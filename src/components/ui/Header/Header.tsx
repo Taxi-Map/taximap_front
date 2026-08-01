@@ -24,49 +24,53 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
     i18n.changeLanguage(lng);
   };
 
-  // ScrollSpy with IntersectionObserver to detect visible section
+  // Bulletproof ScrollSpy with scroll listener and offset calculation
   useEffect(() => {
-    const sectionIds = [
-      'app',
-      'how-it-works',
-      'community',
-      'faq',
-      'solution',
-      'features',
-      'plans',
-      'about',
-      'history',
-      'impact',
-    ];
+    const handleScroll = () => {
+      const sectionIds = [
+        'app',
+        'how-it-works',
+        'community',
+        'faq',
+        'solution',
+        'features',
+        'plans',
+        'about',
+        'history',
+        'impact',
+      ];
 
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
+      const headerOffset = 140; // Sticky header offset
+      const scrollPosition = window.scrollY + headerOffset;
 
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+      let current = '';
+      for (const id of sectionIds) {
+        const element = document.getElementById(id);
+        if (element) {
+          const top = element.offsetTop;
+          const height = element.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            current = id;
+            break;
           }
-        });
-      },
-      {
-        rootMargin: '-20% 0px -40% 0px',
-        threshold: 0.15,
+        }
       }
-    );
 
-    sections.forEach((sec) => observer.observe(sec));
+      if (current) {
+        setActiveSection(current);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    const timer = setTimeout(handleScroll, 300);
 
     return () => {
-      sections.forEach((sec) => observer.unobserve(sec));
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
     };
   }, []);
 
-  // Smooth scroll handler on link click
+  // Smooth scroll handler on link click with offset adjustment for sticky header
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
     if (url.startsWith('#')) {
       e.preventDefault();
@@ -75,7 +79,14 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
 
       const element = document.getElementById(targetId);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const headerHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
         setActiveSection(targetId);
       }
       setIsMobileMenuOpen(false);
@@ -109,9 +120,7 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
                   href={link.url}
                   onClick={(e) => handleNavClick(e, link.url)}
                   className={`font-bold transition-colors ${
-                    isActive
-                      ? 'text-[#6DB7E2] active'
-                      : 'text-gray-900 hover:text-[#6DB7E2]'
+                    isActive ? 'active' : 'text-gray-900 hover:text-[#6DB7E2]'
                   } ${
                     link.isAction
                       ? 'text-[#6DB7E2] underline underline-offset-4 decoration-2'

@@ -106,6 +106,36 @@
         }
       }
     },
+    "faqSection": {
+      "title": "Frequently Asked Questions (FAQ)",
+      "subtitle": "Everything you need to know about Táxi Map, how it works, and daily usage.",
+      "items": {
+        "0": {
+          "question": "Can I request or hail a taxi (candongueiro) through Táxi Map?",
+          "answer": "No. Táxi Map is not a private ride-hailing (ride-share) service. The platform allows you to track in real time the location and route of public taxis (candongueiros) operating near you or along your route, so you know exactly when they arrive and plan your journey."
+        },
+        "1": {
+          "question": "Is Táxi Map free for passengers?",
+          "answer": "Yes! The Táxi Map app is 100% free for passengers to check routes, stops, and track taxi locations in real time."
+        },
+        "2": {
+          "question": "How do I know which candongueiro is right for my route?",
+          "answer": "In the app, simply enter your origin and destination. Táxi Map shows you nearest stops, taxis heading in that direction, and estimated arrival time."
+        },
+        "3": {
+          "question": "Does the app work with low internet connectivity or weak mobile data?",
+          "answer": "Yes. Táxi Map has been specifically optimized for Angola's network conditions, consuming minimal mobile data and maintaining performance even in weak coverage areas."
+        },
+        "4": {
+          "question": "How do community alerts work?",
+          "answer": "Any user can report traffic jams, roadworks, accidents, or closed roads in real time. Alerts are verified by fellow passengers and drivers to ensure maximum accuracy."
+        },
+        "5": {
+          "question": "Is Táxi Map available in all provinces of Angola?",
+          "answer": "The platform launched focusing on Luanda province and is continuously expanding to cover major urban and interprovincial routes across Angola."
+        }
+      }
+    },
     "footer": {
       "contacts": "Contacts",
       "phone": "Phone",

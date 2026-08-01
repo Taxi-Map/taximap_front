@@ -5,6 +5,7 @@ import { Hero } from './components/ui/Hero';
 import { AppShowcase } from './components/ui/AppShowcase';
 import { HowItWorks } from './components/ui/HowItWorks';
 import { Community } from './components/ui/Community';
+import { Faq } from './components/ui/Faq';
 import { Footer } from './components/ui/Footer';
 
 import './App.css';
@@ -26,6 +27,7 @@ function App() {
         <AppShowcase />
         <HowItWorks />
         <Community />
+        <Faq />
       </main>
 
       {/* Footer Component */}

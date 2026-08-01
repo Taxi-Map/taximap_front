@@ -1,0 +1,44 @@
+{
+  "titleKey": "faqSection.title",
+  "titleFallback": "Perguntas Frequentes (FAQ)",
+  "subtitleKey": "faqSection.subtitle",
+  "subtitleFallback": "Tudo o que precisa de saber sobre o Táxi Map, funcionamento e utilização no seu dia a dia.",
+  "items": [
+    {
+      "questionKey": "faqSection.items.0.question",
+      "questionFallback": "Posso solicitar ou chamar um táxi (candongueiro) através do Táxi Map?",
+      "answerKey": "faqSection.items.0.answer",
+      "answerFallback": "Não. O Táxi Map não é um serviço de táxi privado sob chamada (TVDE). A plataforma permite-lhe acompanhar em tempo real a posição e a rota dos táxis (candongueiros) públicos que circulam perto de si ou na sua rota, para saber exatamente quando vão passar e planear a sua viagem com antecedência."
+    },
+    {
+      "questionKey": "faqSection.items.1.question",
+      "questionFallback": "O Táxi Map é gratuito para os passageiros?",
+      "answerKey": "faqSection.items.1.answer",
+      "answerFallback": "Sim! A aplicação Táxi Map é 100% gratuita para os passageiros consultarem rotas, paragens e acompanharem a localização dos táxis em tempo real."
+    },
+    {
+      "questionKey": "faqSection.items.2.question",
+      "questionFallback": "Como sei qual é o candongueiro certo para a minha rota?",
+      "answerKey": "faqSection.items.2.answer",
+      "answerFallback": "Na aplicação, basta introduzir onde está e para onde quer ir. O Táxi Map indica-lhe as paragens mais próximas, os táxis que fazem esse trajeto e o tempo estimado de chegada."
+    },
+    {
+      "questionKey": "faqSection.items.3.question",
+      "questionFallback": "A aplicação funciona com pouca ligação à internet ou dados móveis fracos?",
+      "answerKey": "faqSection.items.3.answer",
+      "answerFallback": "Sim. O Táxi Map foi especialmente otimizado para a realidade das redes em Angola, consumindo o mínimo de dados móveis e mantendo o desempenho mesmo em locais de fraca cobertura."
+    },
+    {
+      "questionKey": "faqSection.items.4.question",
+      "questionFallback": "Como funcionam os alertas da comunidade?",
+      "answerKey": "faqSection.items.4.answer",
+      "answerFallback": "Qualquer utilizador pode reportar em tempo real engarrafamentos, obras, acidentes ou vias cortadas. Os alertas são confirmados pelos próprios passageiros e motoristas para garantir a máxima precisão das informações."
+    },
+    {
+      "questionKey": "faqSection.items.5.question",
+      "questionFallback": "O Táxi Map já está disponível em todas as províncias de Angola?",
+      "answerKey": "faqSection.items.5.answer",
+      "answerFallback": "A plataforma iniciou as suas operações focada na província de Luanda e está em constante expansão gradual para servir as principais rotas urbanas e interprovinciais de Angola."
+    }
+  ]
+}
