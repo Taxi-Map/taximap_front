@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { X, Sparkles, CheckCircle2, Send, User, Mail } from "lucide-react";
+import { X, CheckCircle2, Send, User, Mail } from "lucide-react";
 import "./EarlyAccessModal.css";
 
 interface EarlyAccessModalProps {

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../Button";
 import "./Hero.css";
 import { fetchHeroSlides, type HeroSlideData } from "../../../lib/contentful";
 
 export function Hero() {
+	const { i18n } = useTranslation();
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const [slides, setSlides] = useState<HeroSlideData[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -13,7 +15,7 @@ export function Hero() {
 		let isMounted = true;
 		async function loadSlides() {
 			try {
-				const remoteSlides = await fetchHeroSlides();
+				const remoteSlides = await fetchHeroSlides(i18n.language);
 				if (isMounted) {
 					setSlides(remoteSlides);
 				}
@@ -29,7 +31,7 @@ export function Hero() {
 		return () => {
 			isMounted = false;
 		};
-	}, []);
+	}, [i18n.language]);
 
 	const nextSlide = () => {
 		if (slides.length === 0) return;
@@ -74,7 +76,10 @@ export function Hero() {
 		<section className="hero-section relative w-full min-h-[calc(100dvh-80px)] md:min-h-[calc(100dvh-120px)]">
 			{slides.map((slide, index) => {
 				const isActive = index === activeSlideIndex;
+				const title = slide.title;
 				const description = slide.description;
+				const ctaLabel = slide.cta?.label;
+
 				const truncateLimit = 100;
 				const displayDescription =
 					description.length > truncateLimit
@@ -99,22 +104,17 @@ export function Hero() {
 							<div
 								className={`hero-box text-white rounded-xl shadow-2xl backdrop-blur-sm border border-white/20 transition-all duration-1000 delay-100 transform ${isActive ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
 							>
-								<h1 className="text-4xl font-bold hero-title">
-									{slide.title}
-								</h1>
-								<p
-									className="text-xl hero-text mb-4"
-									title={description}
-								>
+								<h1 className="text-4xl font-bold hero-title">{title}</h1>
+								<p className="text-xl hero-text mb-4" title={description}>
 									{displayDescription}
 								</p>
 								<div style={{ paddingTop: "2rem" }}>
 									<Button
-										href={slide.cta.url}
+										href={slide.cta?.url || "#app"}
 										variant="white"
 										className="pointer-events-auto"
 									>
-										{slide.cta.label}
+										{ctaLabel}
 									</Button>
 								</div>
 							</div>

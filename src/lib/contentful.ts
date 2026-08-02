@@ -44,13 +44,32 @@ export function formatImageUrl(url?: string): string {
 	return url;
 }
 
-export async function fetchHeroSlides(): Promise<HeroSlideData[]> {
+export async function fetchHeroSlides(locale?: string): Promise<HeroSlideData[]> {
 	try {
-		const response = await contentfulClient.getEntries<WebsiteTaxiMapSkeleton>({
-			content_type: "websiteTaxiMap",
-		});
+		// Use pt-AO for Portuguese (Angola) and en-US for English
+		const contentfulLocale = locale === "en" ? "en-US" : "pt-AO";
 
-		if (response.items && response.items.length > 0) {
+		let response;
+		try {
+			response = await contentfulClient.getEntries<WebsiteTaxiMapSkeleton>({
+				content_type: "websiteTaxiMap",
+				locale: contentfulLocale,
+			} as any);
+		} catch {
+			// Fallback if specific locale is not published yet
+			response = await contentfulClient.getEntries<WebsiteTaxiMapSkeleton>({
+				content_type: "websiteTaxiMap",
+			} as any);
+		}
+
+		if ((!response?.items || response.items.length === 0) && locale !== "en") {
+			// Secondary fallback if pt-AO returns 0 items
+			response = await contentfulClient.getEntries<WebsiteTaxiMapSkeleton>({
+				content_type: "websiteTaxiMap",
+			} as any);
+		}
+
+		if (response?.items && response.items.length > 0) {
 			return response.items.map((item) => {
 				const fields = item.fields;
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
