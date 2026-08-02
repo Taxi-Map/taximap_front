@@ -8,12 +8,19 @@ import { Community } from './components/ui/Community';
 import { Faq } from './components/ui/Faq';
 import { Footer } from './components/ui/Footer';
 import { EarlyAccessModal } from './components/ui/EarlyAccessModal';
+import { BusinessPage } from './components/ui/Business';
+import { InstitutionalPage } from './components/ui/Institutional';
+import { PartnersPage } from './components/ui/Partners';
 
 import './App.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState(0);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
+
+  const handleOpenWaitlist = () => {
+    setIsWaitlistModalOpen(true);
+  };
 
   return (
     <div className="app-container flex flex-col min-h-dvh w-full bg-white font-sans antialiased text-gray-900">
@@ -23,17 +30,33 @@ function App() {
         <Header
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          onOpenWaitlist={() => setIsWaitlistModalOpen(true)}
+          onOpenWaitlist={handleOpenWaitlist}
         />
       </header>
 
-      {/* Main Content Sections */}
+      {/* Main Content Sections dynamically rendered based on activeTab */}
       <main className="flex-1 w-full flex flex-col">
-        <Hero />
-        <AppShowcase />
-        <HowItWorks />
-        <Community />
-        <Faq />
+        {activeTab === 0 && (
+          <>
+            <Hero />
+            <AppShowcase />
+            <HowItWorks />
+            <Community />
+            <Faq />
+          </>
+        )}
+
+        {activeTab === 1 && (
+          <BusinessPage onOpenWaitlist={handleOpenWaitlist} />
+        )}
+
+        {activeTab === 2 && (
+          <InstitutionalPage onOpenWaitlist={handleOpenWaitlist} />
+        )}
+
+        {activeTab === 3 && (
+          <PartnersPage onOpenWaitlist={handleOpenWaitlist} />
+        )}
       </main>
 
       {/* Footer Component */}

@@ -1,0 +1,124 @@
+{
+  "hero": {
+    "badgeKey": "businessPage.hero.badge",
+    "badgeFallback": "Programa Piloto em Luanda",
+    "titleKey": "businessPage.hero.title",
+    "titleFallback": "A Nossa Solução para Empresas de Táxi e Operadores de Frota",
+    "subtitleKey": "businessPage.hero.subtitle",
+    "subtitleFallback": "Gerir uma frota em Angola ainda é, na maior parte dos casos, feito no caderno, no grupo de WhatsApp e na memória de quem despacha. O Táxi Map Empresas substitui isso por uma operação digital, visível em tempo real, desenhada de raiz para a realidade angolana.",
+    "pilotNoteKey": "businessPage.hero.pilotNote",
+    "pilotNoteFallback": "Estamos a construir o Táxi Map Empresas junto com as primeiras empresas de táxi de Luanda, através de um programa piloto. Se a tua frota está pronta para dar o salto, queremos falar contigo.",
+    "ctaPilotKey": "businessPage.hero.ctaPilot",
+    "ctaPilotFallback": "Candidatar a empresa piloto",
+    "ctaTalkKey": "businessPage.hero.ctaTalk",
+    "ctaTalkFallback": "Agendar conversa com a equipa"
+  },
+  "audience": {
+    "titleKey": "businessPage.audience.title",
+    "titleFallback": "Para quem é o Táxi Map Empresas",
+    "subtitleKey": "businessPage.audience.subtitle",
+    "subtitleFallback": "Soluções focadas na operação real e no crescimento sustentável da tua frota em Luanda.",
+    "items": [
+      {
+        "badgeKey": "businessPage.audience.items.0.badge",
+        "badgeFallback": "Disponível para programa piloto",
+        "titleKey": "businessPage.audience.items.0.title",
+        "titleFallback": "Empresas de Táxi & Operadores de Frota",
+        "descKey": "businessPage.audience.items.0.desc",
+        "descFallback": "Gestão centralizada da frota e dos motoristas, localização em tempo real de cada viatura, e relatórios de produtividade para decidir com dados em vez de intuição."
+      },
+      {
+        "badgeKey": "businessPage.audience.items.1.badge",
+        "badgeFallback": "Em desenho, brevemente",
+        "titleKey": "businessPage.audience.items.1.title",
+        "titleFallback": "Clientes Corporativos",
+        "descKey": "businessPage.audience.items.1.desc",
+        "descFallback": "Transporte seguro e rastreável para colaboradores e executivos, agendamento de deslocações corporativas com faturação centralizada. Está a ser desenhado com o contributo direto de empresas em Luanda — se a tua empresa quer ajudar a moldar este produto, fala connosco."
+      }
+    ]
+  },
+  "reasons": {
+    "titleKey": "businessPage.reasons.title",
+    "titleFallback": "Porque Escolher o Táxi Map",
+    "subtitleKey": "businessPage.reasons.subtitle",
+    "subtitleFallback": "Vantagens desenhadas para quem opera frotas nas ruas de Angola.",
+    "items": [
+      {
+        "num": "01",
+        "titleKey": "businessPage.reasons.items.0.title",
+        "titleFallback": "Feito para Angola, não adaptado a Angola",
+        "descKey": "businessPage.reasons.items.0.desc",
+        "descFallback": "Começámos pelos desafios reais de quem gere uma frota em Luanda — vias sem nome oficial, cobertura de rede instável, rotas informais de candongueiro — e construímos a tecnologia à volta disso, incluindo funcionamento pensado para internet lenta."
+      },
+      {
+        "num": "02",
+        "titleKey": "businessPage.reasons.items.1.title",
+        "titleFallback": "Sem custo de equipamento para começar",
+        "descKey": "businessPage.reasons.items.1.desc",
+        "descFallback": "Muitas soluções exigem comprar um dispositivo GPS dedicado por viatura (40-80 USD por carro). No Táxi Map, o telemóvel do motorista funciona como rastreador, eliminando a barreira de entrada mais óbvia."
+      },
+      {
+        "num": "03",
+        "titleKey": "businessPage.reasons.items.2.title",
+        "titleFallback": "Uma rede de confiança, não só um mapa",
+        "descKey": "businessPage.reasons.items.2.desc",
+        "descFallback": "O nosso ativo mais difícil de copiar não é o mapa — é o conhecimento das rotas, dos operadores e da forma como o transporte informal funciona em Angola. Somos parceiros na formalização do setor."
+      },
+      {
+        "num": "04",
+        "titleKey": "businessPage.reasons.items.3.title",
+        "titleFallback": "Preparado para crescer com a tua frota",
+        "descKey": "businessPage.reasons.items.3.desc",
+        "descFallback": "Arquitetura pensada, desde o primeiro dia, para acompanhar o crescimento de 5 para milhares de viaturas e de Luanda para outras províncias — sem precisar de reconstruir a plataforma a meio do caminho."
+      }
+    ]
+  },
+  "features": {
+    "titleKey": "businessPage.features.title",
+    "titleFallback": "Ferramentas para a Gestão da Tua Frota",
+    "subtitleKey": "businessPage.features.subtitle",
+    "subtitleFallback": "Tudo o que precisas para controlar a tua operação diária sem depender de cadernos ou grupos de WhatsApp.",
+    "cards": [
+      {
+        "titleKey": "businessPage.features.cards.0.title",
+        "titleFallback": "Mapa de operação em tempo real",
+        "descKey": "businessPage.features.cards.0.desc",
+        "descFallback": "Todas as viaturas da tua frota visíveis num único mapa, com atualização em tempo real da localização de cada uma."
+      },
+      {
+        "titleKey": "businessPage.features.cards.1.title",
+        "titleFallback": "Gestão de motoristas",
+        "descKey": "businessPage.features.cards.1.desc",
+        "descFallback": "Atribuição de motoristas a viaturas, histórico de percursos e documentos organizados num único painel."
+      },
+      {
+        "titleKey": "businessPage.features.cards.2.title",
+        "titleFallback": "Registo e manutenção de viaturas",
+        "descKey": "businessPage.features.cards.2.desc",
+        "descFallback": "Seguros, documentos, custos de manutenção e alertas de revisão, sem precisar de folhas de cálculo paralelas."
+      },
+      {
+        "titleKey": "businessPage.features.cards.3.title",
+        "titleFallback": "Relatórios de desempenho",
+        "descKey": "businessPage.features.cards.3.desc",
+        "descFallback": "Quilómetros percorridos, produtividade por motorista e por viatura, custo por percurso — os números que hoje ninguém consegue ver sem perguntar a alguém."
+      },
+      {
+        "titleKey": "businessPage.features.cards.4.title",
+        "titleFallback": "Alertas de ocorrências na via",
+        "descKey": "businessPage.features.cards.4.desc",
+        "descFallback": "Avisos sobre engarrafamentos, vias cortadas ou incidentes reportados pela própria comunidade de utilizadores da plataforma."
+      }
+    ]
+  },
+  "ctaFinal": {
+    "titleKey": "businessPage.ctaFinal.title",
+    "titleFallback": "Queres ser uma das primeiras empresas a testar o Táxi Map?",
+    "subtitleKey": "businessPage.ctaFinal.subtitle",
+    "subtitleFallback": "Estamos a selecionar um pequeno grupo de empresas de táxi em Luanda para o programa piloto do Táxi Map Empresas. Junta-te à equipa que está a construir a ferramenta que a tua operação precisa — e ajuda a desenhá-la.",
+    "ctaPilotKey": "businessPage.ctaFinal.ctaPilot",
+    "ctaPilotFallback": "Candidatar a empresa piloto",
+    "ctaTalkKey": "businessPage.ctaFinal.ctaTalk",
+    "ctaTalkFallback": "Falar com a equipa"
+  }
+}

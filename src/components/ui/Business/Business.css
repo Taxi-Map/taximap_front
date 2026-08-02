@@ -1,0 +1,292 @@
+/* === Business Page Styles === */
+
+/* Section Wrapper */
+.business-section {
+	width: 100%;
+	min-height: calc(100dvh - 120px);
+	padding-top: var(--spacing-20);
+	padding-bottom: var(--spacing-20);
+	background-color: var(--color-white);
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@media (min-width: 768px) {
+	.business-section {
+		padding-top: var(--spacing-24);
+		padding-bottom: var(--spacing-24);
+	}
+}
+
+.business-section.bg-alt {
+	background-color: var(--color-gray-50);
+}
+
+/* Uniform Section Header System */
+.business-header {
+	width: 100%;
+	text-align: center;
+	margin-bottom: var(--spacing-16);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+@media (min-width: 768px) {
+	.business-header {
+		margin-bottom: var(--spacing-20);
+	}
+}
+
+.business-title {
+	font-size: var(--font-size-4xl);
+	font-weight: var(--font-weight-bold);
+	color: var(--color-black);
+	line-height: 1.2;
+	margin-bottom: var(--spacing-6);
+	text-align: center;
+	width: 100%;
+}
+
+@media (min-width: 768px) {
+	.business-title {
+		font-size: var(--font-size-5xl);
+		margin-bottom: var(--spacing-8);
+	}
+}
+
+.business-subtitle {
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-medium);
+	color: var(--color-gray-600);
+	line-height: 1.6;
+	text-align: center;
+	width: 100%;
+	max-width: 720px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media (min-width: 768px) {
+	.business-subtitle {
+		font-size: var(--font-size-xl);
+	}
+}
+
+/* Grid & Cards System */
+.business-grid-3 {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--spacing-8);
+	width: 100%;
+	max-width: 1140px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media (min-width: 768px) {
+	.business-grid-3 {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+.business-grid-2 {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--spacing-8);
+	width: 100%;
+	max-width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media (min-width: 768px) {
+	.business-grid-2 {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* Standard Card */
+.business-card {
+	background-color: var(--color-white);
+	border: 1px solid var(--color-gray-200);
+	border-radius: var(--border-radius-xl);
+	padding: var(--spacing-8) var(--spacing-6);
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-4);
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+	overflow: hidden;
+}
+
+.business-section.bg-alt .business-card {
+	background-color: var(--color-white);
+}
+
+.business-card:hover {
+	transform: translateY(-6px);
+	border-color: var(--color-primary);
+	box-shadow: 0 20px 25px -5px rgba(109, 183, 226, 0.18), 0 8px 10px -6px rgba(109, 183, 226, 0.12);
+}
+
+.business-card-icon {
+	width: 3.75rem;
+	height: 3.75rem;
+	border-radius: var(--border-radius-lg);
+	background-color: rgba(109, 183, 226, 0.14);
+	color: var(--color-primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: var(--spacing-2);
+	transition: all 0.3s ease;
+	shrink: 0;
+}
+
+.business-card:hover .business-card-icon {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	transform: scale(1.08);
+}
+
+.business-card-title {
+	font-size: var(--font-size-xl);
+	font-weight: var(--font-weight-bold);
+	color: var(--color-black);
+	line-height: 1.3;
+}
+
+.business-card-desc {
+	font-size: var(--font-size-base);
+	font-weight: var(--font-weight-medium);
+	color: var(--color-gray-600);
+	line-height: 1.6;
+}
+
+/* Feature Horizontal Card */
+.business-feature-card {
+	background-color: var(--color-white);
+	border: 1px solid var(--color-gray-200);
+	border-radius: var(--border-radius-xl);
+	padding: var(--spacing-8) var(--spacing-6);
+	display: flex;
+	gap: var(--spacing-6);
+	align-items: flex-start;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.business-feature-card:hover {
+	border-color: var(--color-primary);
+	transform: translateY(-4px);
+	box-shadow: 0 15px 20px -5px rgba(109, 183, 226, 0.15);
+}
+
+/* Benefits Banner Grid */
+.business-benefits-banner {
+	margin-top: var(--spacing-16);
+	padding-top: var(--spacing-12);
+	border-top: 1px solid var(--color-gray-200);
+	width: 100%;
+	max-width: 1140px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.business-benefits-badge {
+	display: inline-block;
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--color-primary);
+	background-color: rgba(109, 183, 226, 0.12);
+	padding: var(--spacing-2) var(--spacing-4);
+	border-radius: var(--border-radius-full);
+	border: 1px solid rgba(109, 183, 226, 0.25);
+	margin-bottom: var(--spacing-4);
+}
+
+/* Pricing Card */
+.business-plan-card {
+	background-color: var(--color-white);
+	border: 1.5px solid var(--color-gray-200);
+	border-radius: var(--border-radius-xl);
+	padding: var(--spacing-8) var(--spacing-6);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	position: relative;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.business-plan-card.is-popular {
+	border-color: var(--color-primary);
+	box-shadow: 0 20px 30px -10px rgba(109, 183, 226, 0.22);
+}
+
+.business-plan-card:hover {
+	border-color: var(--color-primary);
+	transform: translateY(-6px);
+	box-shadow: 0 20px 25px -5px rgba(109, 183, 226, 0.18);
+}
+
+.business-plan-badge {
+	position: absolute;
+	top: -0.875rem;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 0.25rem 1rem;
+	border-radius: var(--border-radius-full);
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+	white-space: nowrap;
+}
+
+.business-plan-price {
+	font-size: var(--font-size-3xl);
+	font-weight: var(--font-weight-bold);
+	color: var(--color-primary);
+}
+
+.business-plan-btn {
+	width: 100%;
+	padding: 0.875rem 1.5rem;
+	border-radius: var(--border-radius-lg);
+	font-size: var(--font-size-base);
+	font-weight: var(--font-weight-bold);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--spacing-2);
+	cursor: pointer;
+	border: none;
+	transition: all 0.2s ease;
+}
+
+.business-plan-btn.btn-primary-action {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	box-shadow: 0 8px 16px -4px rgba(109, 183, 226, 0.35);
+}
+
+.business-plan-btn.btn-primary-action:hover {
+	background-color: var(--color-primary-dark);
+}
+
+.business-plan-btn.btn-secondary-action {
+	background-color: var(--color-gray-100);
+	color: var(--color-black);
+}
+
+.business-plan-btn.btn-secondary-action:hover {
+	background-color: var(--color-gray-200);
+}

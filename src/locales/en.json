@@ -28,8 +28,8 @@
       "advertising": "Advertising"
     },
     "hero": {
-      "title": "What is Lorem Ipsum",
-      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "title": "Smart Mobility in Angola",
+      "description": "Track taxis (candongueiros) in real time and plan your trips with ease.",
       "cta": "Get started"
     },
     "appShowcase": {
@@ -47,7 +47,7 @@
       }
     },
     "howItWorksSection": {
-      "title": "How Táxi Map Works",
+      "title": "How Táxi Map works",
       "subtitle": "Simple, fast, and smart: your trips in 3 simple steps.",
       "steps": {
         "0": {
@@ -65,7 +65,7 @@
       }
     },
     "communitySection": {
-      "title": "Active Community & Real-Time Alerts",
+      "title": "Active community & real-time alerts",
       "subtitle": "Collaborative information created by passengers and drivers to make transit in Angola more predictable and safe.",
       "liveBadge": "Live Alert Feed",
       "confirmations": "confirmations",
@@ -133,6 +133,76 @@
         "5": {
           "question": "Is Táxi Map available in all provinces of Angola?",
           "answer": "The platform launched focusing on Luanda province and is continuously expanding to cover major urban and interprovincial routes across Angola."
+        }
+      }
+    },
+    "businessPage": {
+      "hero": {
+        "badge": "Táxi Map for Business",
+        "title": "Smart Corporate Mobility & Fleet Management in Angola",
+        "subtitle": "Optimize daily commute for your employees, reduce delays, and monitor corporate buses or taxis in real time on a single platform.",
+        "ctaDemo": "Schedule Demo",
+        "ctaPlans": "View Business Plans"
+      },
+      "solution": {
+        "title": "The Ideal Employee Transportation Solution",
+        "subtitle": "Provide safe, punctual, and predictable commutes for your workforce powered by Táxi Map technology.",
+        "items": {
+          "0": {
+            "title": "Corporate Route Tracking",
+            "desc": "Track in real time the exact location of company buses and private employee transit fleets."
+          },
+          "1": {
+            "title": "Delay Reduction & Productivity Boost",
+            "desc": "Avoid rush-hour traffic jams with community alerts and automatic rerouting for your staff."
+          },
+          "2": {
+            "title": "Cost Control & Route Optimization",
+            "desc": "Detailed reporting on attendance, travel times, and corporate transit efficiency."
+          }
+        }
+      },
+      "features": {
+        "title": "Features Built for Your Enterprise",
+        "subtitle": "Powerful tools for HR, logistics, and Operations managers in Luanda and provinces.",
+        "cards": {
+          "0": {
+            "title": "Real-Time Logistics Dashboard",
+            "desc": "Intuitive control panel to monitor all employee transport vehicles active on an interactive map."
+          },
+          "1": {
+            "title": "Attendance & Transit Time Reports",
+            "desc": "Real-time analytics on staff arrival and departure times at designated pickup spots."
+          },
+          "2": {
+            "title": "Corporate Transit Passes & Vouchers",
+            "desc": "Simplified management of employee transit allowances directly inside the mobile app."
+          },
+          "3": {
+            "title": "Road Incidents & Safety Alerts",
+            "desc": "Instant notifications regarding congestion, closed roads, or road hazards across the network."
+          }
+        }
+      },
+      "plans": {
+        "title": "Flexible Corporate Plans",
+        "subtitle": "Choose the solution that best fits your team size and fleet volume.",
+        "cards": {
+          "0": {
+            "name": "Starter",
+            "price": "Custom Quote",
+            "desc": "Ideal for small teams up to 50 employees."
+          },
+          "1": {
+            "name": "Pro Corporate",
+            "price": "Custom Quote",
+            "desc": "For mid-size enterprises up to 250 employees."
+          },
+          "2": {
+            "name": "Enterprise Custom",
+            "price": "Tailored",
+            "desc": "Large corporate fleets and public institutions."
+          }
         }
       }
     },

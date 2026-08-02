@@ -1,0 +1,1 @@
+export { InstitutionalPage } from "./InstitutionalPage";
