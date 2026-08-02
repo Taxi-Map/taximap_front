@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { Rocket, ArrowRight, MessageSquare } from "lucide-react";
+import { ArrowRight, MessageSquare } from "lucide-react";
 import businessContent from "../../../content/Business.json";
+import "./StarryBackground.css";
 
 interface BusinessPlansProps {
 	onOpenWaitlist?: () => void;
@@ -27,30 +28,29 @@ export function BusinessPlans({ onOpenWaitlist }: BusinessPlansProps) {
 	);
 
 	return (
-		<section id="plans" className="business-section">
-			<div className="container">
+		<section id="plans" className="business-section" style={{ position: "relative", overflow: "hidden" }}>
+			{/* Animated Starry Universe Background Layer */}
+			<div className="starry-container">
+				<div id="stars" />
+				<div id="stars2" />
+				<div id="stars3" />
+			</div>
+
+			<div className="container relative z-10">
 				{/* Pilot Final Banner Card */}
 				<div
 					className="business-card text-center flex flex-col items-center gap-6"
 					style={{
-						backgroundColor: "var(--color-gray-900)",
+						backgroundColor: "rgba(15, 23, 42, 0.85)",
+						backdropFilter: "blur(12px)",
 						color: "var(--color-white)",
 						padding: "var(--spacing-16) var(--spacing-8)",
 						maxWidth: "1000px",
 						margin: "0 auto",
 						borderColor: "var(--color-primary)",
+						boxShadow: "0 25px 50px -12px rgba(109, 183, 226, 0.25)",
 					}}
 				>
-					<div
-						className="w-16 h-16 rounded-full flex items-center justify-center mb-2"
-						style={{
-							backgroundColor: "rgba(109, 183, 226, 0.15)",
-							color: "var(--color-primary)",
-						}}
-					>
-						<Rocket size={32} />
-					</div>
-
 					<h2
 						className="business-title"
 						style={{ color: "var(--color-white)", maxWidth: "800px" }}
@@ -65,12 +65,31 @@ export function BusinessPlans({ onOpenWaitlist }: BusinessPlansProps) {
 						{subtitle}
 					</p>
 
-					<div className="flex flex-col sm:flex-row items-center gap-4 mt-4 w-full sm:w-auto">
+					{/* Symmetrical Action Buttons without line wraps */}
+					<div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4 w-full sm:w-auto">
 						<button
 							type="button"
 							onClick={onOpenWaitlist}
 							className="business-plan-btn btn-primary-action"
-							style={{ padding: "1rem 2rem", fontSize: "var(--font-size-lg)" }}
+							style={{
+								height: "56px",
+								minHeight: "56px",
+								padding: "0 2rem",
+								fontSize: "1rem",
+								fontWeight: 700,
+								whiteSpace: "nowrap",
+								display: "inline-flex",
+								alignItems: "center",
+								justifyContent: "center",
+								gap: "0.6rem",
+								borderRadius: "var(--border-radius-lg)",
+								backgroundColor: "var(--color-primary)",
+								color: "#ffffff",
+								boxShadow: "0 10px 25px -5px rgba(109, 183, 226, 0.4)",
+								border: "none",
+								cursor: "pointer",
+								width: "auto",
+							}}
 						>
 							<span>{ctaPilot}</span>
 							<ArrowRight size={20} />
@@ -81,10 +100,22 @@ export function BusinessPlans({ onOpenWaitlist }: BusinessPlansProps) {
 							onClick={onOpenWaitlist}
 							className="business-plan-btn btn-secondary-action"
 							style={{
-								padding: "1rem 2rem",
-								fontSize: "var(--font-size-lg)",
-								backgroundColor: "rgba(255,255,255,0.1)",
-								color: "var(--color-white)",
+								height: "56px",
+								minHeight: "56px",
+								padding: "0 2rem",
+								fontSize: "1rem",
+								fontWeight: 700,
+								whiteSpace: "nowrap",
+								display: "inline-flex",
+								alignItems: "center",
+								justifyContent: "center",
+								gap: "0.6rem",
+								borderRadius: "var(--border-radius-lg)",
+								backgroundColor: "rgba(255, 255, 255, 0.08)",
+								color: "#ffffff",
+								border: "1.5px solid rgba(255, 255, 255, 0.25)",
+								cursor: "pointer",
+								width: "auto",
 							}}
 						>
 							<MessageSquare size={20} />

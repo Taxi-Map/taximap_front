@@ -17,8 +17,11 @@ import './App.css';
 function App() {
   const [activeTab, setActiveTab] = useState(0);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
+  const [waitlistModalMode, setWaitlistModalMode] = useState<"particular" | "empresa">("particular");
 
-  const handleOpenWaitlist = () => {
+  const handleOpenWaitlist = (mode?: "particular" | "empresa") => {
+    const selectedMode = mode || (activeTab === 1 ? "empresa" : "particular");
+    setWaitlistModalMode(selectedMode);
     setIsWaitlistModalOpen(true);
   };
 
@@ -47,15 +50,15 @@ function App() {
         )}
 
         {activeTab === 1 && (
-          <BusinessPage onOpenWaitlist={handleOpenWaitlist} />
+          <BusinessPage onOpenWaitlist={() => handleOpenWaitlist("empresa")} />
         )}
 
         {activeTab === 2 && (
-          <InstitutionalPage onOpenWaitlist={handleOpenWaitlist} />
+          <InstitutionalPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />
         )}
 
         {activeTab === 3 && (
-          <PartnersPage onOpenWaitlist={handleOpenWaitlist} />
+          <PartnersPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />
         )}
       </main>
 
@@ -66,6 +69,7 @@ function App() {
       <EarlyAccessModal
         isOpen={isWaitlistModalOpen}
         onClose={() => setIsWaitlistModalOpen(false)}
+        mode={waitlistModalMode}
       />
     </div>
   );

@@ -4,7 +4,7 @@
       "id": "particulares",
       "links": [
         { "labelKey": "nav.app", "fallback": "Aplicação", "url": "#app", "isPrimary": true },
-        { "labelKey": "nav.howItWorks", "fallback": "Como Funciona", "url": "#how-it-works" },
+        { "labelKey": "nav.howItWorks", "fallback": "Como funciona", "url": "#how-it-works" },
         { "labelKey": "nav.community", "fallback": "Comunidade", "url": "#community" },
         { "labelKey": "nav.faq", "fallback": "FAQ", "url": "#faq" },
         { "labelKey": "nav.login", "fallback": "Entrar", "url": "#login", "isAction": true }
@@ -23,8 +23,8 @@
     {
       "id": "institucional",
       "links": [
-        { "labelKey": "nav.about", "fallback": "Quem Somos", "url": "#about", "isPrimary": true },
-        { "labelKey": "nav.history", "fallback": "Nossa História", "url": "#history" },
+        { "labelKey": "nav.about", "fallback": "Quem somos", "url": "#about", "isPrimary": true },
+        { "labelKey": "nav.history", "fallback": "Nossa história", "url": "#history" },
         { "labelKey": "nav.impact", "fallback": "Impacto", "url": "#impact" },
         { "labelKey": "nav.faq", "fallback": "FAQ", "url": "#faq" },
         { "labelKey": "nav.contact", "fallback": "Contacto", "url": "#contact", "isAction": true }

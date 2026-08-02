@@ -9,7 +9,7 @@
     },
     "nav": {
       "app": "Aplicação",
-      "howItWorks": "Como Funciona",
+      "howItWorks": "Como funciona",
       "community": "Comunidade",
       "news": "Notícias",
       "faq": "FAQ",
@@ -17,8 +17,8 @@
       "solution": "Solução",
       "features": "Funcionalidades",
       "plans": "Planos",
-      "about": "Quem Somos",
-      "history": "Nossa História",
+      "about": "Quem somos",
+      "history": "Nossa história",
       "impact": "Impacto",
       "contact": "Contacto",
       "partners": "Parceiros",
@@ -28,7 +28,7 @@
       "advertising": "Publicidade"
     },
     "hero": {
-      "title": "Mobilidade Inteligente em Angola",
+      "title": "Mobilidade inteligente em Angola",
       "description": "Acompanhe os táxis (candongueiros) em tempo real e planeie as suas viagens com facilidade.",
       "cta": "Começar agora"
     },
@@ -55,19 +55,19 @@
           "description": "Insira onde está e para onde quer ir. O Táxi Map calcula a melhor rota combinando caminhada e transportes."
         },
         "1": {
-          "title": "Acompanhe em Tempo Real",
+          "title": "Acompanhe em tempo real",
           "description": "Veja no mapa a localização exata dos táxis (candongueiros) a caminho e o tempo estimado de chegada."
         },
         "2": {
-          "title": "Viaje com Tranquilidade",
+          "title": "Viaje com tranquilidade",
           "description": "Receba alertas da comunidade sobre o trânsito, acidentes e vias cortadas para uma viagem segura e sem surpresas."
         }
       }
     },
     "communitySection": {
-      "title": "Comunidade activa & alertas em tempo real",
+      "title": "Comunidade activa e alertas em tempo real",
       "subtitle": "Informação colaborativa criada por passageiros e motoristas para tornar o trânsito em Angola mais previsível e seguro.",
-      "liveBadge": "Feed de Alertas Ao Vivo",
+      "liveBadge": "Feed de alertas ao vivo",
       "confirmations": "confirmações",
       "features": {
         "realtime": "Reporte e receba avisos instantâneos sobre o trânsito e estradas.",
@@ -75,9 +75,9 @@
         "routes": "Sugestões de rotas alternativas automáticas em caso de engarrafamento."
       },
       "stats": {
-        "alerts": "Alertas por Mês",
-        "accuracy": "Precisão da Informação",
-        "users": "Utilizadores Ativos"
+        "alerts": "Alertas por mês",
+        "accuracy": "Precisão da informação",
+        "users": "Utilizadores activos"
       },
       "alerts": {
         "0": {
@@ -107,7 +107,7 @@
       }
     },
     "faqSection": {
-      "title": "Perguntas Frequentes (FAQ)",
+      "title": "Perguntas frequentes (FAQ)",
       "subtitle": "Tudo o que precisa de saber sobre o Táxi Map, funcionamento e utilização no seu dia a dia.",
       "items": {
         "0": {
@@ -138,31 +138,31 @@
     },
     "businessPage": {
       "hero": {
-        "badge": "Programa Piloto em Luanda",
-        "title": "A Nossa Solução para Empresas de Táxi e Operadores de Frota",
+        "badge": "Programa piloto em Luanda",
+        "title": "A nossa solução para empresas de táxi e operadores de frota",
         "subtitle": "Gerir uma frota em Angola ainda é, na maior parte dos casos, feito no caderno, no grupo de WhatsApp e na memória de quem despacha. O Táxi Map Empresas substitui isso por uma operação digital, visível em tempo real, desenhada de raiz para a realidade angolana — e não adaptada de um produto estrangeiro.",
         "pilotNote": "Estamos a construir o Táxi Map Empresas junto com as primeiras empresas de táxi de Luanda, através de um programa piloto. Se a tua frota está pronta para dar o salto, queremos falar contigo.",
         "ctaPilot": "Candidatar a empresa piloto",
         "ctaTalk": "Agendar conversa com a equipa"
       },
       "audience": {
-        "title": "Táxi Map Empresas",
+        "title": "Para quem é o Táxi Map Empresas",
         "subtitle": "Soluções focadas na operação real e no crescimento sustentável da tua frota em Luanda.",
         "items": {
           "0": {
             "badge": "Disponível para programa piloto",
-            "title": "Empresas de Táxi & Operadores de Frota",
+            "title": "Empresas de táxi e operadores de frota",
             "desc": "Gestão centralizada da frota e dos motoristas, localização em tempo real de cada viatura, e relatórios de produtividade para decidir com dados em vez de intuição."
           },
           "1": {
             "badge": "Em desenho, brevemente",
-            "title": "Clientes Corporativos",
+            "title": "Clientes corporativos",
             "desc": "Transporte seguro e rastreável para colaboradores e executivos, agendamento de deslocações corporativas com faturação centralizada. Está a ser desenhado com o contributo direto de empresas que já geram grande volume de deslocações em Luanda — se a tua empresa quer ajudar a moldar este produto antes de mais ninguém, fala connosco."
           }
         }
       },
       "reasons": {
-        "title": "Porque escolher o Táxi Map?",
+        "title": "Porque escolher o Táxi Map",
         "subtitle": "Vantagens desenhadas para quem opera frotas nas ruas de Angola.",
         "items": {
           "0": {
@@ -184,7 +184,7 @@
         }
       },
       "features": {
-        "title": "Ferramentas para a gestão da tua Frota",
+        "title": "Ferramentas para a gestão da tua frota",
         "subtitle": "Tudo o que precisas para controlar a tua operação diária sem depender de cadernos ou grupos de WhatsApp.",
         "cards": {
           "0": {
@@ -206,6 +206,10 @@
           "4": {
             "title": "Alertas de ocorrências na via",
             "desc": "Avisos sobre engarrafamentos, vias cortadas ou incidentes reportados pela própria comunidade de utilizadores da plataforma."
+          },
+          "5": {
+            "title": "Histórico de viagens e exportação de dados",
+            "desc": "Registo completo de todas as rotas efetuadas com exportação simples em Excel/PDF para controlo financeiro e auditorias de frota."
           }
         }
       },
@@ -217,20 +221,38 @@
       }
     },
     "waitlistModal": {
-      "badge": "Programa Piloto",
-      "title": "Candidatura ao Programa Piloto do Táxi Map Empresas",
-      "subtitle": "Junta-te às primeiras empresas de táxi em Luanda que estão a testar e a moldar a plataforma de gestão de frotas em primeira mão!",
-      "nameLabel": "Nome Completo / Representante",
-      "namePlaceholder": "Introduza o seu nome",
-      "emailLabel": "Endereço de Email",
-      "emailPlaceholder": "seu.email@empresa.com",
-      "profileLabel": "A tua frota ou perfil:",
-      "passengerRole": "Empresa de Táxi / Operador de Frota",
-      "driverRole": "Cliente Corporativo / Outro",
-      "submitButton": "Enviar Candidatura Piloto",
-      "successTitle": "Candidatura Recebida!",
-      "successMessage": "Obrigado pelo interesse. A nossa equipa entrará em contacto muito em breve para apresentar o programa piloto e validar o acesso da tua frota.",
-      "closeButton": "Concluído"
+      "particular": {
+        "badge": "Acesso antecipado",
+        "title": "Fila de espera — Táxi Map Particular",
+        "subtitle": "A aplicação para passageiros ainda não está disponível. Introduza o seu nome e email para garantir acesso antecipado e receber o Táxi Map em primeira mão!",
+        "nameLabel": "Nome completo",
+        "namePlaceholder": "Introduza o seu nome",
+        "emailLabel": "Endereço de email",
+        "emailPlaceholder": "seu.email@exemplo.com",
+        "profileLabel": "Eu sou:",
+        "role1": "Passageiro (Fila de espera)",
+        "role2": "Motorista de candongueiro",
+        "submitButton": "Garantir acesso antecipado",
+        "successTitle": "Inscrição confirmada!",
+        "successMessage": "Obrigado por se juntar à lista de espera do Táxi Map Particular. Enviaremos um convite exclusivo para o seu email assim que a versão Beta estiver pronta para descarregar.",
+        "closeButton": "Concluído"
+      },
+      "empresa": {
+        "badge": "Programa piloto",
+        "title": "Candidatura ao programa piloto — Táxi Map Empresas",
+        "subtitle": "Estamos a selecionar as primeiras empresas de táxi e operadores de frota em Luanda para testar e moldar a plataforma de gestão de frotas em primeira mão!",
+        "nameLabel": "Nome completo / representante",
+        "namePlaceholder": "Introduza o seu nome ou o da empresa",
+        "emailLabel": "Endereço de email corporativo",
+        "emailPlaceholder": "seu.email@empresa.com",
+        "profileLabel": "A sua frota ou perfil:",
+        "role1": "Empresa de táxi / operador de frota",
+        "role2": "Cliente corporativo / outro",
+        "submitButton": "Submeter candidatura de empresa piloto",
+        "successTitle": "Candidatura recebida!",
+        "successMessage": "Obrigado pelo interesse! A nossa equipa entrará em contacto muito em breve para apresentar o programa piloto do Táxi Map Empresas e validar o acesso da sua frota.",
+        "closeButton": "Concluído"
+      }
     },
     "footer": {
       "contacts": "Contactos",

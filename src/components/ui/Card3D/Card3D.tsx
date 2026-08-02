@@ -32,8 +32,10 @@ export function Card3D({
 
 				{/* 3D Content Box */}
 				<div className="card-3d-content">
-					<span className="card-3d-title">{title}</span>
-					<p className="card-3d-text">{description}</p>
+					<div className="card-3d-body">
+						<span className="card-3d-title">{title}</span>
+						<p className="card-3d-text">{description}</p>
+					</div>
 
 					{actionText && (
 						<button

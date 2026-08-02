@@ -56,7 +56,7 @@ export function BusinessSolution({ onOpenWaitlist }: BusinessSolutionProps) {
 							businessContent.audience.items[0].badgeKey,
 							businessContent.audience.items[0].badgeFallback
 						)}
-						actionText="Candidatar a Empresa Piloto"
+						actionText="Candidatar a empresa piloto"
 						onAction={onOpenWaitlist}
 					/>
 
@@ -75,7 +75,7 @@ export function BusinessSolution({ onOpenWaitlist }: BusinessSolutionProps) {
 							businessContent.audience.items[1].badgeKey,
 							businessContent.audience.items[1].badgeFallback
 						)}
-						actionText="Ajudar a Moldar o Produto"
+						actionText="Ajudar a moldar o produto"
 						onAction={onOpenWaitlist}
 					/>
 				</div>
@@ -84,7 +84,7 @@ export function BusinessSolution({ onOpenWaitlist }: BusinessSolutionProps) {
 				<div className="business-benefits-banner" style={{ marginTop: 0, paddingTop: "var(--spacing-16)" }}>
 					<div className="business-header">
 						<span className="business-benefits-badge">
-							Posicionamento Único
+							Posicionamento único
 						</span>
 						<h3 className="business-title">{reasonsTitle}</h3>
 						<p className="business-subtitle">{reasonsSubtitle}</p>

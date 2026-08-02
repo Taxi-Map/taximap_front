@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { MapPin, Users, Wrench, BarChart3, AlertCircle } from "lucide-react";
+import { MapPin, Users, Wrench, BarChart3, AlertCircle, FileSpreadsheet } from "lucide-react";
 import { Card3D } from "../Card3D";
 import businessContent from "../../../content/Business.json";
 
@@ -15,7 +15,7 @@ export function BusinessFeatures() {
 		businessContent.features.subtitleFallback
 	);
 
-	const icons = [MapPin, Users, Wrench, BarChart3, AlertCircle];
+	const icons = [MapPin, Users, Wrench, BarChart3, AlertCircle, FileSpreadsheet];
 
 	return (
 		<section id="features" className="business-section bg-alt">
@@ -26,7 +26,7 @@ export function BusinessFeatures() {
 					<p className="business-subtitle">{subtitle}</p>
 				</div>
 
-				{/* 5 Feature Cards with 3D Parallax Effect */}
+				{/* 6 Feature Cards with 3D Parallax Effect */}
 				<div className="business-grid-3">
 					{businessContent.features.cards.map((card, idx) => {
 						const IconComponent = icons[idx] || MapPin;

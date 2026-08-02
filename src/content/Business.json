@@ -1,9 +1,9 @@
 {
   "hero": {
     "badgeKey": "businessPage.hero.badge",
-    "badgeFallback": "Programa Piloto em Luanda",
+    "badgeFallback": "Programa piloto em Luanda",
     "titleKey": "businessPage.hero.title",
-    "titleFallback": "A Nossa Solução para Empresas de Táxi e Operadores de Frota",
+    "titleFallback": "A nossa solução para empresas de táxi e operadores de frota",
     "subtitleKey": "businessPage.hero.subtitle",
     "subtitleFallback": "Gerir uma frota em Angola ainda é, na maior parte dos casos, feito no caderno, no grupo de WhatsApp e na memória de quem despacha. O Táxi Map Empresas substitui isso por uma operação digital, visível em tempo real, desenhada de raiz para a realidade angolana.",
     "pilotNoteKey": "businessPage.hero.pilotNote",
@@ -23,7 +23,7 @@
         "badgeKey": "businessPage.audience.items.0.badge",
         "badgeFallback": "Disponível para programa piloto",
         "titleKey": "businessPage.audience.items.0.title",
-        "titleFallback": "Empresas de Táxi & Operadores de Frota",
+        "titleFallback": "Empresas de táxi e operadores de frota",
         "descKey": "businessPage.audience.items.0.desc",
         "descFallback": "Gestão centralizada da frota e dos motoristas, localização em tempo real de cada viatura, e relatórios de produtividade para decidir com dados em vez de intuição."
       },
@@ -31,7 +31,7 @@
         "badgeKey": "businessPage.audience.items.1.badge",
         "badgeFallback": "Em desenho, brevemente",
         "titleKey": "businessPage.audience.items.1.title",
-        "titleFallback": "Clientes Corporativos",
+        "titleFallback": "Clientes corporativos",
         "descKey": "businessPage.audience.items.1.desc",
         "descFallback": "Transporte seguro e rastreável para colaboradores e executivos, agendamento de deslocações corporativas com faturação centralizada. Está a ser desenhado com o contributo direto de empresas em Luanda — se a tua empresa quer ajudar a moldar este produto, fala connosco."
       }
@@ -39,7 +39,7 @@
   },
   "reasons": {
     "titleKey": "businessPage.reasons.title",
-    "titleFallback": "Porque Escolher o Táxi Map",
+    "titleFallback": "Porque escolher o Táxi Map",
     "subtitleKey": "businessPage.reasons.subtitle",
     "subtitleFallback": "Vantagens desenhadas para quem opera frotas nas ruas de Angola.",
     "items": [
@@ -75,7 +75,7 @@
   },
   "features": {
     "titleKey": "businessPage.features.title",
-    "titleFallback": "Ferramentas para a Gestão da Tua Frota",
+    "titleFallback": "Ferramentas para a gestão da tua frota",
     "subtitleKey": "businessPage.features.subtitle",
     "subtitleFallback": "Tudo o que precisas para controlar a tua operação diária sem depender de cadernos ou grupos de WhatsApp.",
     "cards": [
@@ -108,6 +108,12 @@
         "titleFallback": "Alertas de ocorrências na via",
         "descKey": "businessPage.features.cards.4.desc",
         "descFallback": "Avisos sobre engarrafamentos, vias cortadas ou incidentes reportados pela própria comunidade de utilizadores da plataforma."
+      },
+      {
+        "titleKey": "businessPage.features.cards.5.title",
+        "titleFallback": "Histórico de viagens e exportação de dados",
+        "descKey": "businessPage.features.cards.5.desc",
+        "descFallback": "Registo completo de todas as rotas efetuadas com exportação simples em Excel/PDF para controlo financeiro e auditorias de frota."
       }
     ]
   },
