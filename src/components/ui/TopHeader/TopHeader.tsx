@@ -39,20 +39,35 @@ export function TopHeader({ activeTab, setActiveTab }: TopHeaderProps) {
   return (
     <div className="top-header bg-primary relative z-50 hidden md:block">
       <div className="container flex justify-between items-center top-header-inner">
+        {/* Left Links (Particulares & Empresas enabled; Institucional & Parceiros disabled) */}
         <div className="flex top-links">
-          {leftLinks.map((link, idx) => (
-            <button 
-              key={idx} 
-              onClick={() => setActiveTab(idx)} 
-              className={activeTab === idx ? "active" : ""}
-            >
-              {t(link.labelKey, link.fallback)}
-            </button>
-          ))}
+          {leftLinks.map((link, idx) => {
+            const isDisabled = idx >= 2;
+
+            return (
+              <button 
+                key={idx} 
+                disabled={isDisabled}
+                onClick={() => !isDisabled && setActiveTab(idx)} 
+                className={`${activeTab === idx ? "active" : ""} ${
+                  isDisabled ? "opacity-50 cursor-not-allowed hover:bg-transparent! hover:text-gray-800! pointer-events-none" : ""
+                }`}
+              >
+                {t(link.labelKey, link.fallback)}
+              </button>
+            );
+          })}
         </div>
+
+        {/* Right Links (Apoio ao cliente disabled) */}
         <div className="flex items-center gap-6 top-links-right">
           {rightLinks.map((link, idx) => (
-            <a key={idx} href={link.url}>
+            <a 
+              key={idx} 
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="opacity-50 cursor-not-allowed pointer-events-none"
+            >
               {t(link.labelKey, link.fallback)}
             </a>
           ))}

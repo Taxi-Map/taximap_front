@@ -220,26 +220,35 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
             </button>
           </div>
 
-          {/* Tabs Navigation */}
+          {/* Tabs Navigation (Institucional & Parceiros disabled) */}
           <div className="relative pt-2 border-b border-gray-100">
             {/* Visual affordance for horizontal scroll */}
             <div className="absolute right-0 top-0 bottom-0 w-16 bg-linear-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
             <div className="flex overflow-x-auto hide-scrollbar gap-8 px-8">
-              {leftLinks.map((link, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveTab(idx)}
-                  className={`shrink-0 pb-4 pt-2 text-sm font-semibold transition-colors relative whitespace-nowrap ${
-                    activeTab === idx ? 'text-primary' : 'text-gray-500 hover:text-gray-900'
-                  }`}
-                >
-                  {t(link.labelKey, link.fallback) as string}
-                  {activeTab === idx && (
-                    <div className="absolute bottom-0 left-0 w-full h-0.75 bg-primary rounded-t-full"></div>
-                  )}
-                </button>
-              ))}
+              {leftLinks.map((link, idx) => {
+                const isDisabled = idx >= 2;
+
+                return (
+                  <button
+                    key={idx}
+                    disabled={isDisabled}
+                    onClick={() => !isDisabled && setActiveTab(idx)}
+                    className={`shrink-0 pb-4 pt-2 text-sm font-semibold transition-colors relative whitespace-nowrap ${
+                      isDisabled
+                        ? 'opacity-40 cursor-not-allowed pointer-events-none'
+                        : activeTab === idx
+                        ? 'text-primary'
+                        : 'text-gray-500 hover:text-gray-900'
+                    }`}
+                  >
+                    <span>{t(link.labelKey, link.fallback) as string}</span>
+                    {activeTab === idx && (
+                      <div className="absolute bottom-0 left-0 w-full h-0.75 bg-primary rounded-t-full"></div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -295,13 +304,14 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
               ))}
           </div>
 
-          {/* Bottom Footer Links */}
+          {/* Bottom Footer Links (Apoio ao cliente disabled) */}
           <div className="px-8 py-8 bg-gray-50 flex flex-col gap-5 border-t border-gray-200">
             {rightLinks.map((link, idx) => (
               <a
                 key={idx}
-                href={link.url}
-                className="text-sm font-semibold text-gray-600 hover:text-primary flex items-center gap-3 transition-colors"
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="text-sm font-semibold text-gray-400 opacity-50 cursor-not-allowed pointer-events-none"
               >
                 {t(link.labelKey, link.fallback) as string}
               </a>
