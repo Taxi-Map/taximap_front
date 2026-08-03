@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ThumbsUp, AlertTriangle, CheckCircle2, ShieldAlert, Activity } from "lucide-react";
+import { ThumbsUp, AlertTriangle, CheckCircle2, ShieldAlert, Activity, Target } from "lucide-react";
 import "./Community.css";
 import communityContent from "../../../content/Community.json";
 
@@ -212,14 +212,26 @@ export function Community({ data, isLoading: externalLoading }: CommunityProps) 
 							</ul>
 						</div>
 
-						{/* Stats Grid */}
-						<div className="stats-grid-card">
-							{statsList.map((stat, idx) => (
-								<div key={idx} className="flex flex-col items-center justify-center">
-									<span className="stat-item-number">{stat.number}</span>
-									<span className="stat-item-label">{stat.label}</span>
-								</div>
-							))}
+						{/* Stats Grid Container with Year 1 Target Badge */}
+						<div className="flex flex-col gap-3">
+							<div className="flex items-center gap-2 self-start bg-slate-100 border border-slate-200 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-700 shadow-xs">
+								<Target size={14} className="text-[#6DB7E2]" />
+								<span>
+									{t(
+										communityContent.statsHeader.badgeKey,
+										communityContent.statsHeader.badgeFallback
+									)}
+								</span>
+							</div>
+
+							<div className="stats-grid-card">
+								{statsList.map((stat, idx) => (
+									<div key={idx} className="flex flex-col items-center justify-center text-center">
+										<span className="stat-item-number">{stat.number}</span>
+										<span className="stat-item-label">{stat.label}</span>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 				</div>

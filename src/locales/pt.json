@@ -74,10 +74,13 @@
         "validation": "Informações validadas continuamente pela própria comunidade.",
         "routes": "Sugestões de rotas alternativas automáticas em caso de engarrafamento."
       },
+      "statsHeader": {
+        "badge": "Metas do 1.º ano em Luanda"
+      },
       "stats": {
-        "alerts": "Alertas por mês",
-        "accuracy": "Precisão da informação",
-        "users": "Utilizadores activos"
+        "alerts": "Alertas estimados / mês",
+        "accuracy": "Meta de precisão dos dados",
+        "users": "Utilizadores activos previstos"
       },
       "alerts": {
         "0": {
@@ -97,7 +100,7 @@
           "timeAgo": "Há 1 min"
         },
         "4": {
-          "message": "Trânsito normalizado na rotunda principal.",
+          "message": "Trânsito normalizado na via principal.",
           "timeAgo": "Há 10 min"
         },
         "5": {

@@ -17,21 +17,25 @@
       "fallback": "Sugestões de rotas alternativas automáticas em caso de engarrafamento."
     }
   ],
+  "statsHeader": {
+    "badgeKey": "communitySection.statsHeader.badge",
+    "badgeFallback": "Metas do 1.º ano em Luanda"
+  },
   "stats": [
     {
       "number": "+10k",
       "labelKey": "communitySection.stats.alerts",
-      "labelFallback": "Alertas por mês"
+      "labelFallback": "Alertas estimados / mês"
     },
     {
       "number": "99%",
       "labelKey": "communitySection.stats.accuracy",
-      "labelFallback": "Precisão da informação"
+      "labelFallback": "Meta de precisão dos dados"
     },
     {
-      "number": "+50k",
+      "number": "+5k",
       "labelKey": "communitySection.stats.users",
-      "labelFallback": "Utilizadores activos"
+      "labelFallback": "Utilizadores activos previstos"
     }
   ],
   "sampleAlerts": [
