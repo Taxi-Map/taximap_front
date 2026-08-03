@@ -5,6 +5,23 @@ import { Button } from "../Button";
 import "./Hero.css";
 import { fetchHeroSlides, type HeroSlideData } from "../../../lib/contentful";
 
+function normalizeCtaUrl(url?: string): string {
+	if (!url) return "#app";
+	const trimmed = url.trim();
+	if (
+		trimmed.startsWith("#") ||
+		trimmed.startsWith("/") ||
+		trimmed.startsWith("mailto:") ||
+		trimmed.startsWith("tel:")
+	) {
+		return trimmed;
+	}
+	if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+		return trimmed;
+	}
+	return `https://${trimmed}`;
+}
+
 export function Hero() {
 	const { i18n } = useTranslation();
 	const [currentSlide, setCurrentSlide] = useState(0);
@@ -79,6 +96,7 @@ export function Hero() {
 				const title = slide.title;
 				const description = slide.description;
 				const ctaLabel = slide.cta?.label;
+				const ctaUrl = normalizeCtaUrl(slide.cta?.url);
 
 				const truncateLimit = 100;
 				const displayDescription =
@@ -110,7 +128,7 @@ export function Hero() {
 								</p>
 								<div style={{ paddingTop: "2rem" }}>
 									<Button
-										href={slide.cta?.url || "#app"}
+										href={ctaUrl}
 										variant="white"
 										className="pointer-events-auto"
 									>
