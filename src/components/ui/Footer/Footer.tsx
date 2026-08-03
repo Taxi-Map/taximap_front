@@ -78,7 +78,7 @@ export function Footer({ className = '' }: FooterProps) {
         <a href="/" aria-label="Táxi Map — Início">
           <img
             src="/logo.png"
-            alt="Táxi Map"
+            alt="Logótipo oficial da plataforma Táxi Map Angola"
             style={{ height: '7rem', width: 'auto', objectFit: 'contain' }}
           />
         </a>

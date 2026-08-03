@@ -30,6 +30,26 @@ function App() {
     }
   }, []);
 
+  // Dynamic Document Title and Meta Description Update based on active tab for SEO
+  useEffect(() => {
+    let title = "Táxi Map — Mobilidade Inteligente e Gestão de Frotas em Angola";
+    let description = "Acompanhe táxis e candongueiros em tempo real em Luanda. Soluções completas para particulares e empresas de táxi com gestão de frotas, localização GPS e alertas em tempo real.";
+
+    if (activeTab === 0) {
+      title = "Táxi Map Particulares — Rotas e Candongueiros em Tempo Real em Luanda";
+      description = "Acompanhe os táxis (candongueiros) em tempo real, consulte paragens, receba alertas de trânsito e planeie as suas viagens com facilidade em Luanda.";
+    } else if (activeTab === 1) {
+      title = "Táxi Map Empresas — Gestão de Frotas e Operadores de Táxi em Luanda";
+      description = "Plataforma digital para gestão de frotas de táxi em Angola. Rastreamento GPS pelo telemóvel, controlo de motoristas, relatórios de produtividade e manutenção.";
+    }
+
+    document.title = title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', description);
+    }
+  }, [activeTab]);
+
   const handleOpenWaitlist = (mode?: "particular" | "empresa") => {
     const selectedMode = mode || (activeTab === 1 ? "empresa" : "particular");
     setWaitlistModalMode(selectedMode);
