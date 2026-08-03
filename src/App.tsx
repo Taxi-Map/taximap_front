@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TopHeader } from './components/ui/TopHeader';
 import { Header } from './components/ui/Header';
 import { Hero } from './components/ui/Hero';
@@ -18,6 +18,17 @@ function App() {
   const [activeTab, setActiveTab] = useState(0);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [waitlistModalMode, setWaitlistModalMode] = useState<"particular" | "empresa">("particular");
+
+  // Read URL query parameter for direct landing (SEO & Google Sitelinks support)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    if (tabParam === 'empresas') {
+      setActiveTab(1);
+    } else if (tabParam === 'particulares') {
+      setActiveTab(0);
+    }
+  }, []);
 
   const handleOpenWaitlist = (mode?: "particular" | "empresa") => {
     const selectedMode = mode || (activeTab === 1 ? "empresa" : "particular");
