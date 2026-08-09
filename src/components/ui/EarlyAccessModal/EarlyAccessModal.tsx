@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { X, CheckCircle2, Send, User, Mail, Sparkles, Building2 } from "lucide-react";

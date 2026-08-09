@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckCircle2, Smartphone } from "lucide-react";

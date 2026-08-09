@@ -6,3 +6,5 @@ export { ImpactPage } from "./ImpactPage";
 export { TargetPage } from "./TargetPage";
 export { TeamPage } from "./TeamPage";
 export { ContactPage } from "./ContactPage";
+export { HistoryPage } from "./HistoryPage";
+export { NewsPage } from "./NewsPage";
