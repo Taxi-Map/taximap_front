@@ -1,11 +1,22 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Mail, Phone, MapPin, Send, Check, ArrowUpRight } from "lucide-react";
+import {
+	Mail,
+	Phone,
+	MapPin,
+	Send,
+	Check,
+	ArrowUpRight,
+	AlertTriangle,
+	Loader2,
+} from "lucide-react";
 import { useInView } from "../../hooks/useInView";
+import { useSubmitLead } from "../../hooks/useSubmitLead";
+import { FALLBACK_CONTACT, HONEYPOT_FIELD } from "../../lib/leads";
 
 const socialLinks = [
 	{
-		label: "socialFacebook",
+		label: "contact.socialFacebook",
 		href: "https://facebook.com/taximapao",
 		icon: (
 			<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -14,7 +25,7 @@ const socialLinks = [
 		),
 	},
 	{
-		label: "socialInstagram",
+		label: "contact.socialInstagram",
 		href: "https://instagram.com/taximapao",
 		icon: (
 			<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -23,7 +34,7 @@ const socialLinks = [
 		),
 	},
 	{
-		label: "socialLinkedin",
+		label: "contact.socialLinkedin",
 		href: "https://linkedin.com/company/taximapao",
 		icon: (
 			<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -32,7 +43,7 @@ const socialLinks = [
 		),
 	},
 	{
-		label: "socialWhatsapp",
+		label: "contact.socialWhatsapp",
 		href: "https://wa.me/244929782402",
 		icon: (
 			<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -51,7 +62,8 @@ export function ContactPage() {
 		subject: "",
 		message: "",
 	});
-	const [submitted, setSubmitted] = useState(false);
+	const [honeypot, setHoneypot] = useState("");
+	const { mutate, isPending, isSuccess, isError } = useSubmitLead();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -59,7 +71,15 @@ export function ContactPage() {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		setSubmitted(true);
+		if (isPending) return;
+		mutate({
+			type: "contact",
+			name: formState.name.trim(),
+			email: formState.email.trim(),
+			subject: formState.subject.trim(),
+			message: formState.message.trim(),
+			honeypot,
+		});
 	};
 
 	return (
@@ -93,7 +113,7 @@ export function ContactPage() {
 								{t("nav.contact")}
 							</h1>
 							<p className="text-lg text-gray-600 max-w-md mx-auto">
-								Estamos aqui para ajudar. Envie-nos uma mensagem ou use os contactos abaixo.
+								{t("contact.subtitle")}
 							</p>
 						</div>
 
@@ -129,18 +149,31 @@ export function ContactPage() {
 									>
 										{t("contact.formTitle")}
 									</h2>
-									{submitted ? (
+									{isSuccess ? (
 										<div className="text-center py-12">
 											<div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
 												<Check className="w-7 h-7 text-green-600" />
 											</div>
-											<p className="text-gray-900 font-semibold mb-1">Mensagem enviada!</p>
+											<p className="text-gray-900 font-semibold mb-1">
+												{t("contact.sentTitle")}
+											</p>
 											<p className="text-sm text-gray-600">
 												{t("contact.sent")}
 											</p>
 										</div>
 									) : (
 										<form onSubmit={handleSubmit} className="space-y-4">
+											{/* Escondido de pessoas, visível para robôs — ver HONEYPOT_FIELD */}
+											<input
+												type="text"
+												name={HONEYPOT_FIELD}
+												value={honeypot}
+												onChange={(e) => setHoneypot(e.target.value)}
+												tabIndex={-1}
+												autoComplete="off"
+												aria-hidden="true"
+												className="hp-field"
+											/>
 											<div className="grid sm:grid-cols-2 gap-4">
 												<div>
 													<label className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -199,12 +232,54 @@ export function ContactPage() {
 													placeholder="A sua mensagem..."
 												/>
 											</div>
+											{isError && (
+												<div
+													role="alert"
+													className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5"
+												>
+													<AlertTriangle className="w-4.5 h-4.5 text-red-700 shrink-0 mt-0.5" />
+													<div>
+														<p className="text-sm font-semibold text-red-900 mb-0.5">
+															{t("forms.errorTitle")}
+														</p>
+														<p className="text-[13px] leading-relaxed text-red-800/80">
+															{t("forms.errorHelp")}{" "}
+															<a
+																href={`mailto:${FALLBACK_CONTACT.email}`}
+																className="font-semibold text-red-700 underline underline-offset-2"
+															>
+																{FALLBACK_CONTACT.email}
+															</a>{" "}
+															·{" "}
+															<a
+																href={FALLBACK_CONTACT.whatsapp}
+																target="_blank"
+																rel="noopener noreferrer"
+																className="font-semibold text-red-700 underline underline-offset-2"
+															>
+																{FALLBACK_CONTACT.phone}
+															</a>
+														</p>
+													</div>
+												</div>
+											)}
 											<button
 												type="submit"
-												className="w-full inline-flex items-center justify-center gap-2.5 bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300"
+												disabled={isPending}
+												aria-busy={isPending}
+												className="w-full inline-flex items-center justify-center gap-2.5 bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300 disabled:bg-primary/50 disabled:shadow-none disabled:translate-y-0 disabled:cursor-not-allowed"
 											>
-												<Send className="w-4 h-4" />
-												{t("contact.send")}
+												{isPending ? (
+													<>
+														<Loader2 className="w-4 h-4 animate-spin" />
+														{t("forms.submitting")}
+													</>
+												) : (
+													<>
+														<Send className="w-4 h-4" />
+														{isError ? t("forms.retry") : t("contact.send")}
+													</>
+												)}
 											</button>
 										</form>
 									)}

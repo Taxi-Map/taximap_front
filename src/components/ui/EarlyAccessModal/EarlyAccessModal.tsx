@@ -1,7 +1,19 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { X, CheckCircle2, Send, User, Mail, Sparkles, Building2 } from "lucide-react";
+import {
+	X,
+	CheckCircle2,
+	Send,
+	User,
+	Mail,
+	Sparkles,
+	Building2,
+	AlertTriangle,
+	Loader2,
+} from "lucide-react";
+import { useSubmitLead } from "../../../hooks/useSubmitLead";
+import { FALLBACK_CONTACT, HONEYPOT_FIELD } from "../../../lib/leads";
 import "./EarlyAccessModal.css";
 
 interface EarlyAccessModalProps {
@@ -19,7 +31,8 @@ export function EarlyAccessModal({
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [role, setRole] = useState<"role1" | "role2">("role1");
-	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [honeypot, setHoneypot] = useState("");
+	const { mutate, reset, isPending, isSuccess, isError } = useSubmitLead();
 
 	const isEmpresa = mode === "empresa";
 	const prefix = isEmpresa ? "waitlistModal.empresa" : "waitlistModal.particular";
@@ -27,10 +40,11 @@ export function EarlyAccessModal({
 	// Reset state when modal opens/closes or mode changes
 	useEffect(() => {
 		if (isOpen) {
-			setIsSubmitted(false);
+			reset();
 			setName("");
 			setEmail("");
 			setRole("role1");
+			setHoneypot("");
 			document.body.style.overflow = "hidden";
 		} else {
 			document.body.style.overflow = "unset";
@@ -38,7 +52,7 @@ export function EarlyAccessModal({
 		return () => {
 			document.body.style.overflow = "unset";
 		};
-	}, [isOpen, mode]);
+	}, [isOpen, mode, reset]);
 
 	// Close on ESC key press
 	useEffect(() => {
@@ -53,10 +67,26 @@ export function EarlyAccessModal({
 
 	if (!isOpen) return null;
 
+	const role1Label = t(
+		`${prefix}.role1`,
+		isEmpresa ? "Empresa de Táxi / Operador de Frota" : "Passageiro (Fila de Espera)",
+	) as string;
+	const role2Label = t(
+		`${prefix}.role2`,
+		isEmpresa ? "Cliente Corporativo / Outro" : "Motorista de Candongueiro",
+	) as string;
+
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!name.trim() || !email.trim()) return;
-		setIsSubmitted(true);
+		if (!name.trim() || !email.trim() || isPending) return;
+		mutate({
+			type: "waitlist",
+			name: name.trim(),
+			email: email.trim(),
+			audience: isEmpresa ? "empresa" : "particular",
+			profile: role === "role1" ? role1Label : role2Label,
+			honeypot,
+		});
 	};
 
 	return (
@@ -77,7 +107,7 @@ export function EarlyAccessModal({
 					<X size={20} />
 				</button>
 
-				{!isSubmitted ? (
+				{!isSuccess ? (
 					/* Initial Form View */
 					<div className="flex flex-col gap-6">
 						{/* Header Badge & Title */}
@@ -126,6 +156,18 @@ export function EarlyAccessModal({
 
 						{/* Form */}
 						<form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
+							{/* Escondido de pessoas, visível para robôs — ver HONEYPOT_FIELD */}
+							<input
+								type="text"
+								name={HONEYPOT_FIELD}
+								value={honeypot}
+								onChange={(e) => setHoneypot(e.target.value)}
+								tabIndex={-1}
+								autoComplete="off"
+								aria-hidden="true"
+								className="hp-field"
+							/>
+
 							{/* Full Name Field */}
 							<div className="flex flex-col gap-1.5">
 								<label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
@@ -188,12 +230,7 @@ export function EarlyAccessModal({
 											className="accent-[#6DB7E2]"
 										/>
 										<span className="text-xs sm:text-sm font-bold text-slate-800">
-											{t(
-												`${prefix}.role1`,
-												isEmpresa
-													? "Empresa de Táxi / Operador de Frota"
-													: "Passageiro (Fila de Espera)"
-											)}
+											{role1Label}
 										</span>
 									</label>
 
@@ -211,25 +248,68 @@ export function EarlyAccessModal({
 											className="accent-[#6DB7E2]"
 										/>
 										<span className="text-xs sm:text-sm font-bold text-slate-800">
-											{t(
-												`${prefix}.role2`,
-												isEmpresa
-													? "Cliente Corporativo / Outro"
-													: "Motorista de Candongueiro"
-											)}
+											{role2Label}
 										</span>
 									</label>
 								</div>
 							</div>
 
+							{/* Submission failure — never silently swallow the lead */}
+							{isError && (
+								<div className="modal-error" role="alert">
+									<AlertTriangle size={18} className="modal-error-icon" />
+									<div>
+										<p className="modal-error-title">
+											{t(
+												"forms.errorTitle",
+												"Não foi possível registar o seu pedido."
+											)}
+										</p>
+										<p className="modal-error-text">
+											{t(
+												"forms.errorHelp",
+												"Tente novamente. Se o problema continuar, escreva-nos diretamente:"
+											)}{" "}
+											<a href={`mailto:${FALLBACK_CONTACT.email}`}>
+												{FALLBACK_CONTACT.email}
+											</a>{" "}
+											·{" "}
+											<a
+												href={FALLBACK_CONTACT.whatsapp}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												{FALLBACK_CONTACT.phone}
+											</a>
+										</p>
+									</div>
+								</div>
+							)}
+
 							{/* Submit Button */}
-							<button type="submit" className="modal-submit-btn">
-								<Send size={18} />
-								{t(
-									`${prefix}.submitButton`,
-									isEmpresa
-										? "Submeter Candidatura de Empresa Piloto"
-										: "Garantir Acesso Antecipado"
+							<button
+								type="submit"
+								className="modal-submit-btn"
+								disabled={isPending}
+								aria-busy={isPending}
+							>
+								{isPending ? (
+									<>
+										<Loader2 size={18} className="animate-spin" />
+										{t("forms.submitting", "A enviar...")}
+									</>
+								) : (
+									<>
+										<Send size={18} />
+										{isError
+											? t("forms.retry", "Tentar novamente")
+											: t(
+													`${prefix}.submitButton`,
+													isEmpresa
+														? "Submeter Candidatura de Empresa Piloto"
+														: "Garantir Acesso Antecipado"
+												)}
+									</>
 								)}
 							</button>
 						</form>

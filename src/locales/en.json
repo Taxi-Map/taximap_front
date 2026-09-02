@@ -228,6 +228,31 @@
       "email": "General Email",
       "terms": "Terms and Conditions",
       "copyright": "© 2026 Táxi Map."
+    },
+    "contact": {
+      "subtitle": "We're here to help. Send us a message or use the contacts below.",
+      "email": "geral.taximap@gmail.com",
+      "phone": "+244 929 782 402",
+      "address": "Luanda, Angola",
+      "formTitle": "Send us a message",
+      "name": "Name",
+      "emailLabel": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "send": "Send message",
+      "sentTitle": "Message sent!",
+      "sent": "We usually reply within 1 to 2 working days.",
+      "social": "Follow us",
+      "socialFacebook": "Facebook",
+      "socialInstagram": "Instagram",
+      "socialLinkedin": "LinkedIn",
+      "socialWhatsapp": "WhatsApp"
+    },
+    "forms": {
+      "submitting": "Sending...",
+      "retry": "Try again",
+      "errorTitle": "We couldn't record your request.",
+      "errorHelp": "Please try again. If the problem persists, contact us directly:"
     }
   }
 }

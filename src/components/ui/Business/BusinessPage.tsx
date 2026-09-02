@@ -13,7 +13,7 @@ export function BusinessPage({ onOpenWaitlist }: BusinessPageProps) {
 	return (
 		<div className="business-page flex flex-col w-full">
 			<Hero />
-			<BusinessSolution />
+			<BusinessSolution onOpenWaitlist={onOpenWaitlist} />
 			<BusinessFeatures />
 			<BusinessPlans onOpenWaitlist={onOpenWaitlist} />
 			<Faq />
