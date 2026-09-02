@@ -14,6 +14,11 @@ dist-ssr
 .agents
 BaseDeConhecimento/
 
+# Segredos — nunca versionar. O .env.example é o modelo e fica sem valores.
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

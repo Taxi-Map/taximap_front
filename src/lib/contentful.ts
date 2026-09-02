@@ -54,19 +54,19 @@ export async function fetchHeroSlides(locale?: string): Promise<HeroSlideData[]>
 			response = await contentfulClient.getEntries<WebsiteTaxiMapSkeleton>({
 				content_type: "websiteTaxiMap",
 				locale: contentfulLocale,
-			} as any);
+			} as never);
 		} catch {
 			// Fallback if specific locale is not published yet
 			response = await contentfulClient.getEntries<WebsiteTaxiMapSkeleton>({
 				content_type: "websiteTaxiMap",
-			} as any);
+			} as never);
 		}
 
 		if ((!response?.items || response.items.length === 0) && locale !== "en") {
 			// Secondary fallback if pt-AO returns 0 items
 			response = await contentfulClient.getEntries<WebsiteTaxiMapSkeleton>({
 				content_type: "websiteTaxiMap",
-			} as any);
+			} as never);
 		}
 
 		if (response?.items && response.items.length > 0) {

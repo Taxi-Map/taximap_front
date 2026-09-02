@@ -1,5 +1,4 @@
 import type { ComponentType } from "react";
-import { ComingSoon } from "../components/ui/ComingSoon";
 import { NotFound } from "../components/ui/NotFound";
 import {
 	AboutPage,
@@ -10,10 +9,12 @@ import {
 	TargetPage,
 	TeamPage,
 	ContactPage,
+	HistoryPage,
+	NewsPage,
 } from "./Institutional";
-import { AppPage, HowItWorksPage } from "./Individuals";
+import { AppPage, HowItWorksPage, CommunityPage, FaqPage } from "./Individuals";
 import { SolutionPage, FeaturesPage, PlansPage } from "./Business";
-import { PartnersPage, IntegrationsPage } from "./Partners";
+import { PartnersPage, IntegrationsPage, AdvertisingPage } from "./Partners";
 
 export const pageRegistry: Record<string, ComponentType> = {
 	about: AboutPage,
@@ -33,10 +34,10 @@ export const pageRegistry: Record<string, ComponentType> = {
 	"become-partner": PartnersPage,
 	apis: IntegrationsPage,
 	integrations: IntegrationsPage,
-	community: ComingSoon,
-	news: ComingSoon,
-	faq: ComingSoon,
-	history: ComingSoon,
-	advertising: ComingSoon,
+	community: CommunityPage,
+	news: NewsPage,
+	faq: FaqPage,
+	history: HistoryPage,
+	advertising: AdvertisingPage,
 	_not_found: NotFound,
 };

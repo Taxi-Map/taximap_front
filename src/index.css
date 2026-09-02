@@ -296,3 +296,16 @@ button, input, select, textarea {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/*
+  Campo-armadilha anti-robôs dos formulários. Sai do ecrã em vez de usar
+  display:none, porque muitos robôs ignoram campos escondidos dessa forma.
+*/
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}

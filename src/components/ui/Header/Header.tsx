@@ -220,14 +220,14 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
             </button>
           </div>
 
-          {/* Tabs Navigation (Institucional & Parceiros disabled) */}
+          {/* Tabs Navigation */}
           <div className="relative pt-2 border-b border-gray-100">
             {/* Visual affordance for horizontal scroll */}
             <div className="absolute right-0 top-0 bottom-0 w-16 bg-linear-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
             <div className="flex overflow-x-auto hide-scrollbar gap-8 px-8">
               {leftLinks.map((link, idx) => {
-                const isDisabled = idx >= 2;
+                const isDisabled = false; // Enabled all tabs
 
                 return (
                   <button
@@ -256,8 +256,8 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
           <div className="flex-1 overflow-y-auto px-8 py-8 flex flex-col gap-8">
             <div className="flex flex-col gap-6">
               {headerContent.tabs[activeTab]?.links
-                .filter((l: any) => !l.isAction)
-                .map((link: any, idx: number) => {
+                .filter((l: { isAction?: boolean }) => !l.isAction)
+                .map((link: { url: string; labelKey: string; fallback: string; isAction?: boolean }, idx: number) => {
                   const targetId = link.url.replace('#', '');
                   const isActive = activeSection === targetId;
 
@@ -277,8 +277,8 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
             </div>
 
             {headerContent.tabs[activeTab]?.links
-              .filter((l: any) => l.isAction)
-              .map((link: any, idx: number) => (
+              .filter((l: { isAction?: boolean }) => l.isAction)
+              .map((link: { url: string; labelKey: string; fallback: string; isAction?: boolean }, idx: number) => (
                 <div key={idx} className="mt-4 pt-8 border-t border-gray-100">
                   <a
                     href={link.url}
@@ -304,14 +304,13 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
               ))}
           </div>
 
-          {/* Bottom Footer Links (Apoio ao cliente disabled) */}
+          {/* Bottom Footer Links */}
           <div className="px-8 py-8 bg-gray-50 flex flex-col gap-5 border-t border-gray-200">
             {rightLinks.map((link, idx) => (
               <a
                 key={idx}
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                className="text-sm font-semibold text-gray-400 opacity-50 cursor-not-allowed pointer-events-none"
+                href={link.url}
+                className="text-sm font-semibold text-gray-400 hover:text-gray-900 transition-colors"
               >
                 {t(link.labelKey, link.fallback) as string}
               </a>

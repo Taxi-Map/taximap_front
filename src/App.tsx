@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { TopHeader } from './components/ui/TopHeader';
 import { Header } from './components/ui/Header';
 import { Hero } from './components/ui/Hero';
@@ -11,6 +13,8 @@ import { EarlyAccessModal } from './components/ui/EarlyAccessModal';
 import { BusinessPage } from './components/ui/Business';
 import { InstitutionalPage } from './components/ui/Institutional';
 import { PartnersPage } from './components/ui/Partners';
+import { pageRegistry } from './pages/pageRegistry';
+import { SLUG_TO_PAGE_ID } from './pages/routeConfig';
 
 import './App.css';
 
@@ -19,14 +23,38 @@ function App() {
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [waitlistModalMode, setWaitlistModalMode] = useState<"particular" | "empresa">("particular");
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Handle setting activeTab based on current route
+  useEffect(() => {
+    const path = location.pathname;
+
+    // Top-level tabs
+    if (path === '/empresas') setActiveTab(1);
+    else if (path === '/institucional') setActiveTab(2);
+    else if (path === '/parceiros') setActiveTab(3);
+    else if (path === '/' || path === '/particulares') setActiveTab(0);
+    // For other subroutes, we could infer the tab based on the page's logical parent,
+    // but preserving the current activeTab or defaulting to 0 for generic pages is acceptable.
+  }, [location]);
+
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+    if (index === 0) navigate('/');
+    else if (index === 1) navigate('/empresas');
+    else if (index === 2) navigate('/institucional');
+    else if (index === 3) navigate('/parceiros');
+  };
+
   // Read URL query parameter for direct landing (SEO & Google Sitelinks support)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const tabParam = params.get('tab');
     if (tabParam === 'empresas') {
-      setActiveTab(1);
+      handleTabChange(1);
     } else if (tabParam === 'particulares') {
-      setActiveTab(0);
+      handleTabChange(0);
     }
   }, []);
 
@@ -60,37 +88,41 @@ function App() {
     <div className="app-container flex flex-col min-h-dvh w-full bg-white font-sans antialiased text-gray-900">
       {/* Sticky Header Wrapper */}
       <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
-        <TopHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+        <TopHeader activeTab={activeTab} setActiveTab={handleTabChange} />
         <Header
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
+          setActiveTab={handleTabChange}
           onOpenWaitlist={handleOpenWaitlist}
         />
       </header>
 
-      {/* Main Content Sections dynamically rendered based on activeTab */}
+      {/* Main Content Sections dynamically rendered based on React Router Routes */}
       <main className="flex-1 w-full flex flex-col">
-        {activeTab === 0 && (
-          <>
-            <Hero />
-            <AppShowcase />
-            <HowItWorks />
-            <Community />
-            <Faq />
-          </>
-        )}
+        <Routes>
+          <Route path="/" element={
+            <>
+              <Hero />
+              <AppShowcase />
+              <HowItWorks />
+              <Community />
+              <Faq />
+            </>
+          } />
 
-        {activeTab === 1 && (
-          <BusinessPage onOpenWaitlist={() => handleOpenWaitlist("empresa")} />
-        )}
+          <Route path="/particulares" element={<Navigate to="/" replace />} />
 
-        {activeTab === 2 && (
-          <InstitutionalPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />
-        )}
+          <Route path="/empresas" element={<BusinessPage onOpenWaitlist={() => handleOpenWaitlist("empresa")} />} />
+          <Route path="/institucional" element={<InstitutionalPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />} />
+          <Route path="/parceiros" element={<PartnersPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />} />
 
-        {activeTab === 3 && (
-          <PartnersPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />
-        )}
+          {Object.entries(SLUG_TO_PAGE_ID).map(([slug, id]) => {
+            const Component = pageRegistry[id];
+            if (!Component) return null;
+            return <Route key={slug} path={`/${slug}`} element={<Component />} />;
+          })}
+
+          <Route path="*" element={<pageRegistry._not_found />} />
+        </Routes>
       </main>
 
       {/* Footer Component */}
