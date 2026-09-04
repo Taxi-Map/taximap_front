@@ -2,7 +2,7 @@ import { Hero } from "../Hero";
 import { BusinessSolution } from "./BusinessSolution";
 import { BusinessFeatures } from "./BusinessFeatures";
 import { BusinessPlans } from "./BusinessPlans";
-import { Faq } from "../Faq";
+import { BusinessFaq } from "./BusinessFaq";
 import "./Business.css";
 
 interface BusinessPageProps {
@@ -12,11 +12,11 @@ interface BusinessPageProps {
 export function BusinessPage({ onOpenWaitlist }: BusinessPageProps) {
 	return (
 		<div className="business-page flex flex-col w-full">
-			<Hero />
+			<Hero audience="empresa" onCtaClick={onOpenWaitlist} />
 			<BusinessSolution onOpenWaitlist={onOpenWaitlist} />
 			<BusinessFeatures />
 			<BusinessPlans onOpenWaitlist={onOpenWaitlist} />
-			<Faq />
+			<BusinessFaq />
 		</div>
 	);
 }

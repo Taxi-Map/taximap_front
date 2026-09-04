@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Car, Building2, Smartphone, ShieldCheck, TrendingUp, Cpu } from "lucide-react";
 import { Card3D } from "../Card3D";
+import { BusinessReasons } from "./BusinessReasons";
 import businessContent from "../../../content/Business.json";
 
 interface BusinessSolutionProps {
@@ -90,22 +91,7 @@ export function BusinessSolution({ onOpenWaitlist }: BusinessSolutionProps) {
 						<p className="business-subtitle">{reasonsSubtitle}</p>
 					</div>
 
-					<div className="business-grid-2">
-						{businessContent.reasons.items.map((reason, idx) => {
-							const IconComponent = reasonIcons[idx] || Cpu;
-							const rTitle = t(reason.titleKey, reason.titleFallback);
-							const rDesc = t(reason.descKey, reason.descFallback);
-
-							return (
-								<Card3D
-									key={idx}
-									title={rTitle}
-									description={rDesc}
-									icon={IconComponent}
-								/>
-							);
-						})}
-					</div>
+					<BusinessReasons icons={reasonIcons} fallbackIcon={Cpu} />
 				</div>
 			</div>
 		</section>

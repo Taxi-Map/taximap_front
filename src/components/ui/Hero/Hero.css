@@ -1,54 +1,114 @@
-/* --- Hero Banner Section --- */
+/*
+  Hero.
+
+  Antes era um carrossel de fotografias de merchandising vindo do CMS — a
+  primeira coisa que um investidor via era um saco e uma garrafa térmica, e o
+  produto não aparecia em lado nenhum. Agora abre com o que o produto faz.
+*/
+
 .hero-section {
-	position: relative;
 	width: 100%;
-	min-height: calc(100dvh - 80px);
-	background-color: var(--color-gray-200);
+	min-height: calc(100dvh - 120px);
+	display: flex;
+	align-items: center;
+	padding-top: var(--spacing-16);
+	padding-bottom: var(--spacing-16);
+	background:
+		radial-gradient(ellipse at 85% 15%, rgba(109, 183, 226, 0.1) 0%, transparent 55%),
+		var(--color-white);
 	overflow: hidden;
 }
 
-@media (min-width: 768px) {
-	.hero-section {
-		min-height: calc(100dvh - 120px);
-	}
-}
-
-.hero-background {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center;
-	z-index: 1;
-}
-
-.hero-content-wrapper {
-	position: relative;
-	z-index: 2;
-	height: 100%;
-	display: flex;
+.hero-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--spacing-10);
 	align-items: center;
+	width: 100%;
 }
 
-.hero-box {
-	width: 100%;
-	max-width: 600px;
-	padding: var(--spacing-8) var(--spacing-10);
-	background-color: rgba(109, 183, 226, 0.9);
-	/* Primary color with some opacity to match design overlay */
+/* --- Coluna de texto --- */
+.hero-copy {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--spacing-5);
+}
+
+.hero-eyebrow {
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--color-primary-dark);
 }
 
 .hero-title {
+	font-family: var(--font-family-display), system-ui, sans-serif;
+	font-size: var(--font-size-4xl);
+	font-weight: var(--font-weight-bold);
+	line-height: 1.08;
+	letter-spacing: -0.028em;
 	color: var(--color-black);
-	margin-bottom: var(--spacing-4);
-	font-size: var(--font-size-3xl);
+	margin: 0;
+	text-wrap: balance;
+	max-width: 16ch;
 }
 
-.hero-text {
-	color: var(--color-black);
-	font-weight: var(--font-weight-medium);
+.hero-description {
+	font-size: var(--font-size-lg);
 	line-height: 1.6;
+	color: var(--color-gray-600);
+	margin: 0;
+	max-width: 54ch;
+}
+
+.hero-actions {
+	margin-top: var(--spacing-2);
+}
+
+/* --- Coluna do diagrama --- */
+.hero-map {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 8 / 5;
+	border-radius: 1rem;
+	overflow: hidden;
+	background: linear-gradient(160deg, #f4f9fc 0%, #eaf2f8 100%);
+	border: 1px solid var(--color-gray-200);
+}
+
+.hero-map-caption {
+	position: absolute;
+	right: 0.75rem;
+	bottom: 0.75rem;
+	font-size: 11px;
+	font-weight: var(--font-weight-medium);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--color-gray-600);
+	background: rgba(255, 255, 255, 0.82);
+	border: 1px solid var(--color-gray-200);
+	border-radius: 999px;
+	padding: 0.25rem 0.6rem;
+}
+
+@media (min-width: 900px) {
+	.hero-section {
+		padding-top: var(--spacing-20);
+		padding-bottom: var(--spacing-20);
+	}
+
+	.hero-grid {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+		gap: var(--spacing-16);
+	}
+
+	.hero-title {
+		font-size: var(--font-size-5xl);
+	}
+
+	.hero-description {
+		font-size: var(--font-size-xl);
+	}
 }

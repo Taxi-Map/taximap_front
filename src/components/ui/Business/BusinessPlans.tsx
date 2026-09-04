@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { ArrowRight, MessageSquare } from "lucide-react";
+import { RouteMap } from "../RouteMap";
 import businessContent from "../../../content/Business.json";
-import "./StarryBackground.css";
+import "./NightMap.css";
 
 interface BusinessPlansProps {
 	onOpenWaitlist?: () => void;
@@ -29,11 +30,11 @@ export function BusinessPlans({ onOpenWaitlist }: BusinessPlansProps) {
 
 	return (
 		<section id="plans" className="business-section" style={{ position: "relative", overflow: "hidden" }}>
-			{/* Animated Starry Universe Background Layer */}
-			<div className="starry-container">
-				<div id="stars" />
-				<div id="stars2" />
-				<div id="stars3" />
+			{/* Luanda à noite, com a rota acesa. Substituiu um campo de estrelas
+			    genérico: o instinto de "momento especial em fundo escuro" estava
+			    certo, só não estava ligado ao produto. */}
+			<div className="nightmap-container">
+				<RouteMap variant="night" showLabels={false} showVehicle={false} />
 			</div>
 
 			<div className="container relative z-10">

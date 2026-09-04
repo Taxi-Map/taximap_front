@@ -1,0 +1,178 @@
+/*
+  Diagrama de rota — o momento de assinatura do site.
+
+  É SVG de propósito, não uma biblioteca de mapas. O site promete funcionar com
+  ligação fraca em Luanda; MapLibre sozinho ronda os 200 kB comprimido e
+  desfaria essa promessa logo no primeiro ecrã. Isto pesa alguns kB, desenha-se
+  sem rede e diz a mesma coisa: conhecemos estas rotas.
+*/
+
+.routemap {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+/* --- Malha de fundo: ruas, discretas --- */
+.routemap-street {
+	fill: none;
+	stroke-width: 1.5;
+	stroke-linecap: round;
+}
+
+.routemap--light .routemap-street {
+	stroke: rgba(15, 23, 42, 0.09);
+}
+
+.routemap--night .routemap-street {
+	stroke: rgba(141, 199, 233, 0.14);
+}
+
+/* --- A rota que se desenha --- */
+.routemap-route {
+	fill: none;
+	stroke-width: 4;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-dasharray: var(--route-len);
+	stroke-dashoffset: var(--route-len);
+	animation: routemap-draw 3.2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.routemap--light .routemap-route {
+	stroke: var(--color-primary-dark, #4f9dc9);
+}
+
+.routemap--night .routemap-route {
+	stroke: var(--color-primary, #6db7e2);
+	filter: drop-shadow(0 0 6px rgba(109, 183, 226, 0.55));
+}
+
+.routemap-route--secondary {
+	stroke-width: 2.5;
+	opacity: 0.45;
+	animation-delay: 0.5s;
+}
+
+@keyframes routemap-draw {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+/* --- Paragens --- */
+.routemap-stop {
+	opacity: 0;
+	animation: routemap-pop 0.45s ease-out forwards;
+}
+
+.routemap-stop-ring {
+	fill: none;
+	stroke-width: 2.5;
+}
+
+.routemap--light .routemap-stop-ring {
+	stroke: var(--color-primary-dark, #4f9dc9);
+}
+
+.routemap--night .routemap-stop-ring {
+	stroke: var(--color-primary, #6db7e2);
+}
+
+.routemap--light .routemap-stop-core {
+	fill: #ffffff;
+}
+
+.routemap--night .routemap-stop-core {
+	fill: #0b1219;
+}
+
+@keyframes routemap-pop {
+	from {
+		opacity: 0;
+		transform: scale(0.4);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+/* --- Nomes das paragens: é isto que diz "conhecemos estas ruas" --- */
+.routemap-label {
+	font-family: var(--font-family-display), system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	opacity: 0;
+	animation: routemap-fade 0.5s ease-out forwards;
+}
+
+.routemap--light .routemap-label {
+	fill: #1f2937;
+}
+
+.routemap--night .routemap-label {
+	fill: rgba(233, 243, 250, 0.92);
+}
+
+@keyframes routemap-fade {
+	to {
+		opacity: 1;
+	}
+}
+
+/* --- Pulsos de GPS na variante noturna --- */
+.routemap-pulse {
+	fill: var(--color-primary, #6db7e2);
+	transform-origin: center;
+	transform-box: fill-box;
+	animation: routemap-pulse 2.6s ease-out infinite;
+}
+
+@keyframes routemap-pulse {
+	0% {
+		opacity: 0.75;
+		transform: scale(0.5);
+	}
+	70% {
+		opacity: 0;
+		transform: scale(3.4);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(3.4);
+	}
+}
+
+/* --- Veículo a percorrer a rota --- */
+.routemap-vehicle-body {
+	fill: var(--color-primary-dark, #4f9dc9);
+}
+
+.routemap--night .routemap-vehicle-body {
+	fill: #ffffff;
+}
+
+/*
+  Sem animação: tudo aparece no estado final. A informação é a mesma; só não
+  se move.
+*/
+@media (prefers-reduced-motion: reduce) {
+	.routemap-route,
+	.routemap-route--secondary {
+		stroke-dashoffset: 0;
+		animation: none;
+	}
+
+	.routemap-stop,
+	.routemap-label {
+		opacity: 1;
+		animation: none;
+	}
+
+	.routemap-pulse {
+		animation: none;
+		opacity: 0.35;
+	}
+}
