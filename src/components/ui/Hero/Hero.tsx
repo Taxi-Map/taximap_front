@@ -57,19 +57,21 @@ export function Hero({ audience = "particular", onCtaClick }: HeroProps) {
 			</div>
 
 			<div className="container hero-content">
-				<span className="hero-eyebrow">{eyebrow}</span>
-				<h1 className="hero-title">{title}</h1>
-				<p className="hero-description">{description}</p>
-				<div className="hero-actions">
-					{onCtaClick ? (
-						<Button onClick={onCtaClick}>{ctaLabel}</Button>
-					) : (
-						<Button href="#app">{ctaLabel}</Button>
-					)}
+				<div className="hero-copy">
+					<span className="hero-eyebrow data-label">{eyebrow}</span>
+					<h1 className="hero-title">{title}</h1>
+					<p className="hero-description">{description}</p>
+					<div className="hero-actions">
+						{onCtaClick ? (
+							<Button onClick={onCtaClick}>{ctaLabel}</Button>
+						) : (
+							<Button href="#app">{ctaLabel}</Button>
+						)}
+					</div>
 				</div>
 			</div>
 
-			{/* Nunca apresentar a rota como dados ao vivo. */}
+			{/* A rota tem nomes de bairros reais: rotular como demonstração. */}
 			<span className="hero-map-caption">{mapCaption}</span>
 		</section>
 	);
