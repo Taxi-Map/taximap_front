@@ -1,0 +1,220 @@
+/*
+  Primitivas de secção partilhadas pelas páginas de público institucional e de
+  parceiros. Ambas falam ao mesmo tipo de leitor — investidores, imprensa,
+  instituições — e devem ler-se como a mesma publicação.
+
+  Extraídas para aqui em vez de duplicadas: a etiqueta de estado, sobretudo,
+  tem de significar o mesmo em todo o lado.
+*/
+
+/* --- Abertura sobre chão escuro --- */
+.sec-hero {
+	width: 100%;
+	min-height: calc(100dvh - 120px);
+	display: flex;
+	align-items: center;
+	background:
+		radial-gradient(ellipse at 80% 10%, var(--color-ink-soft) 0%, transparent 62%),
+		var(--color-ink);
+	color: #e8f1f8;
+	padding-top: var(--spacing-20);
+	padding-bottom: var(--spacing-20);
+}
+
+.sec-hero-inner {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--spacing-6);
+	max-width: 62ch;
+}
+
+.sec-hero-title {
+	font-family: var(--font-family-display), system-ui, sans-serif;
+	font-size: var(--font-size-4xl);
+	font-weight: var(--font-weight-bold);
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+	color: #ffffff;
+	margin: 0;
+	text-wrap: balance;
+}
+
+.sec-hero-lede {
+	font-size: var(--font-size-lg);
+	line-height: 1.65;
+	color: rgba(232, 241, 248, 0.72);
+	margin: 0;
+}
+
+.sec-eyebrow {
+	color: var(--color-primary);
+}
+
+/* --- Secções --- */
+.sec {
+	width: 100%;
+	padding-top: var(--spacing-20);
+	padding-bottom: var(--spacing-20);
+	background: var(--color-white);
+}
+
+.sec--alt {
+	background: var(--color-gray-50);
+}
+
+.sec--ink {
+	background: var(--color-ink);
+	color: #e8f1f8;
+}
+
+.sec-head {
+	max-width: 62ch;
+	margin-bottom: var(--spacing-12);
+}
+
+.sec-label {
+	color: var(--color-primary-dark);
+	display: block;
+	margin-bottom: var(--spacing-3);
+}
+
+.sec--ink .sec-label {
+	color: var(--color-primary);
+}
+
+.sec-title {
+	font-family: var(--font-family-display), system-ui, sans-serif;
+	font-size: var(--font-size-3xl);
+	font-weight: var(--font-weight-bold);
+	line-height: 1.15;
+	letter-spacing: -0.02em;
+	color: var(--color-black);
+	margin: 0;
+	text-wrap: balance;
+}
+
+.sec--ink .sec-title {
+	color: #ffffff;
+}
+
+.sec-note {
+	font-size: var(--font-size-base);
+	line-height: 1.6;
+	color: var(--color-gray-600);
+	margin: var(--spacing-4) 0 0;
+	max-width: 62ch;
+}
+
+.sec--ink .sec-note {
+	color: rgba(232, 241, 248, 0.6);
+}
+
+/*
+  Linhas de largura total em vez de cartões. O kit de cartão azul está
+  reservado à grelha de ferramentas de frota, que é um conjunto homogéneo de
+  funcionalidades; estes conteúdos são argumentos e vias, e leem-se melhor
+  assim.
+*/
+.sec-rows {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid var(--color-gray-200);
+}
+
+.sec--ink .sec-rows {
+	border-top-color: rgba(141, 199, 233, 0.18);
+}
+
+.sec-row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--spacing-3);
+	padding: var(--spacing-6) 0;
+	border-bottom: 1px solid var(--color-gray-200);
+}
+
+.sec--ink .sec-row {
+	border-bottom-color: rgba(141, 199, 233, 0.18);
+}
+
+.sec-row-title {
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-bold);
+	color: var(--color-black);
+	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-3);
+	flex-wrap: wrap;
+}
+
+.sec--ink .sec-row-title {
+	color: #ffffff;
+}
+
+.sec-row-desc {
+	font-size: var(--font-size-base);
+	line-height: 1.6;
+	color: var(--color-gray-600);
+	margin: 0;
+	max-width: 64ch;
+}
+
+.sec--ink .sec-row-desc {
+	color: rgba(232, 241, 248, 0.66);
+}
+
+/*
+  Etiqueta de estado. É informação, não decoração: distingue o que já existe
+  do que ainda não. Nada nesta página pode parecer disponível sem o ser.
+*/
+.state {
+	border-radius: var(--border-radius-full);
+	padding: 3px 10px;
+	white-space: nowrap;
+}
+
+.state--done {
+	background: var(--color-gray-100);
+	color: var(--color-gray-600);
+}
+
+.state--current {
+	background: rgba(79, 157, 201, 0.14);
+	color: var(--color-primary-dark);
+}
+
+.state--planned {
+	background: transparent;
+	color: var(--color-gray-600);
+	border: 1px dashed var(--color-gray-300);
+}
+
+.sec--ink .state--current {
+	background: rgba(109, 183, 226, 0.18);
+	color: var(--color-primary);
+}
+
+.sec--ink .state--planned {
+	color: rgba(232, 241, 248, 0.55);
+	border-color: rgba(141, 199, 233, 0.35);
+}
+
+@media (min-width: 768px) {
+	.sec-hero-title {
+		font-size: var(--font-size-5xl);
+	}
+
+	.sec-title {
+		font-size: var(--font-size-4xl);
+	}
+
+	.sec-row {
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		gap: var(--spacing-10);
+		padding: var(--spacing-8) 0;
+		align-items: start;
+	}
+}

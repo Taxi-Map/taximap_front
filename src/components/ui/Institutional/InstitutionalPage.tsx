@@ -35,17 +35,17 @@ export function InstitutionalPage({ onOpenWaitlist }: InstitutionalPageProps) {
 	return (
 		<div className="institutional-page flex flex-col w-full">
 			{/* --- Abertura --- */}
-			<section id="about" className="inst-hero">
-				<div className="container inst-hero-inner">
-					<span className="data-label inst-eyebrow">
+			<section id="about" className="sec-hero">
+				<div className="container sec-hero-inner">
+					<span className="data-label sec-eyebrow">
 						{t("presentation.about.title", "Quem somos")}
 					</span>
 
-					<h1 className="inst-hero-title">
+					<h1 className="sec-hero-title">
 						{t("presentation.vision.title", "A nossa visão")}
 					</h1>
 
-					<p className="inst-hero-lede">
+					<p className="sec-hero-lede">
 						{t("presentation.vision.description")}
 					</p>
 
@@ -61,13 +61,13 @@ export function InstitutionalPage({ onOpenWaitlist }: InstitutionalPageProps) {
 			</section>
 
 			{/* --- O problema --- */}
-			<section id="challenges" className="inst-section">
+			<section id="challenges" className="sec">
 				<div className="container">
-					<div className="inst-head">
-						<span className="data-label inst-head-label">
+					<div className="sec-head">
+						<span className="data-label sec-label">
 							{t("institutional.problemLabel", "O problema")}
 						</span>
-						<h2 className="inst-title">
+						<h2 className="sec-title">
 							{t("presentation.challenges.title")}
 						</h2>
 					</div>
@@ -99,13 +99,13 @@ export function InstitutionalPage({ onOpenWaitlist }: InstitutionalPageProps) {
 			</section>
 
 			{/* --- Percurso. É mesmo uma sequência, por isso leva datas. --- */}
-			<section id="history" className="inst-section inst-section--alt">
+			<section id="history" className="sec sec--alt">
 				<div className="container">
-					<div className="inst-head">
-						<span className="data-label inst-head-label">
+					<div className="sec-head">
+						<span className="data-label sec-label">
 							{t("institutional.pathLabel", "Percurso")}
 						</span>
-						<h2 className="inst-title">
+						<h2 className="sec-title">
 							{t("institutional.pathTitle", "Onde estamos, e o que falta")}
 						</h2>
 					</div>
@@ -125,7 +125,7 @@ export function InstitutionalPage({ onOpenWaitlist }: InstitutionalPageProps) {
 										<h3 className="inst-step-title">
 											{t(step.titleKey, step.titleFallback)}
 											<span
-												className={`data-label inst-state inst-state--${step.state}`}
+												className={`data-label state state--${step.state}`}
 											>
 												{t(state.key, state.fallback)}
 											</span>
@@ -142,16 +142,16 @@ export function InstitutionalPage({ onOpenWaitlist }: InstitutionalPageProps) {
 			</section>
 
 			{/* --- Metas. Rotuladas como metas, porque é o que são. --- */}
-			<section id="impact" className="inst-targets-band">
+			<section id="impact" className="sec sec--ink">
 				<div className="container">
-					<div className="inst-targets-head">
-						<span className="data-label inst-eyebrow">
+					<div className="sec-head">
+						<span className="data-label sec-eyebrow">
 							{t("institutional.targetsLabel", "Metas do 1.º ano em Luanda")}
 						</span>
-						<h2 className="inst-title">
+						<h2 className="sec-title">
 							{t("presentation.impact.title", "Impacto no mercado")}
 						</h2>
-						<p className="inst-targets-note">
+						<p className="sec-note">
 							{t(
 								"institutional.targetsNote",
 								"Os números abaixo são as metas que definimos para o primeiro ano de operação em Luanda. Não são resultados alcançados: o programa piloto está a arrancar e a aplicação para passageiros ainda não foi lançada.",
@@ -175,7 +175,7 @@ export function InstitutionalPage({ onOpenWaitlist }: InstitutionalPageProps) {
 			</section>
 
 			{/* --- Fecho --- */}
-			<section className="inst-section">
+			<section className="sec">
 				<div className="container inst-closing">
 					<p className="inst-closing-text">
 						{t("presentation.about.footer")}

@@ -473,6 +473,21 @@
           "label": "active users"
         }
       }
+    },
+    "partners": {
+      "heroTitle": "We're building the network. We're looking for people to build it with us.",
+      "heroLede": "Táxi Map is in a pilot programme with Luanda's first taxi companies. At this stage we're looking for partners who want to shape the platform — not customers for a finished product.",
+      "whoLabel": "Who we're looking for",
+      "howLabel": "How to work with us",
+      "howNote": "Each track is marked with its real status. What is in design is not a promise of a date: it's a conversation worth starting early.",
+      "adsLabel": "Advertising",
+      "adsTitle": "We don't sell ad space yet",
+      "adsNote": "Advertising depends on the passenger app, which has not launched. We have no audience to sell and we won't pretend otherwise. If you're a brand that wants to reach people moving around Luanda, talk to us now and we'll design the format before the inventory exists.",
+      "adsCta": "Talk about advertising",
+      "state": {
+        "open": "Open",
+        "design": "In design"
+      }
     }
   }
 }

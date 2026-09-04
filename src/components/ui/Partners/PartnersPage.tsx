@@ -1,104 +1,161 @@
 import { useTranslation } from "react-i18next";
-import { Handshake, Code2, Layers, Megaphone, ArrowRight } from "lucide-react";
-import { Faq } from "../Faq";
+import { ArrowRight } from "lucide-react";
+import { Button } from "../Button";
+import "./Partners.css";
 
 interface PartnersPageProps {
 	onOpenWaitlist?: () => void;
 }
 
+interface Row {
+	title: string;
+	description: string;
+}
+
+/**
+ * Estado de disponibilidade de cada via de parceria.
+ *
+ * Existe porque a versão anterior desta página vendia coisas que não existem:
+ * inventário publicitário "a milhares de passageiros que se deslocam
+ * diariamente" quando não há um único passageiro ativo, e uma API de
+ * geolocalização e uma integração de pagamentos descritas como disponíveis.
+ * Nada aqui pode parecer pronto sem o estar.
+ */
+const CHANNEL_STATE: Record<
+	string,
+	{ state: "current" | "planned"; key: string; fallback: string }
+> = {
+	0: { state: "current", key: "partners.state.open", fallback: "Aberto" },
+	1: { state: "current", key: "partners.state.open", fallback: "Aberto" },
+	2: { state: "planned", key: "partners.state.design", fallback: "Em desenho" },
+};
+
 export function PartnersPage({ onOpenWaitlist }: PartnersPageProps) {
 	const { t } = useTranslation();
 
+	const rawWho = t("presentation.partnerships.items", { returnObjects: true });
+	const whoItems: Row[] = Array.isArray(rawWho) ? (rawWho as Row[]) : [];
+
+	const rawHow = t("presentation.businessModel.items", { returnObjects: true });
+	const howItems: Row[] = Array.isArray(rawHow) ? (rawHow as Row[]) : [];
+
 	return (
 		<div className="partners-page flex flex-col w-full">
-			{/* Hero Partners */}
-			<section id="partners" className="w-full min-h-[calc(100dvh-120px)] py-20 md:py-24 bg-slate-950 text-white flex items-center justify-center">
-				<div className="container px-8 text-center max-w-4xl mx-auto flex flex-col items-center gap-8">
-					<div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#6DB7E2]/15 text-[#6DB7E2] text-sm font-bold border border-[#6DB7E2]/30">
-						<Handshake size={18} />
-						<span>{t("nav.partners", "Rede de Parceiros")}</span>
-					</div>
+			{/* --- Abertura. É uma chamada a parceiros, não um catálogo. --- */}
+			<section id="partners" className="sec-hero">
+				<div className="container sec-hero-inner">
+					<span className="data-label sec-eyebrow">
+						{t("nav.partners", "Parceiros")}
+					</span>
 
-					<h1 className="text-4xl md:text-6xl font-bold leading-tight">
-						Cresça Connosco no Ecossistema de Transportes
+					<h1 className="sec-hero-title">
+						{t("partners.heroTitle", "Estamos a construir a rede. Procuramos quem a construa connosco.")}
 					</h1>
 
-					<p className="text-lg md:text-xl text-slate-300 leading-relaxed max-w-3xl">
-						Conecte os seus veículos, integre a sua solução de pagamentos ou anuncie a sua marca diretamente a milhares de passageiros que se deslocam diariamente em Angola.
+					<p className="sec-hero-lede">
+						{t(
+							"partners.heroLede",
+							"O Táxi Map está em programa piloto com as primeiras empresas de táxi de Luanda. Nesta fase procuramos parceiros que queiram moldar a plataforma — não clientes para um produto acabado.",
+						)}
 					</p>
 
-					<button
-						type="button"
-						onClick={onOpenWaitlist}
-						className="px-8 py-4 rounded-xl bg-[#6DB7E2] hover:bg-[#5aa6d1] text-white font-bold text-base flex items-center gap-2 shadow-lg shadow-[#6DB7E2]/30 transition-all cursor-pointer mt-4"
-					>
-						<span>{t("nav.becomePartner", "Tornar-se Parceiro")}</span>
+					<Button onClick={onOpenWaitlist}>
+						{t("nav.becomePartner", "Tornar-se parceiro")}
 						<ArrowRight size={18} />
-					</button>
+					</Button>
 				</div>
 			</section>
 
-			{/* APIs & Integrations */}
-			<section id="apis" className="w-full min-h-[calc(100dvh-120px)] py-20 md:py-24 bg-white flex items-center justify-center">
-				<div className="container px-8 max-w-5xl mx-auto">
-					<div className="w-full text-center mb-16 flex flex-col items-center">
-						<h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-							{t("nav.apis", "APIs & Integrações")}
+			{/* --- Quem procuramos --- */}
+			<section className="sec">
+				<div className="container">
+					<div className="sec-head">
+						<span className="data-label sec-label">
+							{t("partners.whoLabel", "Quem procuramos")}
+						</span>
+						<h2 className="sec-title">
+							{t("presentation.partnerships.title", "Parcerias e oportunidades")}
 						</h2>
-						<p className="text-lg text-slate-600 max-w-2xl">
-							Conecte os dados de geolocalização e rotas do Táxi Map aos seus sistemas empresariais.
+					</div>
+
+					<ul className="sec-rows">
+						{whoItems.map((item) => (
+							<li key={item.title} className="sec-row">
+								<h3 className="sec-row-title">{item.title}</h3>
+								<p className="sec-row-desc">{item.description}</p>
+							</li>
+						))}
+					</ul>
+				</div>
+			</section>
+
+			{/* --- Como se trabalha connosco, com o estado de cada via --- */}
+			<section id="apis" className="sec sec--alt">
+				<div className="container">
+					<div className="sec-head">
+						<span className="data-label sec-label">
+							{t("partners.howLabel", "Como se trabalha connosco")}
+						</span>
+						<h2 className="sec-title">
+							{t("presentation.businessModel.title", "Modelo de negócio")}
+						</h2>
+						<p className="sec-note">
+							{t(
+								"partners.howNote",
+								"Cada via está marcada com o seu estado real. O que está em desenho não é uma promessa de calendário: é uma conversa que vale a pena começar cedo.",
+							)}
 						</p>
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-						<div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col gap-4">
-							<div className="w-12 h-12 rounded-xl bg-slate-900 text-[#6DB7E2] flex items-center justify-center">
-								<Code2 size={24} />
-							</div>
-							<h3 className="text-2xl font-bold text-slate-900">API de Geolocalização</h3>
-							<p className="text-slate-600 text-base leading-relaxed">
-								Acesso a streams de dados de posição em tempo real e cálculo de tempos de viagem para plataformas externas.
-							</p>
-						</div>
-
-						<div id="integrations" className="p-8 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col gap-4">
-							<div className="w-12 h-12 rounded-xl bg-slate-900 text-[#6DB7E2] flex items-center justify-center">
-								<Layers size={24} />
-							</div>
-							<h3 className="text-2xl font-bold text-slate-900">Integração de Pagamentos</h3>
-							<p className="text-slate-600 text-base leading-relaxed">
-								Integração com carteiras digitais angolanas e sistemas bancários para pagamentos de viagens e subsídios.
-							</p>
-						</div>
-					</div>
+					<ul className="sec-rows">
+						{howItems.map((item, idx) => {
+							const channel = CHANNEL_STATE[idx];
+							return (
+								<li key={item.title} className="sec-row">
+									<h3 className="sec-row-title">
+										{item.title}
+										{channel && (
+											<span
+												className={`data-label state state--${channel.state}`}
+											>
+												{t(channel.key, channel.fallback)}
+											</span>
+										)}
+									</h3>
+									<p className="sec-row-desc">{item.description}</p>
+								</li>
+							);
+						})}
+					</ul>
 				</div>
 			</section>
 
-			{/* Advertising Section */}
-			<section id="advertising" className="w-full min-h-[calc(100dvh-120px)] py-20 md:py-24 bg-slate-50 flex items-center justify-center">
-				<div className="container px-8 text-center max-w-4xl mx-auto flex flex-col items-center">
-					<div className="w-14 h-14 rounded-2xl bg-[#6DB7E2]/15 text-[#6DB7E2] flex items-center justify-center mb-4">
-						<Megaphone size={28} />
+			{/* --- Publicidade. Existe como via de receita, mas não está à venda. --- */}
+			<section id="advertising" className="sec sec--ink">
+				<div className="container">
+					<div className="sec-head">
+						<span className="data-label sec-eyebrow">
+							{t("partners.adsLabel", "Publicidade")}
+						</span>
+						<h2 className="sec-title">
+							{t("partners.adsTitle", "Ainda não vendemos espaço publicitário")}
+						</h2>
+						<p className="sec-note">
+							{t(
+								"partners.adsNote",
+								"A publicidade depende da aplicação para passageiros, que ainda não foi lançada. Não temos audiência para vender e não vamos fingir que temos. Se é uma marca que quer chegar a quem se desloca em Luanda, fale connosco agora e desenhamos o formato antes de existir inventário.",
+							)}
+						</p>
 					</div>
-					<h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-						{t("nav.advertising", "Publicidade & Parcerias de Marca")}
-					</h2>
-					<p className="text-lg text-slate-600 max-w-2xl mb-8 leading-relaxed">
-						Chegue aos consumidores no momento exato em que estão a planear a sua rota diária. Formatos de anúncios geolocalizados nas paragens e rotas estratégicas.
-					</p>
 
-					<button
-						type="button"
-						onClick={onOpenWaitlist}
-						className="px-8 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-base flex items-center gap-2 cursor-pointer shadow-lg"
-					>
-						<span>Solicitar Media Kit</span>
-						<ArrowRight size={18} />
-					</button>
+					<div className="partners-cta">
+						<Button onClick={onOpenWaitlist} variant="white">
+							{t("partners.adsCta", "Falar sobre publicidade")}
+							<ArrowRight size={18} />
+						</Button>
+					</div>
 				</div>
 			</section>
-
-			<Faq />
 		</div>
 	);
 }
