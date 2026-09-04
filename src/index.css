@@ -99,6 +99,11 @@
   
   --color-white: #ffffff;
   --color-black: #000000;
+
+  /* Chão escuro como dispositivo estrutural. É sobre ele que a rede se lê
+     melhor, e é o que separa este site de um institucional genérico. */
+  --color-ink: #0b1b2b;
+  --color-ink-soft: #14293d;
   
   /* Grays for text and borders */
   --color-gray-50: #f9fafb;
@@ -314,9 +319,16 @@ button, input, select, textarea {
   === Registo de dados ===
 
   O que separa um site institucional de um site de software operacional não é
-  outra família tipográfica — é o tratamento das micro-etiquetas. Custa zero
-  bytes de fonte.
+  outra família tipográfica — é o tratamento dos números e das micro-etiquetas.
+  Custa zero bytes de fonte.
 */
+
+/* Números que alinham em coluna e não dançam quando mudam de valor. */
+.data-numeral {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: -0.03em;
+}
 
 /* Etiqueta de leitura rápida: o rótulo de um painel, não uma frase. */
 .data-label {

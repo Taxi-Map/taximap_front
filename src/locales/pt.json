@@ -466,6 +466,48 @@
       "title": "Algo correu mal nesta página",
       "description": "Não conseguimos mostrar este conteúdo. Já registámos o problema. Pode voltar à página inicial e tentar novamente.",
       "cta": "Voltar à página inicial"
+    },
+    "institutional": {
+      "problemLabel": "O problema",
+      "pathLabel": "Percurso",
+      "pathTitle": "Onde estamos, e o que falta",
+      "targetsLabel": "Metas do 1.º ano em Luanda",
+      "targetsNote": "Os números abaixo são as metas que definimos para o primeiro ano de operação em Luanda. Não são resultados alcançados: o programa piloto está a arrancar e a aplicação para passageiros ainda não foi lançada.",
+      "cta": "Falar com a equipa",
+      "state": {
+        "done": "Concluído",
+        "current": "Em curso",
+        "planned": "Por lançar"
+      },
+      "timeline": {
+        "0": {
+          "title": "Mapeamento das rotas informais",
+          "desc": "Levantamento dos percursos, paragens e nós de trânsito dos candongueiros em Luanda — as rotas que não estão em mapa nenhum."
+        },
+        "1": {
+          "title": "Plataforma de gestão de frota",
+          "desc": "Construção do mapa de operação em tempo real, gestão de motoristas e viaturas, relatórios e alertas, com o telemóvel do motorista como fonte de localização."
+        },
+        "2": {
+          "title": "Programa piloto com empresas",
+          "desc": "Candidaturas abertas às primeiras empresas de táxi e operadores de frota de Luanda, para testar e moldar a plataforma em operação real."
+        },
+        "3": {
+          "title": "Aplicação para passageiros",
+          "desc": "Acompanhamento em tempo real dos candongueiros para quem os apanha, com planeamento de viagem e alertas da comunidade. Ainda não disponível."
+        }
+      },
+      "targets": {
+        "0": {
+          "label": "alertas por mês"
+        },
+        "1": {
+          "label": "precisão dos dados de rota"
+        },
+        "2": {
+          "label": "utilizadores ativos"
+        }
+      }
     }
   }
 }

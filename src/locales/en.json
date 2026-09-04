@@ -431,6 +431,48 @@
       "title": "Something went wrong on this page",
       "description": "We could not display this content. The problem has been logged. You can go back to the home page and try again.",
       "cta": "Back to home page"
+    },
+    "institutional": {
+      "problemLabel": "The problem",
+      "pathLabel": "Progress",
+      "pathTitle": "Where we are, and what's left",
+      "targetsLabel": "Year one targets in Luanda",
+      "targetsNote": "The numbers below are the targets we set for our first year of operation in Luanda. They are not results achieved: the pilot programme is starting and the passenger app has not launched.",
+      "cta": "Talk to the team",
+      "state": {
+        "done": "Done",
+        "current": "In progress",
+        "planned": "Not launched"
+      },
+      "timeline": {
+        "0": {
+          "title": "Mapping the informal routes",
+          "desc": "Surveying the routes, stops and traffic nodes of Luanda's candongueiros — the routes that appear on no map."
+        },
+        "1": {
+          "title": "Fleet management platform",
+          "desc": "Building the real-time operations map, driver and vehicle management, reports and alerts, with the driver's phone as the location source."
+        },
+        "2": {
+          "title": "Pilot programme with companies",
+          "desc": "Applications open to Luanda's first taxi companies and fleet operators, to test and shape the platform in real operation."
+        },
+        "3": {
+          "title": "Passenger app",
+          "desc": "Real-time tracking of candongueiros for the people who catch them, with trip planning and community alerts. Not yet available."
+        }
+      },
+      "targets": {
+        "0": {
+          "label": "alerts per month"
+        },
+        "1": {
+          "label": "route data accuracy"
+        },
+        "2": {
+          "label": "active users"
+        }
+      }
     }
   }
 }
