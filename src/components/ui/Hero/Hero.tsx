@@ -29,6 +29,7 @@ export function Hero({ audience = "particular", onCtaClick }: HeroProps) {
 	 */
 	const defaults = heroContent[audience];
 
+	const status = t(defaults.status.key, defaults.status.fallback) as string;
 	const eyebrow = t(defaults.eyebrow.key, defaults.eyebrow.fallback) as string;
 	const title = t(defaults.title.key, defaults.title.fallback) as string;
 	const description = t(
@@ -58,6 +59,9 @@ export function Hero({ audience = "particular", onCtaClick }: HeroProps) {
 
 			<div className="container hero-content">
 				<div className="hero-copy">
+					{/* O estado do produto à cabeça, para nada do que se lê a
+					    seguir poder ser tomado como já disponível. */}
+					<span className="hero-status data-label">{status}</span>
 					<span className="hero-eyebrow data-label">{eyebrow}</span>
 					<h1 className="hero-title">{title}</h1>
 					<p className="hero-description">{description}</p>

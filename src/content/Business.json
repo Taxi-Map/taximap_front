@@ -21,7 +21,7 @@
     "items": [
       {
         "badgeKey": "businessPage.audience.items.0.badge",
-        "badgeFallback": "Disponível para programa piloto",
+        "badgeFallback": "Candidaturas ao piloto abertas",
         "titleKey": "businessPage.audience.items.0.title",
         "titleFallback": "Empresas de táxi e operadores de frota",
         "descKey": "businessPage.audience.items.0.desc",

@@ -2,43 +2,43 @@
   "titleKey": "faqBusiness.title",
   "titleFallback": "Perguntas frequentes — Empresas",
   "subtitleKey": "faqBusiness.subtitle",
-  "subtitleFallback": "O que as empresas de táxi e operadores de frota perguntam antes de se candidatarem ao programa piloto.",
+  "subtitleFallback": "O que as empresas de táxi e operadores de frota perguntam antes de se candidatarem. A plataforma ainda está em construção — as respostas dizem o que está previsto, não o que já existe.",
   "items": [
     {
       "questionKey": "faqBusiness.items.0.question",
       "questionFallback": "Preciso de instalar rastreadores GPS nas viaturas?",
       "answerKey": "faqBusiness.items.0.answer",
-      "answerFallback": "Não. O telemóvel do motorista já serve como fonte de localização, o que dispensa a compra e a instalação de equipamento dedicado — um custo de 40 a 80 USD por viatura noutras soluções. Começar não exige investimento em hardware."
+      "answerFallback": "Não. O telemóvel do motorista faz de fonte de localização, o que dispensa a compra e a instalação de equipamento dedicado — um custo de 40 a 80 USD por viatura noutras soluções. Começar não vai exigir investimento em hardware."
     },
     {
       "questionKey": "faqBusiness.items.1.question",
       "questionFallback": "Funciona com a ligação à internet que temos hoje?",
       "answerKey": "faqBusiness.items.1.answer",
-      "answerFallback": "É esse o pressuposto do sistema. O Táxi Map foi desenhado para a realidade das redes em Angola, com consumo reduzido de dados e funcionamento mantido em zonas de fraca cobertura. Não foi adaptado a essa condição depois — foi construído a partir dela."
+      "answerFallback": "É esse o pressuposto com que está a ser construído. O Táxi Map está a ser desenhado para a realidade das redes em Angola, com consumo reduzido de dados e funcionamento mantido em zonas de fraca cobertura — não é uma adaptação feita depois."
     },
     {
       "questionKey": "faqBusiness.items.2.question",
       "questionFallback": "Que dados consigo tirar da plataforma?",
       "answerKey": "faqBusiness.items.2.answer",
-      "answerFallback": "Mapa de operação em tempo real, gestão de motoristas, registo e manutenção de viaturas, relatórios de desempenho, alertas de ocorrências e histórico com exportação. Os dados da operação são da empresa e podem ser exportados a qualquer momento."
+      "answerFallback": "A plataforma está a ser construída para dar mapa de operação em tempo real, gestão de motoristas, registo e manutenção de viaturas, relatórios de desempenho, alertas de ocorrências e histórico com exportação. Os dados da operação serão da empresa e exportáveis a qualquer momento. As empresas do piloto ajudam a definir o que entra primeiro."
     },
     {
       "questionKey": "faqBusiness.items.3.question",
       "questionFallback": "Integra com os sistemas que já usamos?",
       "answerKey": "faqBusiness.items.3.answer",
-      "answerFallback": "A API está a ser desenhada com documentação aberta desde o primeiro serviço, para que a integração não dependa de trabalho à medida. Se já usa um sistema de gestão ou faturação, diga-nos qual na candidatura — as primeiras integrações são definidas com as empresas do piloto."
+      "answerFallback": "A API está a ser desenhada com documentação aberta desde o primeiro serviço, para que a integração não dependa de trabalho à medida. Ainda não está disponível. Se já usa um sistema de gestão ou faturação, diga-nos qual na candidatura — as primeiras integrações são definidas com as empresas do piloto."
     },
     {
       "questionKey": "faqBusiness.items.4.question",
       "questionFallback": "Como funciona a candidatura ao programa piloto?",
       "answerKey": "faqBusiness.items.4.answer",
-      "answerFallback": "Submete a candidatura pelo formulário desta página e a equipa entra em contacto para perceber a dimensão e o modo de operação da frota. O piloto tem lugares limitados e as condições são definidas caso a caso com cada empresa participante."
+      "answerFallback": "Submete a candidatura pelo formulário desta página e a equipa entra em contacto para perceber a dimensão e o modo de operação da frota. A plataforma ainda está em construção; o piloto arranca quando estiver pronta, tem lugares limitados e as condições são definidas caso a caso com cada empresa participante."
     },
     {
       "questionKey": "faqBusiness.items.5.question",
       "questionFallback": "Serve para uma frota pequena?",
       "answerKey": "faqBusiness.items.5.answer",
-      "answerFallback": "Sim. A arquitetura foi pensada desde o primeiro dia para acompanhar o crescimento de uma frota, de meia dúzia de viaturas até milhares, e para se estender a outras províncias. Uma frota pequena não precisa de esperar por uma versão diferente."
+      "answerFallback": "Sim. A arquitetura está a ser pensada desde o primeiro dia para acompanhar o crescimento de uma frota, de meia dúzia de viaturas até milhares, e para se estender a outras províncias. Uma frota pequena não vai precisar de esperar por uma versão diferente."
     }
   ]
 }

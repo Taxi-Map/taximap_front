@@ -86,16 +86,18 @@
 	border-bottom: 1px solid var(--color-gray-200);
 }
 
-.inst-step-year {
-	font-size: var(--font-size-xl);
+/* Índice de ordem, não data. A ordem é informação — cada etapa depende da
+   anterior — mas nenhuma delas tem data prometida. */
+.inst-step-index {
+	font-size: var(--font-size-lg);
 	font-weight: var(--font-weight-bold);
 	color: var(--color-gray-300);
 	line-height: 1.1;
 }
 
-.inst-step.is-current .inst-step-year,
-.inst-step.is-done .inst-step-year {
-	color: var(--color-primary-dark);
+.inst-roadmap-note {
+	margin-top: calc(var(--spacing-12) * -1 + var(--spacing-4));
+	margin-bottom: var(--spacing-8);
 }
 
 .inst-step-title {
@@ -187,7 +189,7 @@
 	}
 
 	.inst-step {
-		grid-template-columns: 140px minmax(0, 1fr);
+		grid-template-columns: 56px minmax(0, 1fr);
 		gap: var(--spacing-8);
 		padding: var(--spacing-8) 0;
 	}

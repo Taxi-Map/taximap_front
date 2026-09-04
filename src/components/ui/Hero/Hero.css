@@ -71,7 +71,19 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	gap: var(--spacing-5);
+	gap: var(--spacing-4);
+}
+
+/* Marcador de estado. É a primeira coisa que se lê no hero, de propósito:
+   nada do que vem a seguir pode ser tomado como já disponível. */
+.hero-status {
+	display: inline-flex;
+	align-items: center;
+	color: var(--color-gray-800);
+	background: rgba(255, 255, 255, 0.9);
+	border: 1px solid var(--color-gray-300);
+	border-radius: var(--border-radius-full);
+	padding: 5px 12px;
 }
 
 .hero-eyebrow {

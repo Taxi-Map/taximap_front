@@ -8,11 +8,15 @@ interface InstitutionalPageProps {
 	onOpenWaitlist?: () => void;
 }
 
-/** Rótulo do estado de cada passo do percurso. */
-const STATE_LABEL: Record<string, { key: string; fallback: string }> = {
-	done: { key: "institutional.state.done", fallback: "Concluído" },
-	current: { key: "institutional.state.current", fallback: "Em curso" },
-	planned: { key: "institutional.state.planned", fallback: "Por lançar" },
+/**
+ * Estado real de cada etapa. Nada aqui está concluído: a plataforma de gestão
+ * está a ser construída e o mapeamento das rotas ainda não começou. Um rótulo
+ * "concluído" numa destas linhas seria falso.
+ */
+const STATE_LABEL: Record<string, { key: string; fallback: string; tone: string }> = {
+	building: { key: "institutional.state.building", fallback: "Em construção", tone: "current" },
+	open: { key: "institutional.state.open", fallback: "Candidaturas abertas", tone: "current" },
+	next: { key: "institutional.state.next", fallback: "Por começar", tone: "planned" },
 };
 
 export function InstitutionalPage({ onOpenWaitlist }: InstitutionalPageProps) {
@@ -103,29 +107,33 @@ export function InstitutionalPage({ onOpenWaitlist }: InstitutionalPageProps) {
 				<div className="container">
 					<div className="sec-head">
 						<span className="data-label sec-label">
-							{t("institutional.pathLabel", "Percurso")}
+							{t("institutional.pathLabel", "Onde estamos")}
 						</span>
 						<h2 className="sec-title">
-							{t("institutional.pathTitle", "Onde estamos, e o que falta")}
+							{t("institutional.pathTitle", "O que está feito, o que estamos a construir e o que vem a seguir")}
 						</h2>
 					</div>
 
+					<p className="sec-note inst-roadmap-note">
+						{t(
+							"institutional.pathNote",
+							"Nada nesta lista está concluído. Preferimos dizê-lo do que deixar perceber o contrário.",
+						)}
+					</p>
+
 					<ol className="inst-timeline">
-						{institutionalContent.timeline.map((step) => {
+						{institutionalContent.roadmap.map((step, idx) => {
 							const state = STATE_LABEL[step.state];
 							return (
-								<li
-									key={step.year}
-									className={`inst-step is-${step.state}`}
-								>
-									<span className="inst-step-year data-numeral">
-										{step.year}
+								<li key={step.titleKey} className="inst-step">
+									<span className="inst-step-index data-numeral" aria-hidden="true">
+										{String(idx + 1).padStart(2, "0")}
 									</span>
 									<div>
 										<h3 className="inst-step-title">
 											{t(step.titleKey, step.titleFallback)}
 											<span
-												className={`data-label state state--${step.state}`}
+												className={`data-label state state--${state.tone}`}
 											>
 												{t(state.key, state.fallback)}
 											</span>
@@ -146,15 +154,15 @@ export function InstitutionalPage({ onOpenWaitlist }: InstitutionalPageProps) {
 				<div className="container">
 					<div className="sec-head">
 						<span className="data-label sec-eyebrow">
-							{t("institutional.targetsLabel", "Metas do 1.º ano em Luanda")}
+							{t("institutional.targetsLabel", "Estimativas para o 1.º ano de operação")}
 						</span>
 						<h2 className="sec-title">
-							{t("presentation.impact.title", "Impacto no mercado")}
+							{t("institutional.targetsTitle", "O que esperamos alcançar")}
 						</h2>
 						<p className="sec-note">
 							{t(
 								"institutional.targetsNote",
-								"Os números abaixo são as metas que definimos para o primeiro ano de operação em Luanda. Não são resultados alcançados: o programa piloto está a arrancar e a aplicação para passageiros ainda não foi lançada.",
+								"Estimativas para o primeiro ano depois do lançamento, não resultados. O Táxi Map ainda não está em operação: a plataforma de gestão está a ser construída, o mapeamento das rotas não começou e a aplicação para passageiros não foi lançada. Não há utilizadores nem empresas ativas.",
 							)}
 						</p>
 					</div>

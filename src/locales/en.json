@@ -434,32 +434,34 @@
     },
     "institutional": {
       "problemLabel": "The problem",
-      "pathLabel": "Progress",
-      "pathTitle": "Where we are, and what's left",
-      "targetsLabel": "Year one targets in Luanda",
-      "targetsNote": "The numbers below are the targets we set for our first year of operation in Luanda. They are not results achieved: the pilot programme is starting and the passenger app has not launched.",
+      "pathLabel": "Where we are",
+      "pathTitle": "What's done, what we're building and what comes next",
+      "pathNote": "Nothing on this list is finished. We'd rather say so than let you assume otherwise.",
+      "targetsLabel": "Estimates for the first year of operation",
+      "targetsTitle": "What we expect to reach",
+      "targetsNote": "Estimates for the first year after launch, not results. Táxi Map is not yet in operation: the fleet platform is being built, route mapping has not started and the passenger app has not launched. There are no active users or companies.",
       "cta": "Talk to the team",
       "state": {
-        "done": "Done",
-        "current": "In progress",
-        "planned": "Not launched"
+        "building": "Building",
+        "open": "Applications open",
+        "next": "Not started"
       },
-      "timeline": {
+      "roadmap": {
         "0": {
-          "title": "Mapping the informal routes",
-          "desc": "Surveying the routes, stops and traffic nodes of Luanda's candongueiros — the routes that appear on no map."
+          "title": "Fleet management platform",
+          "desc": "Real-time operations map, driver and vehicle management, reports and alerts, with the driver's phone as the location source. This is what the team is working on right now."
         },
         "1": {
-          "title": "Fleet management platform",
-          "desc": "Building the real-time operations map, driver and vehicle management, reports and alerts, with the driver's phone as the location source."
+          "title": "Pilot programme with the first companies",
+          "desc": "Applications open to Luanda's taxi companies and fleet operators who want to test the platform in real operation once it is ready, and help shape it."
         },
         "2": {
-          "title": "Pilot programme with companies",
-          "desc": "Applications open to Luanda's first taxi companies and fleet operators, to test and shape the platform in real operation."
+          "title": "Mapping the informal routes",
+          "desc": "Surveying the routes, stops and traffic nodes of Luanda's candongueiros — the routes that appear on no map. It is the hardest asset to build and it has not started."
         },
         "3": {
           "title": "Passenger app",
-          "desc": "Real-time tracking of candongueiros for the people who catch them, with trip planning and community alerts. Not yet available."
+          "desc": "Real-time tracking of candongueiros for the people who catch them, with trip planning and community alerts. Depends on the mapping being done."
         }
       },
       "targets": {
