@@ -136,6 +136,179 @@
         }
       }
     },
+    "presentation": {
+      "cover": {
+        "title": "The intelligent platform for urban mobility in Angola"
+      },
+      "about": {
+        "title": "About us",
+        "description": "Táxi Map is a technology platform developed by MURA, dedicated to transforming urban mobility through technology.",
+        "missionLabel": "Mission",
+        "mission": "To make public and private transport more accessible, organised, safe and efficient for passengers, taxi operators and companies.",
+        "footer": "We build digital solutions that bring people, companies and transport providers closer together."
+      },
+      "vision": {
+        "title": "Our vision",
+        "description": "To be the leading mobility technology platform in Angola and a reference in Africa for the digitalisation of urban transport."
+      },
+      "challenges": {
+        "title": "The challenges of urban mobility in Angola",
+        "individuals": "Individuals (passengers)",
+        "individualsItems": [
+          "Difficulty identifying the right route to reach a destination.",
+          "Lack of clear information about routes and boarding points.",
+          "Uncertainty about which taxis (candongueiros) pass through a given location.",
+          "Reliance on other people to obtain route information.",
+          "Little confidence when travelling to unfamiliar places."
+        ],
+        "businesses": "Taxi companies",
+        "businessesItems": [
+          "Fleet and driver management done by hand, in a notebook and a WhatsApp group.",
+          "Difficulty following the operation in real time.",
+          "No indicators or reports to support decisions.",
+          "Low level of digitalisation of operational processes.",
+          "Difficulty scaling and standardising the operation."
+        ],
+        "conclusion": "Táxi Map connects these two needs through technology."
+      },
+      "solutions": {
+        "passenger": {
+          "title": "Táxi Map Passenger",
+          "subtitle": "Finding your way in Angola should never depend on asking a stranger.",
+          "description": "Check routes, journeys and boarding points, and follow in real time the taxis (candongueiros) already on the road, so you know when they will pass and can plan your trip in advance."
+        },
+        "business": {
+          "title": "Táxi Map Business",
+          "subtitle": "A management system for taxi companies and fleet operators, open for pilot programme applications in Luanda.",
+          "description": "Fleet and driver management, real-time monitoring of the operation, performance reports and administration in a single dashboard."
+        }
+      },
+      "differential": {
+        "title": "Our differentiator",
+        "description": "Built with a total focus on the Angolan reality. Features designed to answer local challenges, with dedicated technical support and full integration.",
+        "pillarsLabel": "Pillars",
+        "pillars": [
+          {
+            "title": "Local technology",
+            "description": "Built for Angola, not adapted to Angola: deep knowledge of the market and designed to work on slow connections."
+          },
+          {
+            "title": "Digitalisation",
+            "description": "Digital transformation of transport, replacing manual processes with an operation you can actually see."
+          },
+          {
+            "title": "Scalability",
+            "description": "Architecture ready to grow from 5 to thousands of vehicles and from Luanda to other provinces."
+          },
+          {
+            "title": "Smart data",
+            "description": "Information about routes, drivers and vehicles to improve the operation with data instead of intuition."
+          }
+        ]
+      },
+      "benefits": {
+        "title": "Platform benefits",
+        "items": [
+          {
+            "title": "Cost reduction",
+            "description": "Built to reduce fuel and maintenance costs through route optimisation and fleet monitoring."
+          },
+          {
+            "title": "Greater efficiency",
+            "description": "Centralised management and process automation designed to increase the productivity of the daily operation."
+          },
+          {
+            "title": "Better experience",
+            "description": "A simple interface, real-time tracking and integrated support, optimised for slow connections."
+          }
+        ]
+      },
+      "impact": {
+        "title": "Market impact",
+        "items": [
+          {
+            "title": "Digital transformation of mobility",
+            "description": "Replaces the notebook, the WhatsApp group and the dispatcher's memory with a digital operation visible in real time."
+          },
+          {
+            "title": "Better urban mobility",
+            "description": "Designed to make routes more predictable and to reduce waiting time at stops in Angolan cities."
+          },
+          {
+            "title": "Growth of the technology sector",
+            "description": "Contributes to the Angolan innovation ecosystem, at a moment when the Startup Law creates real incentives for technology companies."
+          }
+        ]
+      },
+      "target": {
+        "title": "Target audience",
+        "items": [
+          {
+            "title": "Taxi companies and fleet operators",
+            "description": "Centralised management, monitoring and performance reports. Open for pilot programme applications."
+          },
+          {
+            "title": "Government entities",
+            "description": "A solution for regulation, oversight and strategic data to support urban planning."
+          },
+          {
+            "title": "Corporate clients",
+            "description": "Safe, trackable transport for employees with centralised billing. Product in design, coming soon."
+          }
+        ]
+      },
+      "businessModel": {
+        "title": "Business model",
+        "items": [
+          {
+            "title": "Licensing for companies",
+            "description": "A licence to use the fleet management platform."
+          },
+          {
+            "title": "Strategic partnerships",
+            "description": "Collaboration on integrated services and new projects with partners in the sector."
+          },
+          {
+            "title": "APIs and integrations",
+            "description": "Our API is being designed with open documentation from the very first service, ready to integrate partners such as insurers, municipalities and other mobility platforms."
+          }
+        ]
+      },
+      "partnerships": {
+        "title": "Partnerships & opportunities",
+        "items": [
+          {
+            "title": "Investors",
+            "description": "An opportunity in a strategic sector, with a scalable revenue model and market validation under way in Luanda."
+          },
+          {
+            "title": "Taxi companies",
+            "description": "Fleet integration to increase the efficiency of the operation and help formalise the sector."
+          },
+          {
+            "title": "Government entities",
+            "description": "Collaboration to modernise urban mobility and promote smarter cities."
+          }
+        ]
+      },
+      "team": {
+        "title": "Our team",
+        "members": [
+          {
+            "name": "Hudson Mateque",
+            "role": "Founder"
+          },
+          {
+            "name": "Mariquinha Francisco",
+            "role": "Marketing Manager"
+          },
+          {
+            "name": "Lourenço António Dala",
+            "role": "Software Engineer"
+          }
+        ]
+      }
+    },
     "businessPage": {
       "hero": {
         "badge": "Táxi Map for Business",
@@ -253,6 +426,70 @@
       "retry": "Try again",
       "errorTitle": "We couldn't record your request.",
       "errorHelp": "Please try again. If the problem persists, contact us directly:"
+    },
+    "errorBoundary": {
+      "title": "Something went wrong on this page",
+      "description": "We could not display this content. The problem has been logged. You can go back to the home page and try again.",
+      "cta": "Back to home page"
+    },
+    "institutional": {
+      "problemLabel": "The problem",
+      "pathLabel": "Where we are",
+      "pathTitle": "What's done, what we're building and what comes next",
+      "pathNote": "Nothing on this list is finished. We'd rather say so than let you assume otherwise.",
+      "targetsLabel": "Estimates for the first year of operation",
+      "targetsTitle": "What we expect to reach",
+      "targetsNote": "Estimates for the first year after launch, not results. Táxi Map is not yet in operation: the fleet platform is being built, route mapping has not started and the passenger app has not launched. There are no active users or companies.",
+      "cta": "Talk to the team",
+      "state": {
+        "building": "Building",
+        "open": "Applications open",
+        "next": "Not started"
+      },
+      "roadmap": {
+        "0": {
+          "title": "Fleet management platform",
+          "desc": "Real-time operations map, driver and vehicle management, reports and alerts, with the driver's phone as the location source. This is what the team is working on right now."
+        },
+        "1": {
+          "title": "Pilot programme with the first companies",
+          "desc": "Applications open to Luanda's taxi companies and fleet operators who want to test the platform in real operation once it is ready, and help shape it."
+        },
+        "2": {
+          "title": "Mapping the informal routes",
+          "desc": "Surveying the routes, stops and traffic nodes of Luanda's candongueiros — the routes that appear on no map. It is the hardest asset to build and it has not started."
+        },
+        "3": {
+          "title": "Passenger app",
+          "desc": "Real-time tracking of candongueiros for the people who catch them, with trip planning and community alerts. Depends on the mapping being done."
+        }
+      },
+      "targets": {
+        "0": {
+          "label": "alerts per month"
+        },
+        "1": {
+          "label": "route data accuracy"
+        },
+        "2": {
+          "label": "active users"
+        }
+      }
+    },
+    "partners": {
+      "heroTitle": "We're building the network. We're looking for people to build it with us.",
+      "heroLede": "Táxi Map is in a pilot programme with Luanda's first taxi companies. At this stage we're looking for partners who want to shape the platform — not customers for a finished product.",
+      "whoLabel": "Who we're looking for",
+      "howLabel": "How to work with us",
+      "howNote": "Each track is marked with its real status. What is in design is not a promise of a date: it's a conversation worth starting early.",
+      "adsLabel": "Advertising",
+      "adsTitle": "We don't sell ad space yet",
+      "adsNote": "Advertising depends on the passenger app, which has not launched. We have no audience to sell and we won't pretend otherwise. If you're a brand that wants to reach people moving around Luanda, talk to us now and we'll design the format before the inventory exists.",
+      "adsCta": "Talk about advertising",
+      "state": {
+        "open": "Open",
+        "design": "In design"
+      }
     }
   }
 }

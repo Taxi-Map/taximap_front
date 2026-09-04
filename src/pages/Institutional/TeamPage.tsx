@@ -11,9 +11,12 @@ export function TeamPage() {
 	const { t } = useTranslation();
 	const { ref, isInView } = useInView();
 
-	const members = t("presentation.team.members", {
-		returnObjects: true,
-	}) as { name: string; role: string }[];
+	// Uma chave em falta faz o i18next devolver a própria chave (string). A guarda
+	// abaixo degrada a secção para vazia em vez de rebentar o .map() e a página.
+	const rawMembers = t("presentation.team.members", { returnObjects: true });
+	const members = Array.isArray(rawMembers)
+		? (rawMembers as { name: string; role: string }[])
+		: [];
 
 	return (
 		<main className="flex-1 min-h-0">

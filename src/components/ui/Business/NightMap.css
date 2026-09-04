@@ -1,0 +1,21 @@
+/*
+  Fundo da faixa CTA: Luanda à noite com a rota acesa.
+
+  Substituiu o StarryBackground.css, que eram 1364 linhas de posições de
+  estrelas geradas em box-shadow. O fundo escuro era o único momento visual
+  próprio do site e o instinto estava certo — faltava ligá-lo ao produto.
+*/
+
+.nightmap-container {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	z-index: 1;
+	background:
+		radial-gradient(ellipse at 70% 20%, #16283a 0%, transparent 60%),
+		radial-gradient(ellipse at bottom, #101c28 0%, #070b10 100%);
+}
+
+.nightmap-container .routemap {
+	opacity: 0.85;
+}

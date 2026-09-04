@@ -1,0 +1,49 @@
+{
+  "roadmap": [
+    {
+      "titleKey": "institutional.roadmap.0.title",
+      "titleFallback": "Plataforma de gestão de frota",
+      "descKey": "institutional.roadmap.0.desc",
+      "descFallback": "Mapa de operação em tempo real, gestão de motoristas e viaturas, relatórios e alertas, com o telemóvel do motorista como fonte de localização. É onde a equipa está a trabalhar neste momento.",
+      "state": "building"
+    },
+    {
+      "titleKey": "institutional.roadmap.1.title",
+      "titleFallback": "Programa piloto com as primeiras empresas",
+      "descKey": "institutional.roadmap.1.desc",
+      "descFallback": "Candidaturas abertas às empresas de táxi e operadores de frota de Luanda que queiram testar a plataforma em operação real assim que estiver pronta, e ajudar a moldá-la.",
+      "state": "open"
+    },
+    {
+      "titleKey": "institutional.roadmap.2.title",
+      "titleFallback": "Mapeamento das rotas informais",
+      "descKey": "institutional.roadmap.2.desc",
+      "descFallback": "Levantamento dos percursos, paragens e nós de trânsito dos candongueiros em Luanda — as rotas que não estão em mapa nenhum. É o ativo mais difícil de construir e ainda não começou.",
+      "state": "next"
+    },
+    {
+      "titleKey": "institutional.roadmap.3.title",
+      "titleFallback": "Aplicação para passageiros",
+      "descKey": "institutional.roadmap.3.desc",
+      "descFallback": "Acompanhamento em tempo real dos candongueiros para quem os apanha, com planeamento de viagem e alertas da comunidade. Depende do mapeamento estar feito.",
+      "state": "next"
+    }
+  ],
+  "targets": [
+    {
+      "value": "+10k",
+      "labelKey": "institutional.targets.0.label",
+      "labelFallback": "alertas por mês"
+    },
+    {
+      "value": "99%",
+      "labelKey": "institutional.targets.1.label",
+      "labelFallback": "precisão dos dados de rota"
+    },
+    {
+      "value": "+5k",
+      "labelKey": "institutional.targets.2.label",
+      "labelFallback": "utilizadores ativos"
+    }
+  ]
+}

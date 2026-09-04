@@ -1,0 +1,12 @@
+/*
+  Secção de parceiros.
+
+  Usa as primitivas partilhadas de src/styles/sections.css — o público é o
+  mesmo da secção institucional e as duas devem ler-se como a mesma
+  publicação. Só o que é específico desta página vive aqui.
+*/
+
+.partners-cta {
+	display: flex;
+	margin-top: var(--spacing-4);
+}

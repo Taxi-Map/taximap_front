@@ -14,9 +14,12 @@ export function BenefitsPage() {
 	const { t } = useTranslation();
 	const { ref, isInView } = useInView();
 
-	const items = t("presentation.benefits.items", {
-		returnObjects: true,
-	}) as { title: string; description: string }[];
+	// Uma chave em falta faz o i18next devolver a própria chave (string). A guarda
+	// abaixo degrada a secção para vazia em vez de rebentar o .map() e a página.
+	const rawItems = t("presentation.benefits.items", { returnObjects: true });
+	const items = Array.isArray(rawItems)
+		? (rawItems as { title: string; description: string }[])
+		: [];
 
 	return (
 		<main className="flex-1 min-h-0">

@@ -1,0 +1,50 @@
+{
+  "particular": {
+    "status": {
+      "key": "hero.particular.status",
+      "fallback": "Aplicação por lançar"
+    },
+    "eyebrow": {
+      "key": "hero.particular.eyebrow",
+      "fallback": "Mobilidade urbana em Luanda"
+    },
+    "title": {
+      "key": "hero.particular.title",
+      "fallback": "Saber quando o candongueiro passa, antes de sair de casa"
+    },
+    "description": {
+      "key": "hero.particular.description",
+      "fallback": "É isto que estamos a construir: uma aplicação que mostra onde estão os táxis que já circulam nas ruas, quais as paragens perto de si e quanto falta para o próximo passar. Não se chama um táxi — acompanha-se o que já anda na via. Ainda não está disponível."
+    },
+    "cta": {
+      "key": "hero.particular.cta",
+      "fallback": "Entrar na lista de espera"
+    }
+  },
+  "empresa": {
+    "status": {
+      "key": "hero.empresa.status",
+      "fallback": "Plataforma em construção · candidaturas abertas"
+    },
+    "eyebrow": {
+      "key": "hero.empresa.eyebrow",
+      "fallback": "Gestão de frotas de táxi"
+    },
+    "title": {
+      "key": "hero.empresa.title",
+      "fallback": "A sua frota no mapa, sem comprar um único rastreador"
+    },
+    "description": {
+      "key": "hero.empresa.description",
+      "fallback": "Estamos a construir a plataforma de gestão: o telemóvel do motorista faz de rastreador, sem custo de equipamento, e a operação fica visível num mapa. As candidaturas ao programa piloto já estão abertas — as primeiras empresas ajudam a definir o que entra."
+    },
+    "cta": {
+      "key": "hero.empresa.cta",
+      "fallback": "Candidatar a empresa piloto"
+    }
+  },
+  "mapCaption": {
+    "key": "hero.mapCaption",
+    "fallback": "Rota de demonstração"
+  }
+}

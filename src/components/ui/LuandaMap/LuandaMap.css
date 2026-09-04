@@ -1,0 +1,94 @@
+/*
+  Fundo de mapa do hero.
+
+  Não importa o maplibre-gl.css (83 kB): este mapa não tem controlos, popups
+  nem elementos de interface da biblioteca, por isso só precisa das regras de
+  posicionamento do canvas. Poupa-se o resto.
+*/
+
+.luandamap {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity 900ms ease-out;
+}
+
+.luandamap.is-visible {
+	opacity: 1;
+}
+
+.luandamap .maplibregl-canvas-container,
+.luandamap .maplibregl-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	outline: none;
+}
+
+/* Atribuição obrigatória do OpenStreetMap — discreta, mas presente. */
+.luandamap .maplibregl-control-container {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+.luandamap .maplibregl-ctrl-bottom-right {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	pointer-events: auto;
+}
+
+.luandamap .maplibregl-ctrl-attrib {
+	background: rgba(255, 255, 255, 0.72);
+	font-size: 10px;
+	padding: 1px 6px;
+	border-radius: 4px 0 0 0;
+	margin: 0;
+}
+
+.luandamap .maplibregl-ctrl-attrib a {
+	color: var(--color-gray-600);
+	text-decoration: none;
+}
+
+.luandamap .maplibregl-ctrl-attrib-button {
+	display: none;
+}
+
+/* --- Paragens sobre o mapa --- */
+.luandamap-stop {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+.luandamap-stop-dot {
+	width: 11px;
+	height: 11px;
+	border-radius: 50%;
+	background: var(--color-white);
+	border: 3px solid var(--color-primary-dark);
+	box-shadow: 0 1px 4px rgba(15, 23, 42, 0.25);
+	flex-shrink: 0;
+}
+
+.luandamap-stop-name {
+	font-family: var(--font-family-display), system-ui, sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	color: #1f2937;
+	background: rgba(255, 255, 255, 0.86);
+	padding: 2px 7px;
+	border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.luandamap {
+		transition: none;
+	}
+}

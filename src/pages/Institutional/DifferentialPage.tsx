@@ -15,9 +15,12 @@ export function DifferentialPage() {
 	const { t } = useTranslation();
 	const { ref, isInView } = useInView();
 
-	const pillars = t("presentation.differential.pillars", {
-		returnObjects: true,
-	}) as { title: string; description: string }[];
+	// Uma chave em falta faz o i18next devolver a própria chave (string). A guarda
+	// abaixo degrada a secção para vazia em vez de rebentar o .map() e a página.
+	const rawPillars = t("presentation.differential.pillars", { returnObjects: true });
+	const pillars = Array.isArray(rawPillars)
+		? (rawPillars as { title: string; description: string }[])
+		: [];
 
 	return (
 		<main className="flex-1 min-h-0">
