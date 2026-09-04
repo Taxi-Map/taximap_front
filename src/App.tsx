@@ -13,6 +13,7 @@ import { EarlyAccessModal } from './components/ui/EarlyAccessModal';
 import { BusinessPage } from './components/ui/Business';
 import { InstitutionalPage } from './components/ui/Institutional';
 import { PartnersPage } from './components/ui/Partners';
+import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { pageRegistry } from './pages/pageRegistry';
 import { SLUG_TO_PAGE_ID } from './pages/routeConfig';
 
@@ -98,31 +99,34 @@ function App() {
 
       {/* Main Content Sections dynamically rendered based on React Router Routes */}
       <main className="flex-1 w-full flex flex-col">
-        <Routes>
-          <Route path="/" element={
-            <>
-              <Hero />
-              <AppShowcase />
-              <HowItWorks />
-              <Community />
-              <Faq />
-            </>
-          } />
+        {/* A key por rota repõe o estado de erro quando o utilizador navega para outra página. */}
+        <ErrorBoundary key={location.pathname}>
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Hero />
+                <AppShowcase />
+                <HowItWorks />
+                <Community />
+                <Faq />
+              </>
+            } />
 
-          <Route path="/particulares" element={<Navigate to="/" replace />} />
+            <Route path="/particulares" element={<Navigate to="/" replace />} />
 
-          <Route path="/empresas" element={<BusinessPage onOpenWaitlist={() => handleOpenWaitlist("empresa")} />} />
-          <Route path="/institucional" element={<InstitutionalPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />} />
-          <Route path="/parceiros" element={<PartnersPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />} />
+            <Route path="/empresas" element={<BusinessPage onOpenWaitlist={() => handleOpenWaitlist("empresa")} />} />
+            <Route path="/institucional" element={<InstitutionalPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />} />
+            <Route path="/parceiros" element={<PartnersPage onOpenWaitlist={() => handleOpenWaitlist("particular")} />} />
 
-          {Object.entries(SLUG_TO_PAGE_ID).map(([slug, id]) => {
-            const Component = pageRegistry[id];
-            if (!Component) return null;
-            return <Route key={slug} path={`/${slug}`} element={<Component />} />;
-          })}
+            {Object.entries(SLUG_TO_PAGE_ID).map(([slug, id]) => {
+              const Component = pageRegistry[id];
+              if (!Component) return null;
+              return <Route key={slug} path={`/${slug}`} element={<Component />} />;
+            })}
 
-          <Route path="*" element={<pageRegistry._not_found />} />
-        </Routes>
+            <Route path="*" element={<pageRegistry._not_found />} />
+          </Routes>
+        </ErrorBoundary>
       </main>
 
       {/* Footer Component */}

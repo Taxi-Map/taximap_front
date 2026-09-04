@@ -139,6 +139,179 @@
         }
       }
     },
+    "presentation": {
+      "cover": {
+        "title": "A plataforma inteligente para a mobilidade urbana em Angola"
+      },
+      "about": {
+        "title": "Quem somos",
+        "description": "O Táxi Map é uma plataforma tecnológica desenvolvida pela MURA, dedicada à transformação da mobilidade urbana através da tecnologia.",
+        "missionLabel": "Missão",
+        "mission": "Tornar o transporte público e privado mais acessível, organizado, seguro e eficiente para passageiros, operadores de táxi e empresas.",
+        "footer": "Criamos soluções digitais que aproximam pessoas, empresas e prestadores de serviços de transporte."
+      },
+      "vision": {
+        "title": "A nossa visão",
+        "description": "Ser a principal plataforma tecnológica de mobilidade em Angola e uma referência em África na digitalização do transporte urbano."
+      },
+      "challenges": {
+        "title": "Os desafios da mobilidade urbana em Angola",
+        "individuals": "Particulares (passageiros)",
+        "individualsItems": [
+          "Dificuldade em identificar a rota correta para chegar ao destino.",
+          "Falta de informação clara sobre percursos e pontos de embarque.",
+          "Incerteza sobre quais os táxis (candongueiros) que passam por determinado local.",
+          "Dependência de terceiros para obter informações sobre rotas.",
+          "Pouca confiança ao deslocar-se para locais desconhecidos."
+        ],
+        "businesses": "Empresas de táxi",
+        "businessesItems": [
+          "Gestão manual da frota e dos motoristas, feita no caderno e no grupo de WhatsApp.",
+          "Dificuldade em acompanhar a operação em tempo real.",
+          "Ausência de indicadores e relatórios para apoiar decisões.",
+          "Baixo nível de digitalização dos processos operacionais.",
+          "Dificuldade em escalar e padronizar a operação."
+        ],
+        "conclusion": "O Táxi Map liga estas duas necessidades através da tecnologia."
+      },
+      "solutions": {
+        "passenger": {
+          "title": "Táxi Map Passageiro",
+          "subtitle": "Encontrar o seu caminho em Angola nunca devia depender de perguntar a um estranho.",
+          "description": "Consulte rotas, percursos e pontos de embarque e acompanhe em tempo real os táxis (candongueiros) que já circulam na via, para saber quando vão passar e planear a viagem com antecedência."
+        },
+        "business": {
+          "title": "Táxi Map Empresas",
+          "subtitle": "Sistema de gestão para empresas de táxi e operadores de frota, disponível para candidatura ao programa piloto em Luanda.",
+          "description": "Gestão da frota e dos motoristas, monitorização da operação em tempo real, relatórios de desempenho e administração num único painel."
+        }
+      },
+      "differential": {
+        "title": "O nosso diferencial",
+        "description": "Desenvolvido com foco total na realidade angolana. Funcionalidades pensadas para responder aos desafios locais, com suporte técnico dedicado e integração completa.",
+        "pillarsLabel": "Pilares",
+        "pillars": [
+          {
+            "title": "Tecnologia local",
+            "description": "Feito para Angola, não adaptado a Angola: conhecimento profundo do mercado e funcionamento pensado para internet lenta."
+          },
+          {
+            "title": "Digitalização",
+            "description": "Transformação digital do transporte, substituindo processos manuais por uma operação visível."
+          },
+          {
+            "title": "Escalabilidade",
+            "description": "Arquitetura preparada para crescer de 5 para milhares de viaturas e de Luanda para outras províncias."
+          },
+          {
+            "title": "Dados inteligentes",
+            "description": "Informação sobre rotas, motoristas e viaturas para melhorar a operação com dados em vez de intuição."
+          }
+        ]
+      },
+      "benefits": {
+        "title": "Benefícios da plataforma",
+        "items": [
+          {
+            "title": "Redução de custos",
+            "description": "Foi construído para reduzir custos de combustível e manutenção através da otimização de rotas e da monitorização da frota."
+          },
+          {
+            "title": "Maior eficiência",
+            "description": "Gestão centralizada e automatização de processos pensadas para aumentar a produtividade da operação diária."
+          },
+          {
+            "title": "Melhor experiência",
+            "description": "Interface simples, acompanhamento em tempo real e suporte integrado, otimizados para ligações lentas."
+          }
+        ]
+      },
+      "impact": {
+        "title": "Impacto no mercado",
+        "items": [
+          {
+            "title": "Transformação digital da mobilidade",
+            "description": "Substitui o caderno, o grupo de WhatsApp e a memória de quem despacha por uma operação digital e visível em tempo real."
+          },
+          {
+            "title": "Melhoria da mobilidade urbana",
+            "description": "Foi pensado para tornar as rotas mais previsíveis e reduzir o tempo de espera nas paragens das cidades angolanas."
+          },
+          {
+            "title": "Expansão do setor tecnológico",
+            "description": "Contribui para o ecossistema de inovação angolano, num momento em que a Lei das Startups cria incentivos reais para empresas de base tecnológica."
+          }
+        ]
+      },
+      "target": {
+        "title": "Público-alvo",
+        "items": [
+          {
+            "title": "Empresas de táxi e operadores de frota",
+            "description": "Gestão centralizada, monitorização e relatórios de desempenho. Disponível para candidatura ao programa piloto."
+          },
+          {
+            "title": "Entidades governamentais",
+            "description": "Solução para regulação, fiscalização e dados estratégicos de apoio ao planeamento urbano."
+          },
+          {
+            "title": "Clientes corporativos",
+            "description": "Transporte seguro e rastreável para colaboradores, com faturação centralizada. Produto em desenho, brevemente."
+          }
+        ]
+      },
+      "businessModel": {
+        "title": "Modelo de negócio",
+        "items": [
+          {
+            "title": "Licenciamento para empresas",
+            "description": "Aquisição de licença para utilizar a plataforma de gestão de frota."
+          },
+          {
+            "title": "Parcerias estratégicas",
+            "description": "Colaboração para serviços integrados e novos projetos com parceiros do setor."
+          },
+          {
+            "title": "APIs e integrações",
+            "description": "A nossa API está a ser desenhada com documentação aberta desde o primeiro serviço, pronta para integrar parceiros como seguradoras, municípios e outras plataformas de mobilidade."
+          }
+        ]
+      },
+      "partnerships": {
+        "title": "Parcerias & oportunidades",
+        "items": [
+          {
+            "title": "Investidores",
+            "description": "Oportunidade num setor estratégico, com um modelo de receita escalável e validação de mercado em curso em Luanda."
+          },
+          {
+            "title": "Empresas de táxi",
+            "description": "Integração de frotas para aumentar a eficiência da operação e formalizar o setor."
+          },
+          {
+            "title": "Entidades governamentais",
+            "description": "Colaboração para modernizar a mobilidade urbana e promover cidades mais inteligentes."
+          }
+        ]
+      },
+      "team": {
+        "title": "A nossa equipa",
+        "members": [
+          {
+            "name": "Hudson Mateque",
+            "role": "Fundador"
+          },
+          {
+            "name": "Mariquinha Francisco",
+            "role": "Gestora de Marketing"
+          },
+          {
+            "name": "Lourenço António Dala",
+            "role": "Engenheiro de Software"
+          }
+        ]
+      }
+    },
     "businessPage": {
       "hero": {
         "badge": "Programa piloto em Luanda",
@@ -288,6 +461,11 @@
       "retry": "Tentar novamente",
       "errorTitle": "Não foi possível registar o seu pedido.",
       "errorHelp": "Tente novamente. Se o problema continuar, escreva-nos diretamente:"
+    },
+    "errorBoundary": {
+      "title": "Algo correu mal nesta página",
+      "description": "Não conseguimos mostrar este conteúdo. Já registámos o problema. Pode voltar à página inicial e tentar novamente.",
+      "cta": "Voltar à página inicial"
     }
   }
 }

@@ -22,12 +22,12 @@ export function ChallengesPage() {
 	const { ref, isInView } = useInView();
 	const [activeTab, setActiveTab] = useState<"individuals" | "businesses">("individuals");
 
-	const individualsItems = t("presentation.challenges.individualsItems", {
-		returnObjects: true,
-	}) as string[];
-	const businessesItems = t("presentation.challenges.businessesItems", {
-		returnObjects: true,
-	}) as string[];
+	// Uma chave em falta faz o i18next devolver a própria chave (string). As guardas
+	// abaixo degradam a lista para vazia em vez de rebentar o .map() e a página.
+	const rawIndividualsItems = t("presentation.challenges.individualsItems", { returnObjects: true });
+	const rawBusinessesItems = t("presentation.challenges.businessesItems", { returnObjects: true });
+	const individualsItems = Array.isArray(rawIndividualsItems) ? (rawIndividualsItems as string[]) : [];
+	const businessesItems = Array.isArray(rawBusinessesItems) ? (rawBusinessesItems as string[]) : [];
 
 	const currentItems = activeTab === "individuals" ? individualsItems : businessesItems;
 	const currentIcons = activeTab === "individuals" ? individualIcons : businessIcons;
