@@ -14,6 +14,18 @@ interface HeaderProps {
 export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps) {
   const { t, i18n } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  /*
+   * Com a gaveta aberta, o conteúdo por trás não pode rolar. Sem isto, o
+   * dedo a arrastar sobre a gaveta move a página que está por baixo, e a
+   * sensação de "ecrã próprio" desfaz-se.
+   */
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
   const [activeSection, setActiveSection] = useState<string>('app');
 
   // Settings for the Mobile Menu
@@ -233,7 +245,13 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
                   <button
                     key={idx}
                     disabled={isDisabled}
-                    onClick={() => !isDisabled && setActiveTab(idx)}
+                    onClick={() => {
+                      if (isDisabled) return;
+                      // Escolher um separador tem de se sentir como abrir outra
+                      // página: muda a rota, fecha a gaveta e volta ao topo.
+                      setActiveTab(idx);
+                      setIsMobileMenuOpen(false);
+                    }}
                     className={`shrink-0 pb-4 pt-2 text-sm font-semibold transition-colors relative whitespace-nowrap ${
                       isDisabled
                         ? 'opacity-40 cursor-not-allowed pointer-events-none'

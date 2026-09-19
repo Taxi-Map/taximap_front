@@ -15,12 +15,21 @@ import { InstitutionalPage } from './components/ui/Institutional';
 import { PartnersPage } from './components/ui/Partners';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { PageSkeleton } from './components/ui/PageSkeleton';
+import { useScrollToTop } from './hooks/useScrollToTop';
 import { pageRegistry } from './pages/pageRegistry';
 import { SLUG_TO_PAGE_ID } from './pages/routeConfig';
 
 import './App.css';
 
 function App() {
+  /*
+   * Mudar de rota volta ao topo. O hook já existia em src/hooks/ mas nunca
+   * tinha sido ligado: navegar para outra página mantinha a posição de
+   * scroll anterior, o que a meio de uma página longa dava a sensação de
+   * não ter acontecido nada.
+   */
+  useScrollToTop();
+
   const [activeTab, setActiveTab] = useState(0);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [waitlistModalMode, setWaitlistModalMode] = useState<"particular" | "empresa">("particular");
