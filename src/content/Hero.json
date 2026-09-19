@@ -6,15 +6,15 @@
     },
     "eyebrow": {
       "key": "hero.particular.eyebrow",
-      "fallback": "Mobilidade urbana em Luanda"
+      "fallback": "Mobilidade urbana"
     },
     "title": {
       "key": "hero.particular.title",
-      "fallback": "Saber quando o candongueiro passa, antes de sair de casa"
+      "fallback": "Saber para onde vais, muda tudo."
     },
     "description": {
       "key": "hero.particular.description",
-      "fallback": "É isto que estamos a construir: uma aplicação que mostra onde estão os táxis que já circulam nas ruas, quais as paragens perto de si e quanto falta para o próximo passar. Não se chama um táxi — acompanha-se o que já anda na via. Ainda não está disponível."
+      "fallback": "Táxi Map: É uma aplicação que mostra onde estão os táxis que já circulam nas ruas, quais as paragens perto de si, as rotas e quanto falta para o próximo táxi passar. No Táxi Map não se chama um táxi, acompanha-se o que já circula na via."
     },
     "cta": {
       "key": "hero.particular.cta",
@@ -28,15 +28,15 @@
     },
     "eyebrow": {
       "key": "hero.empresa.eyebrow",
-      "fallback": "Gestão de frotas de táxi"
+      "fallback": "GESTÃO DE FROTAS PARA O TRANSPORTE EM ANGOLA"
     },
     "title": {
       "key": "hero.empresa.title",
-      "fallback": "A sua frota no mapa, sem comprar um único rastreador"
+      "fallback": "Tenha a sua frota sob controlo, em todo momento."
     },
     "description": {
       "key": "hero.empresa.description",
-      "fallback": "Estamos a construir a plataforma de gestão: o telemóvel do motorista faz de rastreador, sem custo de equipamento, e a operação fica visível num mapa. As candidaturas ao programa piloto já estão abertas — as primeiras empresas ajudam a definir o que entra."
+      "fallback": "Acompanhe veículos, motoristas e operações num único lugar. O Táxi Map transforma os dados da sua frota em informação para reduzir custos, melhorar a operação e tomar decisões melhores."
     },
     "cta": {
       "key": "hero.empresa.cta",

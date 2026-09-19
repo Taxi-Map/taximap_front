@@ -57,7 +57,7 @@ export function BusinessSolution({ onOpenWaitlist }: BusinessSolutionProps) {
 							businessContent.audience.items[0].badgeKey,
 							businessContent.audience.items[0].badgeFallback
 						)}
-						actionText="Candidatar a empresa piloto"
+						actionText="Quero gerir a minha frota"
 						onAction={onOpenWaitlist}
 					/>
 
@@ -76,7 +76,7 @@ export function BusinessSolution({ onOpenWaitlist }: BusinessSolutionProps) {
 							businessContent.audience.items[1].badgeKey,
 							businessContent.audience.items[1].badgeFallback
 						)}
-						actionText="Ajudar a moldar o produto"
+						actionText="Quero saber mais"
 						onAction={onOpenWaitlist}
 					/>
 				</div>
@@ -84,9 +84,7 @@ export function BusinessSolution({ onOpenWaitlist }: BusinessSolutionProps) {
 				{/* Section Header: Porque Escolher o Táxi Map */}
 				<div className="business-benefits-banner" style={{ marginTop: 0, paddingTop: "var(--spacing-16)" }}>
 					<div className="business-header">
-						<span className="business-benefits-badge">
-							Posicionamento único
-						</span>
+						
 						<h3 className="business-title">{reasonsTitle}</h3>
 						<p className="business-subtitle">{reasonsSubtitle}</p>
 					</div>
