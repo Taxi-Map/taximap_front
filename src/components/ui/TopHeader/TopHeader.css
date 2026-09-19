@@ -46,3 +46,21 @@
 .separator {
   color: var(--color-gray-800);
 }
+
+/* Link do topo que corresponde à rota atual. */
+.top-links-right .is-current {
+	color: #ffffff;
+	font-weight: var(--font-weight-bold);
+	position: relative;
+}
+
+.top-links-right .is-current::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -6px;
+	height: 2px;
+	background: #ffffff;
+	border-radius: 2px;
+}

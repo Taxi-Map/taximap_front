@@ -16,10 +16,21 @@ import { PartnersPage } from './components/ui/Partners';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { PageSkeleton } from './components/ui/PageSkeleton';
 import { useScrollToTop } from './hooks/useScrollToTop';
+import { PAGE_SLUGS } from './pages/routeConfig';
 import { pageRegistry } from './pages/pageRegistry';
 import { SLUG_TO_PAGE_ID } from './pages/routeConfig';
 
 import './App.css';
+
+/*
+ * Rotas que não mostram a barra branca de navegação secundária.
+ *
+ * A barra branca lista as secções de um separador (Aplicação, Como funciona,
+ * FAQ...). Numa página que não pertence a nenhum separador, como a de
+ * contactos, mostrá-la só confunde: sugere que se está dentro de
+ * Particulares quando não se está.
+ */
+const ROTAS_SEM_HEADER_SECUNDARIO = [`/${PAGE_SLUGS.contact}`];
 
 function App() {
   /*
@@ -35,6 +46,9 @@ function App() {
   const [waitlistModalMode, setWaitlistModalMode] = useState<"particular" | "empresa">("particular");
 
   const location = useLocation();
+  const semHeaderSecundario = ROTAS_SEM_HEADER_SECUNDARIO.includes(
+    location.pathname,
+  );
   const navigate = useNavigate();
 
   // Handle setting activeTab based on current route
@@ -100,11 +114,18 @@ function App() {
       {/* Sticky Header Wrapper */}
       <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
         <TopHeader activeTab={activeTab} setActiveTab={handleTabChange} />
-        <Header
-          activeTab={activeTab}
-          setActiveTab={handleTabChange}
-          onOpenWaitlist={handleOpenWaitlist}
-        />
+        {/*
+          Em desktop a barra branca some. Em telemóvel fica, porque o
+          TopHeader está escondido nesse tamanho e esta é a única barra com
+          o menu — escondê-la deixaria a página sem navegação nenhuma.
+        */}
+        <div className={semHeaderSecundario ? 'md:hidden' : undefined}>
+          <Header
+            activeTab={activeTab}
+            setActiveTab={handleTabChange}
+            onOpenWaitlist={handleOpenWaitlist}
+          />
+        </div>
       </header>
 
       {/* Main Content Sections dynamically rendered based on React Router Routes */}

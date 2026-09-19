@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './TopHeader.css';
 import topHeaderContent from '../../../content/TopHeader.json';
@@ -34,6 +34,14 @@ export function TopHeader({ activeTab, setActiveTab }: TopHeaderProps) {
   const languages = languagesConfig;
   const leftLinks = topHeaderContent.leftLinks;
   const rightLinks = topHeaderContent.rightLinks;
+  const { pathname } = useLocation();
+
+  /*
+   * Um link do topo que aponte para a rota atual fica selecionado, e nesse
+   * caso nenhum dos separadores da esquerda o fica. Sem isto, estar em
+   * /contacto deixava "Particulares" aceso, por ser o activeTab por omissão.
+   */
+  const rightLinkAtivo = rightLinks.some((l) => l.url === pathname);
 
   const currentLang = languages.find(l => l.code === i18n.language) || languages[0];
 
@@ -50,7 +58,7 @@ export function TopHeader({ activeTab, setActiveTab }: TopHeaderProps) {
                 key={idx} 
                 disabled={isDisabled}
                 onClick={() => !isDisabled && setActiveTab(idx)} 
-                className={`${activeTab === idx ? "active" : ""} ${
+                className={`${!rightLinkAtivo && activeTab === idx ? "active" : ""} ${
                   isDisabled ? "opacity-50 cursor-not-allowed hover:bg-transparent! hover:text-gray-800! pointer-events-none" : ""
                 }`}
               >
@@ -69,7 +77,9 @@ export function TopHeader({ activeTab, setActiveTab }: TopHeaderProps) {
               <Link
                 key={idx}
                 to={link.url}
-                className="hover:text-white transition-colors"
+                className={`hover:text-white transition-colors ${
+                  link.url === pathname ? "is-current" : ""
+                }`}
               >
                 {t(link.labelKey, link.fallback)}
               </Link>
