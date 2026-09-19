@@ -46,17 +46,6 @@ export function BusinessReasons({ icons, fallbackIcon }: BusinessReasonsProps) {
 						<p className="reason-desc">
 							{t(reason.descKey, reason.descFallback)}
 						</p>
-
-						{proof && (
-							<div>
-								<span className="reason-proof">
-									{t(proof.valueKey, proof.valueFallback)}
-								</span>
-								<span className="reason-proof-label">
-									{t(proof.labelKey, proof.labelFallback)}
-								</span>
-							</div>
-						)}
 					</div>
 				);
 			})}

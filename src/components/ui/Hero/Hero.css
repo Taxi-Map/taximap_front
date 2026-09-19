@@ -151,3 +151,30 @@
 		transform: none;
 	}
 }
+
+/*
+  Táxi no canto superior direito.
+
+  Assenta acima do véu do mapa (z-index 1, o mesmo do conteúdo) para se ler
+  como pousado sobre ele, e não como parte do fundo. A sombra projetada é o
+  que vende essa sensação: sem ela, a imagem lê-se como colada ao mapa.
+*/
+.hero-taxi {
+	position: absolute;
+	/* Encostado ao canto, sem folga: a secção tem overflow hidden, por isso a
+	   imagem entra em cena pelo vértice em vez de flutuar a meio do fundo. */
+	top: 0;
+	right: 0;
+	z-index: 1;
+	width: clamp(120px, 26vw, 300px);
+	height: auto;
+	pointer-events: none;
+	filter: drop-shadow(0 18px 28px rgba(11, 27, 43, 0.28));
+}
+
+@media (min-width: 900px) {
+	.hero-taxi {
+		top: 0;
+		right: 0;
+	}
+}

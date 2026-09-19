@@ -1,20 +1,20 @@
 {
   "titleKey": "communitySection.title",
-  "titleFallback": "Comunidade activa e alertas em tempo real",
+  "titleFallback": "Saiba do trânsito por quem já lá está",
   "subtitleKey": "communitySection.subtitle",
-  "subtitleFallback": "Informação colaborativa criada por passageiros e motoristas para tornar o trânsito em Angola mais previsível e seguro.",
+  "subtitleFallback": "Os avisos vêm de quem está na estrada naquele momento — passageiros e motoristas que reportam o que veem, para os outros não apanharem a mesma fila.",
   "features": [
     {
       "key": "communitySection.features.realtime",
-      "fallback": "Reporte e receba avisos instantâneos sobre o trânsito e estradas."
+      "fallback": "Reporte uma fila ou um acidente em dois toques."
     },
     {
       "key": "communitySection.features.validation",
-      "fallback": "Informações validadas continuamente pela própria comunidade."
+      "fallback": "Veja o que já foi reportado na sua rota, antes de sair."
     },
     {
       "key": "communitySection.features.routes",
-      "fallback": "Sugestões de rotas alternativas automáticas em caso de engarrafamento."
+      "fallback": "Receba uma alternativa quando a via está cortada."
     }
   ],
   "statsHeader": {

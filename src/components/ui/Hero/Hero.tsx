@@ -57,6 +57,21 @@ export function Hero({ audience = "particular", onCtaClick }: HeroProps) {
 				<div className="hero-scrim" />
 			</div>
 
+			{/*
+			  Decorativo: fica por cima do véu do mapa, não por baixo, para se ler
+			  como pousado sobre ele. Sem texto alternativo de propósito — não
+			  acrescenta informação a quem usa leitor de ecrã.
+			*/}
+			<img
+				src="/taxi_azul.png"
+				alt=""
+				aria-hidden="true"
+				width={447}
+				height={559}
+				decoding="async"
+				className="hero-taxi"
+			/>
+
 			<div className="container hero-content">
 				<div className="hero-copy">
 					{/* O estado do produto à cabeça, para nada do que se lê a

@@ -71,7 +71,31 @@ export function LuandaMap({ onReady, className = "" }: LuandaMapProps) {
 
 			const instance = new Map({
 				container: containerRef.current,
-				style: "https://tiles.openfreemap.org/styles/positron",
+				/*
+				 * Estilo raster declarado aqui em vez de um URL de estilo vetorial.
+				 * Um estilo vetorial obriga a ir buscar sprites e glyphs antes de
+				 * o mapa se dar por carregado; com tiles raster não há nada disso,
+				 * e o `load` dispara assim que a primeira imagem chega. Menos peças
+				 * a falhar em ligações fracas, que é o caso de uso que interessa.
+				 */
+				style: {
+					version: 8,
+					sources: {
+						osm: {
+							type: "raster",
+							tiles: [
+								"https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+							],
+							tileSize: 256,
+							maxzoom: 19,
+							attribution:
+								'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+						},
+					},
+					layers: [
+						{ id: "osm", type: "raster", source: "osm" },
+					],
+				},
 				center: [13.3120, -8.8720],
 				zoom: 10.4,
 				pitch: reduceMotion ? 0 : 42,

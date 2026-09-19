@@ -33,46 +33,46 @@
       "cta": "Começar agora"
     },
     "appShowcase": {
-      "title": "Mobilidade inteligente na palma da sua mão",
-      "subtitle": "Planeie viagens e acompanhe os táxis (candongueiros) em tempo real com a aplicação Táxi Map.",
+      "title": "Chegue ao seu destino em Luanda sem ficar a adivinhar",
+      "subtitle": "Veja onde está o candongueiro, saiba quanto falta e planeie a viagem. A aplicação ainda não foi lançada — entre na lista de espera para a receber primeiro.",
       "passengerApp": "Táxi Map - Passageiros",
       "comingSoon": "Brevemente",
       "availableOn": "Disponível no",
       "downloadOn": "Descarregar na",
       "benefits": {
-        "realtime": "Rotas e posições em tempo real dos táxis (candongueiros).",
-        "multimodal": "Planeamento multimodal combinando caminhada e transportes.",
-        "alerts": "Alertas da comunidade sobre trânsito, acidentes e vias cortadas.",
-        "offline": "Otimizado para baixa conectividade e funcionamento offline."
+        "realtime": "Veja o candongueiro a chegar à sua paragem, e quanto falta.",
+        "multimodal": "Escolha a melhor rota: a pé até à paragem e depois de candongueiro.",
+        "alerts": "Saiba do trânsito por quem já está na estrada.",
+        "offline": "Funciona com a rede que tem, e gasta poucos dados."
       }
     },
     "howItWorksSection": {
       "title": "Como funciona o Táxi Map",
-      "subtitle": "Simples, rápido e inteligente: as suas deslocações em 3 passos.",
+      "subtitle": "As suas deslocações em três passos.",
       "steps": {
         "0": {
-          "title": "Defina o destino",
-          "description": "Insira onde está e para onde quer ir. O Táxi Map calcula a melhor rota combinando caminhada e transportes."
+          "title": "Diga para onde vai",
+          "description": "Escreva onde está e para onde quer ir. O Táxi Map trata do resto do percurso."
         },
         "1": {
-          "title": "Acompanhe em tempo real",
-          "description": "Veja no mapa a localização exata dos táxis (candongueiros) a caminho e o tempo estimado de chegada."
+          "title": "Veja quem vem a caminho",
+          "description": "Acompanhe no mapa os candongueiros que fazem a sua rota e quanto falta para passarem."
         },
         "2": {
-          "title": "Viaje com tranquilidade",
-          "description": "Receba alertas da comunidade sobre o trânsito, acidentes e vias cortadas para uma viagem segura e sem surpresas."
+          "title": "Viaje sem surpresas",
+          "description": "Avisos de filas, acidentes e vias cortadas chegam-lhe antes de sair de casa."
         }
       }
     },
     "communitySection": {
-      "title": "Comunidade activa e alertas em tempo real",
-      "subtitle": "Informação colaborativa criada por passageiros e motoristas para tornar o trânsito em Angola mais previsível e seguro.",
+      "title": "Saiba do trânsito por quem já lá está",
+      "subtitle": "Os avisos vêm de quem está na estrada naquele momento — passageiros e motoristas que reportam o que veem, para os outros não apanharem a mesma fila.",
       "liveBadge": "Feed de alertas ao vivo",
       "confirmations": "confirmações",
       "features": {
-        "realtime": "Reporte e receba avisos instantâneos sobre o trânsito e estradas.",
-        "validation": "Informações validadas continuamente pela própria comunidade.",
-        "routes": "Sugestões de rotas alternativas automáticas em caso de engarrafamento."
+        "realtime": "Reporte uma fila ou um acidente em dois toques.",
+        "validation": "Veja o que já foi reportado na sua rota, antes de sair.",
+        "routes": "Receba uma alternativa quando a via está cortada."
       },
       "statsHeader": {
         "badge": "Metas do 1.º ano em Luanda"
@@ -107,7 +107,8 @@
           "message": "Obras pontuais na via secundária, rota alternativa ativa.",
           "timeAgo": "Há 18 min"
         }
-      }
+      },
+      "benefitsHeading": "Quem está na estrada avisa quem ainda vai sair."
     },
     "faqSection": {
       "title": "Perguntas frequentes (FAQ)",
@@ -322,46 +323,46 @@
         "ctaTalk": "Agendar conversa com a equipa"
       },
       "audience": {
-        "title": "Para quem é o Táxi Map Empresas",
-        "subtitle": "Soluções focadas na operação real e no crescimento sustentável da tua frota em Luanda.",
+        "title": "Uma plataforma para quem move pessoas e negócios",
+        "subtitle": "O Táxi Map Empresas foi criado para operadores de transporte que precisam de mais visibilidade sobre a sua frota e mais controlo sobre a operação diária.",
         "items": {
           "0": {
             "badge": "Candidaturas ao piloto abertas",
             "title": "Empresas de táxi e operadores de frota",
-            "desc": "Gestão centralizada da frota e dos motoristas, localização em tempo real de cada viatura, e relatórios de produtividade para decidir com dados em vez de intuição."
+            "desc": "Acompanhe os seus veículos, motoristas e operações em tempo real — e tenha os dados necessários para gerir a frota com mais eficiência."
           },
           "1": {
             "badge": "Em desenho, brevemente",
-            "title": "Clientes corporativos",
-            "desc": "Transporte seguro e rastreável para colaboradores e executivos, agendamento de deslocações corporativas com faturação centralizada. Está a ser desenhado com o contributo direto de empresas que já geram grande volume de deslocações em Luanda — se a tua empresa quer ajudar a moldar este produto antes de mais ninguém, fala connosco."
+            "title": "Empresas com transporte de colaboradores",
+            "desc": "Tenha maior visibilidade sobre os veículos que transportam a sua equipa, acompanhe percursos e centralize a informação da operação."
           }
         }
       },
       "reasons": {
-        "title": "Porque escolher o Táxi Map",
-        "subtitle": "Vantagens desenhadas para quem opera frotas nas ruas de Angola.",
+        "title": "PORQUE TÁXI MAP",
+        "subtitle": "Mais visibilidade. Mais controlo. Melhores decisões.",
         "items": {
           "0": {
-            "title": "Feito para Angola, não adaptado a Angola",
-            "desc": "A maior parte das plataformas que operam por cá foram pensadas para outros mercados. O Táxi Map nasceu ao contrário: começámos pelos desafios reais de quem gere uma frota em Luanda — vias sem nome oficial, cobertura de rede instável, rotas informais de candongueiro — e construímos a tecnologia à volta disso, incluindo funcionamento pensado para internet lenta."
+            "title": "Feito para a realidade de Angola",
+            "desc": "O Táxi Map nasce para compreender as particularidades das nossas cidades, rotas, operadores e formas de mobilidade, começando por Luanda."
           },
           "1": {
-            "title": "Sem custo de equipamento para começar",
-            "desc": "Muitas soluções de rastreio exigem comprar um dispositivo GPS dedicado por viatura (40-80 USD por carro). No Táxi Map, o telemóvel do motorista funciona como rastreador, eliminando a barreira de entrada mais óbvia para uma frota pequena ou média."
+            "title": "Comece com o que já tem, sem depender de GPS dedicado",
+            "desc": "No programa piloto, pode utilizar o smartphone como dispositivo de localização e começar a acompanhar a sua operação sem o investimento inicial de instalar rastreadores em toda a frota."
           },
           "2": {
-            "title": "Uma rede de confiança, não só um mapa",
-            "desc": "O nosso ativo mais difícil de copiar não é o mapa — é o conhecimento das rotas, dos operadores e da forma como o transporte informal funciona em Angola. Somos parceiros na formalização do setor, não apenas mais um fornecedor de software."
+            "title": "Os seus dados trabalham para si",
+            "desc": "Queremos transformar os dados da operação em informação sobre percursos, utilização da frota, desempenho e padrões de mobilidade."
           },
           "3": {
-            "title": "Preparado para crescer com a tua frota",
-            "desc": "Arquitetura pensada, desde o primeiro dia, para acompanhar o crescimento de 5 para milhares de viaturas e de Luanda para outras províncias — sem precisar de reconstruir a plataforma a meio do caminho."
+            "title": "Cresça sem trocar de plataforma",
+            "desc": "À medida que a sua operação cresce, o Táxi Map acompanha-a com novas ferramentas de gestão, análise e integração."
           }
         }
       },
       "features": {
-        "title": "Ferramentas para a gestão da tua frota",
-        "subtitle": "Tudo o que precisas para controlar a tua operação diária sem depender de cadernos ou grupos de WhatsApp.",
+        "title": "Tudo o que precisa para gerir a sua frota",
+        "subtitle": "Do acompanhamento em tempo real aos relatórios de desempenho, tenha a informação da sua operação num único lugar.",
         "cards": {
           "0": {
             "title": "Mapa de operação em tempo real",
@@ -390,10 +391,11 @@
         }
       },
       "ctaFinal": {
-        "title": "Queres ser uma das primeiras empresas a testar o Táxi Map?",
-        "subtitle": "Estamos a selecionar um pequeno grupo de empresas de táxi em Luanda para o programa piloto do Táxi Map Empresas. Junta-te à equipa que está a construir a ferramenta que a tua operação precisa — e ajuda a desenhá-la.",
-        "ctaPilot": "Candidatar a empresa piloto",
-        "ctaTalk": "Falar com a equipa"
+        "title": "Se a sua frota se move, queremos conhecê-la.",
+        "subtitle": "Estamos a selecionar empresas de transporte em Luanda para participar na primeira fase do Táxi Map Empresas. Ajude-nos a construir uma plataforma de gestão de frotas pensada para a realidade de Angola — e seja uma das primeiras empresas a utilizá-la.",
+        "ctaPilot": "Candidatar a minha empresa",
+        "ctaTalk": "Falar com a equipa",
+        "badge": "Programa piloto"
       }
     },
     "waitlistModal": {
@@ -439,7 +441,7 @@
     },
     "contact": {
       "subtitle": "Estamos aqui para ajudar. Envie-nos uma mensagem ou use os contactos abaixo.",
-      "email": "geral.taximap@gmail.com",
+      "email": "geral@taximap.ao",
       "phone": "+244 929 782 402",
       "address": "Luanda, Angola",
       "formTitle": "Envie-nos uma mensagem",
@@ -524,6 +526,60 @@
       "state": {
         "open": "Aberto",
         "design": "Em desenho"
+      }
+    },
+    "faqBusiness": {
+      "title": "Perguntas frequentes — Empresas",
+      "subtitle": "O que as empresas de transporte perguntam antes de se candidatarem ao programa piloto.",
+      "items": {
+        "0": {
+          "question": "Preciso instalar um rastreador GPS em cada veículo?",
+          "answer": "Não necessariamente. No programa piloto, o Táxi Map pode utilizar o smartphone do motorista como dispositivo de localização. O objetivo é permitir que a empresa comece a acompanhar a operação sem depender da instalação de hardware dedicado."
+        },
+        "1": {
+          "question": "A localização funciona sem internet?",
+          "answer": "A localização depende da conectividade disponível no dispositivo. Quando existe ligação à internet, os dados podem ser enviados para a plataforma e apresentados no painel da empresa."
+        },
+        "2": {
+          "question": "Que veículos posso adicionar?",
+          "answer": "O Táxi Map foi pensado para diferentes tipos de operações de transporte. Durante o programa piloto, trabalharemos com a empresa para configurar a frota e os veículos de acordo com a sua operação."
+        },
+        "3": {
+          "question": "Posso acompanhar os veículos em tempo real?",
+          "answer": "Sim. O painel permite visualizar os veículos ativos no mapa e acompanhar a sua operação conforme os dados de localização são recebidos."
+        },
+        "4": {
+          "question": "Os meus motoristas precisam utilizar o próprio telemóvel?",
+          "answer": "Durante o programa piloto, o smartphone pode ser utilizado como dispositivo de localização. A implementação será definida de acordo com a operação e as necessidades da empresa."
+        },
+        "5": {
+          "question": "Posso consultar viagens anteriores?",
+          "answer": "Sim. A plataforma está preparada para trabalhar com histórico de viagens, permitindo analisar percursos e atividade da frota."
+        },
+        "6": {
+          "question": "O Táxi Map é apenas um GPS?",
+          "answer": "Não. O GPS é apenas uma das fontes de dados. O objetivo do Táxi Map é evoluir para uma plataforma completa de gestão e inteligência operacional para empresas de transporte."
+        }
+      }
+    },
+    "businessIntelligence": {
+      "badge": "Fleet Intelligence",
+      "title": "Não queremos apenas mostrar a sua frota. Queremos ajudá-lo a entendê-la.",
+      "lede": "Cada viagem gera informação. Cada veículo gera dados. Cada operação conta uma história.",
+      "intro": "O Táxi Map organiza esses dados para que a empresa possa compreender melhor:",
+      "items": {
+        "0": "os veículos operam",
+        "1": "as rotas são utilizadas",
+        "2": "a procura aumenta",
+        "3": "a frota está a ser utilizada",
+        "4": "existem oportunidades de melhoria",
+        "5": "operações precisam de atenção"
+      },
+      "resultLabel": "Resultado",
+      "progression": {
+        "0": "Localização",
+        "1": "Informação",
+        "2": "Decisão"
       }
     }
   }

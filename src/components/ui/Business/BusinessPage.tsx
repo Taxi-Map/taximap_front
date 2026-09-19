@@ -1,6 +1,7 @@
 import { Hero } from "../Hero";
 import { BusinessSolution } from "./BusinessSolution";
 import { BusinessFeatures } from "./BusinessFeatures";
+import { BusinessIntelligence } from "./BusinessIntelligence";
 import { BusinessPlans } from "./BusinessPlans";
 import { BusinessFaq } from "./BusinessFaq";
 import "./Business.css";
@@ -15,6 +16,7 @@ export function BusinessPage({ onOpenWaitlist }: BusinessPageProps) {
 			<Hero audience="empresa" onCtaClick={onOpenWaitlist} />
 			<BusinessSolution onOpenWaitlist={onOpenWaitlist} />
 			<BusinessFeatures />
+			<BusinessIntelligence />
 			<BusinessPlans onOpenWaitlist={onOpenWaitlist} />
 			<BusinessFaq />
 		</div>

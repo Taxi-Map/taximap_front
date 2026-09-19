@@ -17,7 +17,7 @@
     "titleKey": "businessPage.audience.title",
     "titleFallback": "Para quem é o Táxi Map Empresas",
     "subtitleKey": "businessPage.audience.subtitle",
-    "subtitleFallback": "Soluções focadas na operação real e no crescimento sustentável da tua frota em Luanda.",
+    "subtitleFallback": "Para quem opera táxis em Luanda e quer parar de gerir a frota de cabeça.",
     "items": [
       {
         "badgeKey": "businessPage.audience.items.0.badge",
@@ -75,7 +75,7 @@
   },
   "features": {
     "titleKey": "businessPage.features.title",
-    "titleFallback": "Ferramentas para a gestão da tua frota",
+    "titleFallback": "Faça a gestão da frota a partir de um mapa",
     "subtitleKey": "businessPage.features.subtitle",
     "subtitleFallback": "Tudo o que precisas para controlar a tua operação diária sem depender de cadernos ou grupos de WhatsApp.",
     "cards": [
@@ -119,12 +119,14 @@
   },
   "ctaFinal": {
     "titleKey": "businessPage.ctaFinal.title",
-    "titleFallback": "Queres ser uma das primeiras empresas a testar o Táxi Map?",
+    "titleFallback": "Se a sua frota se move, queremos conhecê-la.",
     "subtitleKey": "businessPage.ctaFinal.subtitle",
-    "subtitleFallback": "Estamos a selecionar um pequeno grupo de empresas de táxi em Luanda para o programa piloto do Táxi Map Empresas. Junta-te à equipa que está a construir a ferramenta que a tua operação precisa — e ajuda a desenhá-la.",
+    "subtitleFallback": "Estamos a selecionar empresas de transporte em Luanda para participar na primeira fase do Táxi Map Empresas. Ajude-nos a construir uma plataforma de gestão de frotas pensada para a realidade de Angola — e seja uma das primeiras empresas a utilizá-la.",
     "ctaPilotKey": "businessPage.ctaFinal.ctaPilot",
-    "ctaPilotFallback": "Candidatar a empresa piloto",
+    "ctaPilotFallback": "Candidatar a minha empresa",
     "ctaTalkKey": "businessPage.ctaFinal.ctaTalk",
-    "ctaTalkFallback": "Falar com a equipa"
+    "ctaTalkFallback": "Falar com a equipa",
+    "badgeKey": "businessPage.ctaFinal.badge",
+    "badgeFallback": "Programa piloto"
   }
 }

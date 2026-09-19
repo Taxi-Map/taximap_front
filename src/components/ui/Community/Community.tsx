@@ -198,7 +198,10 @@ export function Community({ data, isLoading: externalLoading }: CommunityProps) 
 					<div className="flex flex-col gap-8">
 						<div className="flex flex-col gap-4">
 							<h3 className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight">
-								Informação em tempo real, validada por quem circula nas ruas.
+								{t(
+									"communitySection.benefitsHeading",
+									"Quem está na estrada avisa quem ainda vai sair.",
+								)}
 							</h3>
 							<ul className="flex flex-col gap-4 mt-2">
 								{featuresList.map((feature, idx) => (
