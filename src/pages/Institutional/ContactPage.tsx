@@ -13,6 +13,7 @@ import {
 import { useInView } from "../../hooks/useInView";
 import { useSubmitLead } from "../../hooks/useSubmitLead";
 import { FALLBACK_CONTACT, HONEYPOT_FIELD } from "../../lib/leads";
+import "./ContactPage.css";
 
 /*
  * Só aparecem as redes com um perfil real da empresa por trás. Um ícone que
@@ -93,86 +94,82 @@ export function ContactPage() {
 	};
 
 	return (
-		<main className="flex-1 min-h-0">
-			<section ref={ref} className="relative overflow-hidden bg-gray-50">
-				<div className="absolute inset-0 opacity-[0.04]"
+		<main className="contact">
+			<section ref={ref} className="contact-section">
+				<div className="contact-grid-bg" aria-hidden="true"
 					style={{
 						backgroundImage:
 							"linear-gradient(to right, var(--color-primary) 1px, transparent 1px), linear-gradient(to bottom, var(--color-primary) 1px, transparent 1px)",
 						backgroundSize: "40px 40px",
 					}}
 				/>
-				<svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+				<svg className="contact-route-bg" aria-hidden="true">
 					<path d="M0,200 Q200,100 400,250 T800,150" stroke="var(--color-primary)" strokeWidth="1" fill="none" strokeOpacity="0.12"
 						className={isInView ? "animate-draw-path" : ""} />
 					<path d="M0,350 Q300,450 600,300" stroke="var(--color-primary)" strokeWidth="1" fill="none" strokeOpacity="0.08"
 						className={isInView ? "animate-draw-path" : ""} style={{ animationDelay: "0.8s" }} />
 				</svg>
 
-				<div className="container relative py-20 md:py-28">
+				<div className="container contact-inner">
 					<div className={`max-w-4xl mx-auto transition-all duration-700 ${isInView ? "animate-fade-in-up" : "opacity-0"}`}>
-						<div className="text-center mb-16">
-							<div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+						<div className="contact-head">
+							<div className="contact-icon">
 								<svg className="w-7 h-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
 									<path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
 								</svg>
 							</div>
-							<h1 style={{ fontFamily: "var(--font-family-display)" }}
-								className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight"
-							>
+							<h1 className="contact-title">
 								{t("nav.contact")}
 							</h1>
-							<p className="text-lg text-gray-600 max-w-md mx-auto">
+							<p className="contact-subtitle">
 								{t("contact.subtitle")}
 							</p>
 						</div>
 
-						<div className="grid md:grid-cols-3 gap-4 mb-16">
-							<div className="group bg-white rounded-xl p-6 border border-gray-200 hover:border-primary/20 hover:shadow-md transition-all duration-300 text-center">
-								<div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+						<div className="contact-methods">
+							<div className="contact-method">
+								<div className="contact-method-icon">
 									<Mail className="w-5 h-5 text-primary group-hover:text-white transition-colors" />
 								</div>
-								<p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Email</p>
-								<p className="text-sm font-medium text-gray-900">{t("contact.email")}</p>
+								<p className="contact-method-label">Email</p>
+								<p className="contact-method-value">{t("contact.email")}</p>
 							</div>
-							<div className="group bg-white rounded-xl p-6 border border-gray-200 hover:border-primary/20 hover:shadow-md transition-all duration-300 text-center">
-								<div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+							<div className="contact-method">
+								<div className="contact-method-icon">
 									<Phone className="w-5 h-5 text-primary group-hover:text-white transition-colors" />
 								</div>
-								<p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Telefone</p>
-								<p className="text-sm font-medium text-gray-900">{t("contact.phone")}</p>
+								<p className="contact-method-label">Telefone</p>
+								<p className="contact-method-value">{t("contact.phone")}</p>
 							</div>
-							<div className="group bg-white rounded-xl p-6 border border-gray-200 hover:border-primary/20 hover:shadow-md transition-all duration-300 text-center">
-								<div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+							<div className="contact-method">
+								<div className="contact-method-icon">
 									<MapPin className="w-5 h-5 text-primary group-hover:text-white transition-colors" />
 								</div>
-								<p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Morada</p>
-								<p className="text-sm font-medium text-gray-900">{t("contact.address")}</p>
+								<p className="contact-method-label">Morada</p>
+								<p className="contact-method-value">{t("contact.address")}</p>
 							</div>
 						</div>
 
-						<div className="grid md:grid-cols-5 gap-8 md:gap-12">
-							<div className="md:col-span-3">
-								<div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
-									<h2 style={{ fontFamily: "var(--font-family-display)" }}
-										className="text-xl font-bold text-gray-900 mb-6"
-									>
+						<div className="contact-columns">
+							<div >
+								<div className="contact-card">
+									<h2 className="contact-card-title">
 										{t("contact.formTitle")}
 									</h2>
 									{isSuccess ? (
-										<div className="text-center py-12">
-											<div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+										<div className="contact-sent">
+											<div className="contact-sent-icon">
 												<Check className="w-7 h-7 text-green-600" />
 											</div>
-											<p className="text-gray-900 font-semibold mb-1">
+											<p className="contact-sent-title">
 												{t("contact.sentTitle")}
 											</p>
-											<p className="text-sm text-gray-600">
+											<p className="contact-sent-text">
 												{t("contact.sent")}
 											</p>
 										</div>
 									) : (
-										<form onSubmit={handleSubmit} className="space-y-4">
+										<form onSubmit={handleSubmit} className="contact-form">
 											{/* Escondido de pessoas, visível para robôs — ver HONEYPOT_FIELD */}
 											<input
 												type="text"
@@ -182,11 +179,11 @@ export function ContactPage() {
 												tabIndex={-1}
 												autoComplete="off"
 												aria-hidden="true"
-												className="hp-field"
+												className="contact-hp"
 											/>
-											<div className="grid sm:grid-cols-2 gap-4">
+											<div className="contact-row">
 												<div>
-													<label className="block text-sm font-medium text-gray-700 mb-1.5">
+													<label className="contact-label">
 														{t("contact.name")}
 													</label>
 													<input
@@ -195,12 +192,12 @@ export function ContactPage() {
 														value={formState.name}
 														onChange={handleChange}
 														required
-														className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+														className="contact-input"
 														placeholder={t("contact.namePlaceholder", "O seu nome") as string}
 													/>
 												</div>
 												<div>
-													<label className="block text-sm font-medium text-gray-700 mb-1.5">
+													<label className="contact-label">
 														{t("contact.emailLabel")}
 													</label>
 													<input
@@ -209,13 +206,13 @@ export function ContactPage() {
 														value={formState.email}
 														onChange={handleChange}
 														required
-														className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+														className="contact-input"
 														placeholder={t("contact.emailPlaceholder", "seu@email.com") as string}
 													/>
 												</div>
 											</div>
 											<div>
-												<label className="block text-sm font-medium text-gray-700 mb-1.5">
+												<label className="contact-label">
 													{t("contact.subject")}
 												</label>
 												<input
@@ -224,12 +221,12 @@ export function ContactPage() {
 													value={formState.subject}
 													onChange={handleChange}
 													required
-													className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+													className="contact-input"
 													placeholder={t("contact.subjectPlaceholder", "Assunto da mensagem") as string}
 												/>
 											</div>
 											<div>
-												<label className="block text-sm font-medium text-gray-700 mb-1.5">
+												<label className="contact-label">
 													{t("contact.message")}
 												</label>
 												<textarea
@@ -238,25 +235,25 @@ export function ContactPage() {
 													onChange={handleChange}
 													required
 													rows={4}
-													className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none"
+													className="contact-input"
 													placeholder={t("contact.messagePlaceholder", "A sua mensagem...") as string}
 												/>
 											</div>
 											{isError && (
 												<div
 													role="alert"
-													className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5"
+													className="contact-error"
 												>
-													<AlertTriangle className="w-4.5 h-4.5 text-red-700 shrink-0 mt-0.5" />
+													<AlertTriangle className="contact-error-icon" />
 													<div>
-														<p className="text-sm font-semibold text-red-900 mb-0.5">
+														<p className="contact-error-title">
 															{t("forms.errorTitle")}
 														</p>
-														<p className="text-[13px] leading-relaxed text-red-800/80">
+														<p className="contact-error-text">
 															{t("forms.errorHelp")}{" "}
 															<a
 																href={`mailto:${FALLBACK_CONTACT.email}`}
-																className="font-semibold text-red-700 underline underline-offset-2"
+																
 															>
 																{FALLBACK_CONTACT.email}
 															</a>{" "}
@@ -265,7 +262,7 @@ export function ContactPage() {
 																href={FALLBACK_CONTACT.whatsapp}
 																target="_blank"
 																rel="noopener noreferrer"
-																className="font-semibold text-red-700 underline underline-offset-2"
+																
 															>
 																{FALLBACK_CONTACT.phone}
 															</a>
@@ -277,7 +274,7 @@ export function ContactPage() {
 												type="submit"
 												disabled={isPending}
 												aria-busy={isPending}
-												className="w-full inline-flex items-center justify-center gap-2.5 bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300 disabled:bg-primary/50 disabled:shadow-none disabled:translate-y-0 disabled:cursor-not-allowed"
+												className="contact-submit"
 											>
 												{isPending ? (
 													<>
@@ -297,13 +294,11 @@ export function ContactPage() {
 							</div>
 
 							<div className="md:col-span-2">
-								<div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm h-full">
-									<h2 style={{ fontFamily: "var(--font-family-display)" }}
-										className="text-xl font-bold text-gray-900 mb-6"
-									>
+								<div className="contact-card">
+									<h2 className="contact-card-title">
 										{t("contact.social")}
 									</h2>
-									<div className="space-y-3">
+									<div className="contact-socials">
 										{socialLinks.filter((s) => s.enabled).map((s, idx) => {
 											const label = t(s.label);
 											return (
@@ -312,17 +307,17 @@ export function ContactPage() {
 													href={s.href}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="group flex items-center gap-4 px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 hover:border-primary/20 hover:bg-primary/5 transition-all duration-300"
+													className="contact-social"
 												>
-													<span className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-600 group-hover:text-primary group-hover:border-primary/20 transition-colors">
+													<span className="contact-social-icon">
 														{s.icon}
 													</span>
-													<div className="flex-1">
-														<p className="text-sm font-semibold text-gray-900 group-hover:text-primary transition-colors">
+													<div >
+														<p className="contact-social-label">
 															{label}
 														</p>
 													</div>
-													<ArrowUpRight className="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" />
+													<ArrowUpRight className="contact-social-arrow" />
 												</a>
 											);
 										})}

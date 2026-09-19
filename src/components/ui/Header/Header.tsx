@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import headerContent from '../../../content/Header.json';
 import topHeaderContent from '../../../content/TopHeader.json';
 import languagesConfig from '../../../content/languages.json';
@@ -324,15 +325,26 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
 
           {/* Bottom Footer Links */}
           <div className="px-8 py-8 bg-gray-50 flex flex-col gap-5 border-t border-gray-200">
-            {rightLinks.map((link, idx) => (
-              <a
-                key={idx}
-                href={link.url}
-                className="text-sm font-semibold text-gray-400 hover:text-gray-900 transition-colors"
-              >
-                {t(link.labelKey, link.fallback) as string}
-              </a>
-            ))}
+            {rightLinks.map((link, idx) =>
+              link.url.startsWith('/') ? (
+                <Link
+                  key={idx}
+                  to={link.url}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-semibold text-gray-400 hover:text-gray-900 transition-colors"
+                >
+                  {t(link.labelKey, link.fallback) as string}
+                </Link>
+              ) : (
+                <a
+                  key={idx}
+                  href={link.url}
+                  className="text-sm font-semibold text-gray-400 hover:text-gray-900 transition-colors"
+                >
+                  {t(link.labelKey, link.fallback) as string}
+                </a>
+              ),
+            )}
           </div>
         </div>
       )}

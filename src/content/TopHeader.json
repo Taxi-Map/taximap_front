@@ -6,6 +6,6 @@
     { "labelKey": "header.partners", "fallback": "Parceiros", "url": "#" }
   ],
   "rightLinks": [
-    { "labelKey": "header.customerSupport", "fallback": "Apoio ao Cliente", "url": "#" }
+    { "labelKey": "header.contacts", "fallback": "Contactos", "url": "/contacto" }
   ]
 }

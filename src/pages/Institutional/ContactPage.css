@@ -1,0 +1,409 @@
+/*
+  Página de contactos.
+
+  Estilos próprios com os tokens do index.css, como o .agents/AGENTS.md manda.
+  Há também uma razão prática: o reset universal do index.css está fora de
+  cascade layer e anula as utilidades de espaçamento do Tailwind em todo o
+  site, por isso os p-* e m-* que esta página usava não produziam nada. CSS
+  normal, sem layer, aplica-se.
+*/
+
+.contact {
+	flex: 1;
+	min-height: 0;
+}
+
+.contact-section {
+	position: relative;
+	overflow: hidden;
+	background: var(--color-gray-50);
+	padding-top: var(--spacing-20);
+	padding-bottom: var(--spacing-20);
+}
+
+.contact-grid-bg {
+	position: absolute;
+	inset: 0;
+	opacity: 0.04;
+	background-image:
+		linear-gradient(to right, var(--color-primary) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--color-primary) 1px, transparent 1px);
+	background-size: 40px 40px;
+}
+
+.contact-route-bg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
+
+.contact-inner {
+	position: relative;
+	max-width: 64rem;
+	margin: 0 auto;
+}
+
+/* --- Cabeçalho --- */
+.contact-head {
+	text-align: center;
+	margin-bottom: var(--spacing-16);
+}
+
+.contact-icon {
+	width: 56px;
+	height: 56px;
+	border-radius: var(--border-radius-xl);
+	background: rgba(109, 183, 226, 0.1);
+	color: var(--color-primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto var(--spacing-6);
+}
+
+.contact-title {
+	font-family: var(--font-family-display), system-ui, sans-serif;
+	font-size: var(--font-size-4xl);
+	font-weight: var(--font-weight-bold);
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	color: var(--color-gray-900);
+	margin: 0 0 var(--spacing-4);
+}
+
+.contact-subtitle {
+	font-size: var(--font-size-lg);
+	color: var(--color-gray-600);
+	max-width: 32rem;
+	margin: 0 auto;
+	line-height: 1.6;
+}
+
+/* --- Cartões de contacto direto --- */
+.contact-methods {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--spacing-4);
+	margin-bottom: var(--spacing-16);
+}
+
+.contact-method {
+	background: var(--color-white);
+	border: 1px solid var(--color-gray-200);
+	border-radius: var(--border-radius-xl);
+	padding: var(--spacing-6);
+	text-align: center;
+	transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-method:hover {
+	border-color: rgba(109, 183, 226, 0.25);
+	box-shadow: var(--shadow-md);
+}
+
+.contact-method-icon {
+	width: 40px;
+	height: 40px;
+	border-radius: var(--border-radius-xl);
+	background: rgba(109, 183, 226, 0.1);
+	color: var(--color-primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto var(--spacing-4);
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.contact-method:hover .contact-method-icon {
+	background: var(--color-primary);
+	color: var(--color-white);
+}
+
+.contact-method-label {
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-semibold);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--color-gray-300);
+	margin: 0 0 var(--spacing-1);
+}
+
+.contact-method-value {
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	color: var(--color-gray-900);
+	margin: 0;
+	word-break: break-word;
+}
+
+/* --- Colunas: formulário + redes --- */
+.contact-columns {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--spacing-8);
+}
+
+.contact-card {
+	background: var(--color-white);
+	border: 1px solid var(--color-gray-200);
+	border-radius: 1rem;
+	padding: var(--spacing-8);
+	box-shadow: var(--shadow-sm);
+}
+
+.contact-card-title {
+	font-family: var(--font-family-display), system-ui, sans-serif;
+	font-size: var(--font-size-xl);
+	font-weight: var(--font-weight-bold);
+	color: var(--color-gray-900);
+	margin: 0 0 var(--spacing-6);
+}
+
+/* --- Formulário --- */
+.contact-form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-4);
+}
+
+.contact-row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--spacing-4);
+}
+
+.contact-field {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-2);
+}
+
+.contact-label {
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	color: var(--color-gray-800);
+}
+
+.contact-input {
+	width: 100%;
+	padding: 0.625rem var(--spacing-4);
+	border-radius: var(--border-radius-xl);
+	border: 1px solid var(--color-gray-200);
+	background: var(--color-gray-50);
+	font-size: var(--font-size-sm);
+	color: var(--color-gray-900);
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-input::placeholder {
+	color: var(--color-gray-300);
+}
+
+.contact-input:focus {
+	outline: none;
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 3px rgba(109, 183, 226, 0.3);
+}
+
+textarea.contact-input {
+	resize: none;
+	min-height: 7rem;
+}
+
+.contact-submit {
+	width: 100%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.625rem;
+	background: var(--color-primary);
+	color: var(--color-white);
+	padding: 0.75rem var(--spacing-6);
+	border: none;
+	border-radius: var(--border-radius-xl);
+	font-weight: var(--font-weight-semibold);
+	cursor: pointer;
+	box-shadow: 0 4px 6px -1px rgba(109, 183, 226, 0.2);
+	transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.contact-submit:hover:not(:disabled) {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 15px -3px rgba(109, 183, 226, 0.3);
+}
+
+.contact-submit:disabled {
+	background: rgba(109, 183, 226, 0.5);
+	cursor: not-allowed;
+	transform: none;
+	box-shadow: none;
+}
+
+/* --- Estados --- */
+.contact-sent {
+	text-align: center;
+	padding: var(--spacing-12) 0;
+}
+
+.contact-sent-icon {
+	width: 56px;
+	height: 56px;
+	border-radius: var(--border-radius-full);
+	background: #dcfce7;
+	color: #16a34a;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto var(--spacing-4);
+}
+
+.contact-sent-title {
+	font-weight: var(--font-weight-semibold);
+	color: var(--color-gray-900);
+	margin: 0 0 var(--spacing-1);
+}
+
+.contact-sent-text {
+	font-size: var(--font-size-sm);
+	color: var(--color-gray-600);
+	margin: 0;
+}
+
+.contact-error {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--spacing-3);
+	border-radius: var(--border-radius-xl);
+	border: 1px solid #f0c9c1;
+	background: #fdf2f0;
+	padding: 0.875rem var(--spacing-4);
+}
+
+.contact-error-icon {
+	color: #a8352a;
+	flex-shrink: 0;
+	margin-top: 2px;
+}
+
+.contact-error-title {
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+	color: #8a2c22;
+	margin: 0 0 2px;
+}
+
+.contact-error-text {
+	font-size: 0.8125rem;
+	line-height: 1.5;
+	color: #6b4640;
+	margin: 0;
+}
+
+.contact-error-text a {
+	color: #a8352a;
+	font-weight: var(--font-weight-semibold);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+/* --- Redes sociais --- */
+.contact-socials {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-3);
+}
+
+.contact-social {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-4);
+	padding: 0.875rem var(--spacing-4);
+	border-radius: var(--border-radius-xl);
+	background: var(--color-gray-50);
+	border: 1px solid var(--color-gray-200);
+	transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.contact-social:hover {
+	background: rgba(109, 183, 226, 0.05);
+	border-color: rgba(109, 183, 226, 0.25);
+}
+
+.contact-social-icon {
+	width: 40px;
+	height: 40px;
+	border-radius: var(--border-radius-xl);
+	background: var(--color-white);
+	border: 1px solid var(--color-gray-200);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--color-gray-600);
+	flex-shrink: 0;
+	transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.contact-social:hover .contact-social-icon {
+	color: var(--color-primary);
+	border-color: rgba(109, 183, 226, 0.25);
+}
+
+.contact-social-label {
+	flex: 1;
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+	color: var(--color-gray-900);
+	transition: color 0.3s ease;
+}
+
+.contact-social:hover .contact-social-label {
+	color: var(--color-primary);
+}
+
+.contact-social-arrow {
+	color: var(--color-gray-300);
+	flex-shrink: 0;
+	transition: color 0.3s ease;
+}
+
+.contact-social:hover .contact-social-arrow {
+	color: var(--color-primary);
+}
+
+/* Campo-armadilha anti-robôs. */
+.contact-hp {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+	pointer-events: none;
+}
+
+@media (min-width: 640px) {
+	.contact-row {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.contact-methods {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+@media (min-width: 768px) {
+	.contact-section {
+		padding-top: var(--spacing-24);
+		padding-bottom: var(--spacing-24);
+	}
+
+	.contact-title {
+		font-size: var(--font-size-5xl);
+	}
+
+	.contact-columns {
+		grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+		gap: var(--spacing-12);
+	}
+}

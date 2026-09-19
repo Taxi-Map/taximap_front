@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './TopHeader.css';
 import topHeaderContent from '../../../content/TopHeader.json';
@@ -61,15 +62,27 @@ export function TopHeader({ activeTab, setActiveTab }: TopHeaderProps) {
 
         {/* Right Links */}
         <div className="flex items-center gap-6 top-links-right">
-          {rightLinks.map((link, idx) => (
-            <a 
-              key={idx} 
-              href={link.url}
-              className="hover:text-white transition-colors"
-            >
-              {t(link.labelKey, link.fallback)}
-            </a>
-          ))}
+          {rightLinks.map((link, idx) =>
+            /* Caminho interno navega pelo router; sem isto, recarregava a
+               aplicação toda e perdia-se a sensação de site único. */
+            link.url.startsWith('/') ? (
+              <Link
+                key={idx}
+                to={link.url}
+                className="hover:text-white transition-colors"
+              >
+                {t(link.labelKey, link.fallback)}
+              </Link>
+            ) : (
+              <a
+                key={idx}
+                href={link.url}
+                className="hover:text-white transition-colors"
+              >
+                {t(link.labelKey, link.fallback)}
+              </a>
+            ),
+          )}
           <span className="separator">|</span>
           
           {/* Language Selector Dropdown */}
