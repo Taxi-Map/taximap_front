@@ -8,13 +8,13 @@
  *
  * Variáveis de ambiente (definidas no painel da Vercel, nunca no repositório):
  *   RESEND_API_KEY    obrigatória — chave da API do Resend (re_...)
- *   LEADS_TO_EMAIL    destino dos avisos      (por omissão geral.taximap@gmail.com)
+ *   LEADS_TO_EMAIL    destino dos avisos      (por omissão geral@taximap.ao)
  *   LEADS_FROM_EMAIL  remetente, tem de usar um domínio verificado no Resend
  */
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
-const TO_EMAIL = process.env.LEADS_TO_EMAIL || "geral.taximap@gmail.com";
+const TO_EMAIL = process.env.LEADS_TO_EMAIL || "geral@taximap.ao";
 const FROM_EMAIL = process.env.LEADS_FROM_EMAIL || "Táxi Map <onboarding@resend.dev>";
 
 /** Limites de tamanho por campo, para travar payloads abusivos. */
