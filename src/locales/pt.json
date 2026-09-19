@@ -33,46 +33,46 @@
       "cta": "Começar agora"
     },
     "appShowcase": {
-      "title": "Mobilidade inteligente na palma da sua mão",
-      "subtitle": "Planeie viagens e acompanhe os táxis (candongueiros) em tempo real com a aplicação Táxi Map.",
+      "title": "Chegue ao seu destino em Luanda sem ficar a adivinhar",
+      "subtitle": "Veja onde está o candongueiro, saiba quanto falta e planeie a viagem. A aplicação ainda não foi lançada — entre na lista de espera para a receber primeiro.",
       "passengerApp": "Táxi Map - Passageiros",
       "comingSoon": "Brevemente",
       "availableOn": "Disponível no",
       "downloadOn": "Descarregar na",
       "benefits": {
-        "realtime": "Rotas e posições em tempo real dos táxis (candongueiros).",
-        "multimodal": "Planeamento multimodal combinando caminhada e transportes.",
-        "alerts": "Alertas da comunidade sobre trânsito, acidentes e vias cortadas.",
-        "offline": "Otimizado para baixa conectividade e funcionamento offline."
+        "realtime": "Veja o candongueiro a chegar à sua paragem, e quanto falta.",
+        "multimodal": "Escolha a melhor rota: a pé até à paragem e depois de candongueiro.",
+        "alerts": "Saiba do trânsito por quem já está na estrada.",
+        "offline": "Funciona com a rede que tem, e gasta poucos dados."
       }
     },
     "howItWorksSection": {
       "title": "Como funciona o Táxi Map",
-      "subtitle": "Simples, rápido e inteligente: as suas deslocações em 3 passos.",
+      "subtitle": "As suas deslocações em três passos.",
       "steps": {
         "0": {
-          "title": "Defina o destino",
-          "description": "Insira onde está e para onde quer ir. O Táxi Map calcula a melhor rota combinando caminhada e transportes."
+          "title": "Diga para onde vai",
+          "description": "Escreva onde está e para onde quer ir. O Táxi Map trata do resto do percurso."
         },
         "1": {
-          "title": "Acompanhe em tempo real",
-          "description": "Veja no mapa a localização exata dos táxis (candongueiros) a caminho e o tempo estimado de chegada."
+          "title": "Veja quem vem a caminho",
+          "description": "Acompanhe no mapa os candongueiros que fazem a sua rota e quanto falta para passarem."
         },
         "2": {
-          "title": "Viaje com tranquilidade",
-          "description": "Receba alertas da comunidade sobre o trânsito, acidentes e vias cortadas para uma viagem segura e sem surpresas."
+          "title": "Viaje sem surpresas",
+          "description": "Avisos de filas, acidentes e vias cortadas chegam-lhe antes de sair de casa."
         }
       }
     },
     "communitySection": {
-      "title": "Comunidade activa e alertas em tempo real",
-      "subtitle": "Informação colaborativa criada por passageiros e motoristas para tornar o trânsito em Angola mais previsível e seguro.",
+      "title": "Saiba do trânsito por quem já lá está",
+      "subtitle": "Os avisos vêm de quem está na estrada naquele momento — passageiros e motoristas que reportam o que veem, para os outros não apanharem a mesma fila.",
       "liveBadge": "Feed de alertas ao vivo",
       "confirmations": "confirmações",
       "features": {
-        "realtime": "Reporte e receba avisos instantâneos sobre o trânsito e estradas.",
-        "validation": "Informações validadas continuamente pela própria comunidade.",
-        "routes": "Sugestões de rotas alternativas automáticas em caso de engarrafamento."
+        "realtime": "Reporte uma fila ou um acidente em dois toques.",
+        "validation": "Veja o que já foi reportado na sua rota, antes de sair.",
+        "routes": "Receba uma alternativa quando a via está cortada."
       },
       "statsHeader": {
         "badge": "Metas do 1.º ano em Luanda"
@@ -107,7 +107,8 @@
           "message": "Obras pontuais na via secundária, rota alternativa ativa.",
           "timeAgo": "Há 18 min"
         }
-      }
+      },
+      "benefitsHeading": "Quem está na estrada avisa quem ainda vai sair."
     },
     "faqSection": {
       "title": "Perguntas frequentes (FAQ)",

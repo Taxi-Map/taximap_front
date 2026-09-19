@@ -1,25 +1,25 @@
 {
   "titleKey": "appShowcase.title",
-  "titleFallback": "Mobilidade inteligente na palma da sua mão",
+  "titleFallback": "Chegue ao seu destino em Luanda sem ficar a adivinhar",
   "subtitleKey": "appShowcase.subtitle",
-  "subtitleFallback": "Planeie viagens e acompanhe os táxis (candongueiros) em tempo real com a aplicação Táxi Map.",
+  "subtitleFallback": "Veja onde está o candongueiro, saiba quanto falta e planeie a viagem. A aplicação ainda não foi lançada — entre na lista de espera para a receber primeiro.",
   "image": "/app-mockup.png",
   "benefits": [
     {
       "key": "appShowcase.benefits.realtime",
-      "fallback": "Rotas e posições em tempo real dos táxis (candongueiros)."
+      "fallback": "Veja o candongueiro a chegar à sua paragem, e quanto falta."
     },
     {
       "key": "appShowcase.benefits.multimodal",
-      "fallback": "Planeamento multimodal combinando caminhada e transportes."
+      "fallback": "Escolha a melhor rota: a pé até à paragem e depois de candongueiro."
     },
     {
       "key": "appShowcase.benefits.alerts",
-      "fallback": "Alertas da comunidade sobre trânsito, acidentes e vias cortadas."
+      "fallback": "Saiba do trânsito por quem já está na estrada."
     },
     {
       "key": "appShowcase.benefits.offline",
-      "fallback": "Otimizado para baixa conectividade e funcionamento offline."
+      "fallback": "Funciona com a rede que tem, e gasta poucos dados."
     }
   ],
   "downloadButtons": {

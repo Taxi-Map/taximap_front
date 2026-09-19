@@ -17,7 +17,7 @@
     "titleKey": "businessPage.audience.title",
     "titleFallback": "Para quem é o Táxi Map Empresas",
     "subtitleKey": "businessPage.audience.subtitle",
-    "subtitleFallback": "Soluções focadas na operação real e no crescimento sustentável da tua frota em Luanda.",
+    "subtitleFallback": "Para quem opera táxis em Luanda e quer parar de gerir a frota de cabeça.",
     "items": [
       {
         "badgeKey": "businessPage.audience.items.0.badge",
@@ -75,7 +75,7 @@
   },
   "features": {
     "titleKey": "businessPage.features.title",
-    "titleFallback": "Ferramentas para a gestão da tua frota",
+    "titleFallback": "Faça a gestão da frota a partir de um mapa",
     "subtitleKey": "businessPage.features.subtitle",
     "subtitleFallback": "Tudo o que precisas para controlar a tua operação diária sem depender de cadernos ou grupos de WhatsApp.",
     "cards": [

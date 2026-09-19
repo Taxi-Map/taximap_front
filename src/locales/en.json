@@ -33,46 +33,46 @@
       "cta": "Get started"
     },
     "appShowcase": {
-      "title": "Smart mobility in the palm of your hand",
-      "subtitle": "Plan trips and track taxis (candongueiros) in real time with the Táxi Map app.",
+      "title": "Get where you're going in Luanda without guessing",
+      "subtitle": "See where the candongueiro is, know how long it'll take and plan the trip. The app hasn't launched yet — join the waiting list to get it first.",
       "passengerApp": "Táxi Map - Passengers",
       "comingSoon": "Coming Soon",
       "availableOn": "Available on",
       "downloadOn": "Download on",
       "benefits": {
-        "realtime": "Real-time routes and positions for taxis (candongueiros).",
-        "multimodal": "Multimodal planning combining walking and transit.",
-        "alerts": "Community alerts about traffic, accidents, and road closures.",
-        "offline": "Optimized for low connectivity and offline functionality."
+        "realtime": "See the candongueiro coming to your stop, and how long it'll be.",
+        "multimodal": "Pick the best route: walk to the stop, then ride.",
+        "alerts": "Hear about traffic from people already on the road.",
+        "offline": "Works on the signal you have, and uses little data."
       }
     },
     "howItWorksSection": {
       "title": "How Táxi Map works",
-      "subtitle": "Simple, fast, and smart: your trips in 3 simple steps.",
+      "subtitle": "Your trips in three steps.",
       "steps": {
         "0": {
-          "title": "Set Destination",
-          "description": "Enter your origin and destination. Táxi Map calculates the best route combining walking and transit."
+          "title": "Say where you're going",
+          "description": "Type where you are and where you want to go. Táxi Map handles the rest of the route."
         },
         "1": {
-          "title": "Track in Real Time",
-          "description": "See the exact location of approaching taxis (candongueiros) on the map along with estimated arrival time."
+          "title": "See who's on the way",
+          "description": "Follow the candongueiros running your route on the map, and how long until they pass."
         },
         "2": {
-          "title": "Travel with Peace of Mind",
-          "description": "Receive community alerts about traffic, accidents, and road closures for a safe and hassle-free trip."
+          "title": "Travel without surprises",
+          "description": "Alerts about queues, accidents and closed roads reach you before you leave home."
         }
       }
     },
     "communitySection": {
-      "title": "Active community & real-time alerts",
-      "subtitle": "Collaborative information created by passengers and drivers to make transit in Angola more predictable and safe.",
+      "title": "Hear about traffic from people already there",
+      "subtitle": "Alerts come from people on the road right then — passengers and drivers reporting what they see, so others don't hit the same queue.",
       "liveBadge": "Live Alert Feed",
       "confirmations": "confirmations",
       "features": {
-        "realtime": "Report and receive instant notifications about traffic and road conditions.",
-        "validation": "Information continuously validated by the community itself.",
-        "routes": "Automatic alternative route suggestions in case of congestion."
+        "realtime": "Report a queue or an accident in two taps.",
+        "validation": "See what's already been reported on your route, before you leave.",
+        "routes": "Get an alternative when the road is closed."
       },
       "stats": {
         "alerts": "Alerts per Month",
@@ -104,7 +104,8 @@
           "message": "Roadwork on secondary street, alternative route active.",
           "timeAgo": "18 mins ago"
         }
-      }
+      },
+      "benefitsHeading": "People on the road warn the ones about to leave."
     },
     "faqSection": {
       "title": "Frequently Asked Questions (FAQ)",
