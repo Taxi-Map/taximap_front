@@ -14,8 +14,15 @@ import { useInView } from "../../hooks/useInView";
 import { useSubmitLead } from "../../hooks/useSubmitLead";
 import { FALLBACK_CONTACT, HONEYPOT_FIELD } from "../../lib/leads";
 
+/*
+ * Só aparecem as redes com um perfil real da empresa por trás. Um ícone que
+ * leva a um perfil inexistente lê-se como presença social abandonada, e é
+ * pior do que não ter ícone. Trocar para `enabled: true` quando o perfil
+ * existir.
+ */
 const socialLinks = [
 	{
+		enabled: false,
 		label: "contact.socialFacebook",
 		href: "https://facebook.com/taximapao",
 		icon: (
@@ -25,6 +32,7 @@ const socialLinks = [
 		),
 	},
 	{
+		enabled: false,
 		label: "contact.socialInstagram",
 		href: "https://instagram.com/taximapao",
 		icon: (
@@ -34,6 +42,7 @@ const socialLinks = [
 		),
 	},
 	{
+		enabled: true,
 		label: "contact.socialLinkedin",
 		href: "https://www.linkedin.com/company/taxi-map/",
 		icon: (
@@ -43,6 +52,7 @@ const socialLinks = [
 		),
 	},
 	{
+		enabled: true,
 		label: "contact.socialWhatsapp",
 		href: "https://wa.me/244929782402",
 		icon: (
@@ -294,7 +304,7 @@ export function ContactPage() {
 										{t("contact.social")}
 									</h2>
 									<div className="space-y-3">
-										{socialLinks.map((s, idx) => {
+										{socialLinks.filter((s) => s.enabled).map((s, idx) => {
 											const label = t(s.label);
 											return (
 												<a

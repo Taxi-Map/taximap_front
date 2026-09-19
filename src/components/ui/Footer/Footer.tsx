@@ -156,7 +156,11 @@ export function Footer({ className = '' }: FooterProps) {
 
         {/* Social icons — driven by JSON */}
         <div className="footer-socials">
-          {social.map(({ id, label, url }) => {
+          {social.map(({ id, label, url, enabled }) => {
+            // Só se mostra a rede que aponta para um perfil real da empresa.
+            // Um ícone que leva à homepage do Facebook é pior do que ícone
+            // nenhum: lê-se como presença social abandonada.
+            if (enabled === false) return null;
             const Icon = SOCIAL_ICONS[id];
             if (!Icon) return null;
             return (
