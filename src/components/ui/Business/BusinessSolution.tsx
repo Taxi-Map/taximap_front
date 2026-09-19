@@ -57,7 +57,7 @@ export function BusinessSolution({ onOpenWaitlist }: BusinessSolutionProps) {
 							businessContent.audience.items[0].badgeKey,
 							businessContent.audience.items[0].badgeFallback
 						)}
-						actionText="Quero gerir a minha frota"
+						actionText={t("businessPage.audience.items.0.cta", "Quero gerir a minha frota") as string}
 						onAction={onOpenWaitlist}
 					/>
 
@@ -76,7 +76,7 @@ export function BusinessSolution({ onOpenWaitlist }: BusinessSolutionProps) {
 							businessContent.audience.items[1].badgeKey,
 							businessContent.audience.items[1].badgeFallback
 						)}
-						actionText="Quero saber mais"
+						actionText={t("businessPage.audience.items.1.cta", "Quero saber mais") as string}
 						onAction={onOpenWaitlist}
 					/>
 				</div>

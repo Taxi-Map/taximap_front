@@ -196,7 +196,7 @@ export function ContactPage() {
 														onChange={handleChange}
 														required
 														className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-														placeholder="O seu nome"
+														placeholder={t("contact.namePlaceholder", "O seu nome") as string}
 													/>
 												</div>
 												<div>
@@ -210,7 +210,7 @@ export function ContactPage() {
 														onChange={handleChange}
 														required
 														className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-														placeholder="seu@email.com"
+														placeholder={t("contact.emailPlaceholder", "seu@email.com") as string}
 													/>
 												</div>
 											</div>
@@ -225,7 +225,7 @@ export function ContactPage() {
 													onChange={handleChange}
 													required
 													className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-													placeholder="Assunto da mensagem"
+													placeholder={t("contact.subjectPlaceholder", "Assunto da mensagem") as string}
 												/>
 											</div>
 											<div>
@@ -239,7 +239,7 @@ export function ContactPage() {
 													required
 													rows={4}
 													className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none"
-													placeholder="A sua mensagem..."
+													placeholder={t("contact.messagePlaceholder", "A sua mensagem...") as string}
 												/>
 											</div>
 											{isError && (

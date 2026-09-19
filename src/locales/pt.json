@@ -329,12 +329,14 @@
           "0": {
             "badge": "Candidaturas ao piloto abertas",
             "title": "Empresas de táxi e operadores de frota",
-            "desc": "Acompanhe os seus veículos, motoristas e operações em tempo real — e tenha os dados necessários para gerir a frota com mais eficiência."
+            "desc": "Acompanhe os seus veículos, motoristas e operações em tempo real — e tenha os dados necessários para gerir a frota com mais eficiência.",
+            "cta": "Quero gerir a minha frota"
           },
           "1": {
             "badge": "Em desenho, brevemente",
             "title": "Empresas com transporte de colaboradores",
-            "desc": "Tenha maior visibilidade sobre os veículos que transportam a sua equipa, acompanhe percursos e centralize a informação da operação."
+            "desc": "Tenha maior visibilidade sobre os veículos que transportam a sua equipa, acompanhe percursos e centralize a informação da operação.",
+            "cta": "Quero saber mais"
           }
         }
       },
@@ -456,7 +458,11 @@
       "socialFacebook": "Facebook",
       "socialInstagram": "Instagram",
       "socialLinkedin": "LinkedIn",
-      "socialWhatsapp": "WhatsApp"
+      "socialWhatsapp": "WhatsApp",
+      "namePlaceholder": "O seu nome",
+      "emailPlaceholder": "seu@email.com",
+      "subjectPlaceholder": "Assunto da mensagem",
+      "messagePlaceholder": "A sua mensagem..."
     },
     "forms": {
       "submitting": "A enviar...",

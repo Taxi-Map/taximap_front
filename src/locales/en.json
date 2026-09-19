@@ -378,12 +378,14 @@
           "0": {
             "badge": "Pilot applications open",
             "title": "Taxi companies and fleet operators",
-            "desc": "Follow your vehicles, drivers and operations in real time — and get the data you need to run the fleet more efficiently."
+            "desc": "Follow your vehicles, drivers and operations in real time — and get the data you need to run the fleet more efficiently.",
+            "cta": "I want to manage my fleet"
           },
           "1": {
             "badge": "In design, coming soon",
             "title": "Companies transporting their staff",
-            "desc": "Get more visibility over the vehicles carrying your team, follow their routes and keep the operation's information in one place."
+            "desc": "Get more visibility over the vehicles carrying your team, follow their routes and keep the operation's information in one place.",
+            "cta": "I want to know more"
           }
         }
       },
@@ -468,7 +470,11 @@
       "socialFacebook": "Facebook",
       "socialInstagram": "Instagram",
       "socialLinkedin": "LinkedIn",
-      "socialWhatsapp": "WhatsApp"
+      "socialWhatsapp": "WhatsApp",
+      "namePlaceholder": "Your name",
+      "emailPlaceholder": "you@email.com",
+      "subjectPlaceholder": "Subject of your message",
+      "messagePlaceholder": "Your message..."
     },
     "forms": {
       "submitting": "Sending...",
