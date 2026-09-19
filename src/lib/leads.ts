@@ -14,7 +14,7 @@ const endpoint = import.meta.env.VITE_LEADS_ENDPOINT;
 
 /** Contactos diretos mostrados quando o envio automático falha. */
 export const FALLBACK_CONTACT = {
-	email: "geral.taximap@gmail.com",
+	email: "geral@taximap.ao",
 	phone: "+244 929 782 402",
 	whatsapp: "https://wa.me/244929782402",
 } as const;
