@@ -581,6 +581,12 @@
         "1": "Informação",
         "2": "Decisão"
       }
+    },
+    "notFound": {
+      "tagline": "Esta paragem não existe.",
+      "description": "O endereço que abriu não corresponde a nenhuma página do Táxi Map. Pode ter sido movida, ou o link estar incompleto.",
+      "cta": "Voltar ao início",
+      "suggestions": "Destinos úteis"
     }
   }
 }

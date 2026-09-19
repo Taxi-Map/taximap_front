@@ -552,6 +552,12 @@
         "1": "Information",
         "2": "Decision"
       }
+    },
+    "notFound": {
+      "tagline": "This stop doesn't exist.",
+      "description": "The address you opened doesn't match any page on Táxi Map. It may have moved, or the link may be incomplete.",
+      "cta": "Back to the start",
+      "suggestions": "Useful destinations"
     }
   }
 }

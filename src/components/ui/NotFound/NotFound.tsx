@@ -1,12 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { MapPin, Compass, Home, Mail, HelpCircle } from "lucide-react";
+import { PAGE_SLUGS } from "../../../pages/routeConfig";
 
+/*
+ * Os destinos derivam do routeConfig, que é a fonte de verdade dos slugs.
+ * Antes estavam escritos à mão como /institucional/quem-somos e
+ * /particulares/aplicacao — caminhos aninhados que não existem, porque as
+ * rotas do site são planas. Os quatro atalhos da página 404 levavam todos a
+ * outra 404.
+ */
 const suggestions = [
-	{ icon: Home, labelKey: "nav.about", to: "/institucional/quem-somos" },
-	{ icon: Compass, labelKey: "nav.app", to: "/particulares/aplicacao" },
-	{ icon: Mail, labelKey: "nav.contact", to: "/institucional/contacto" },
-	{ icon: HelpCircle, labelKey: "nav.faq", to: "/particulares/faq" },
+	{ icon: Home, labelKey: "nav.about", to: `/${PAGE_SLUGS.about}` },
+	{ icon: Compass, labelKey: "nav.app", to: `/${PAGE_SLUGS.app}` },
+	{ icon: Mail, labelKey: "nav.contact", to: `/${PAGE_SLUGS.contact}` },
+	{ icon: HelpCircle, labelKey: "nav.faq", to: `/${PAGE_SLUGS.faq}` },
 ];
 
 export function NotFound() {
@@ -62,7 +70,7 @@ export function NotFound() {
 
 				<div className="mt-14 pt-10 border-t border-gray-100">
 					<p className="text-xs font-semibold text-gray-400 uppercase tracking-[0.15em] mb-5">
-						Destinos úteis
+						{t("notFound.suggestions", "Destinos úteis")}
 					</p>
 					<div className="flex flex-wrap justify-center gap-3">
 						{suggestions.map((s, idx) => {
