@@ -1,0 +1,49 @@
+{
+  "badgeKey": "businessIntelligence.badge",
+  "badgeFallback": "Fleet Intelligence",
+  "titleKey": "businessIntelligence.title",
+  "titleFallback": "Não queremos apenas mostrar a sua frota. Queremos ajudá-lo a entendê-la.",
+  "ledeKey": "businessIntelligence.lede",
+  "ledeFallback": "Cada viagem gera informação. Cada veículo gera dados. Cada operação conta uma história.",
+  "introKey": "businessIntelligence.intro",
+  "introFallback": "O Táxi Map organiza esses dados para que a empresa possa compreender melhor:",
+  "items": [
+    {
+      "lead": "Onde",
+      "key": "businessIntelligence.items.0",
+      "fallback": "os veículos operam"
+    },
+    {
+      "lead": "Como",
+      "key": "businessIntelligence.items.1",
+      "fallback": "as rotas são utilizadas"
+    },
+    {
+      "lead": "Quando",
+      "key": "businessIntelligence.items.2",
+      "fallback": "a procura aumenta"
+    },
+    {
+      "lead": "Como",
+      "key": "businessIntelligence.items.3",
+      "fallback": "a frota está a ser utilizada"
+    },
+    {
+      "lead": "Onde",
+      "key": "businessIntelligence.items.4",
+      "fallback": "existem oportunidades de melhoria"
+    },
+    {
+      "lead": "Quais",
+      "key": "businessIntelligence.items.5",
+      "fallback": "operações precisam de atenção"
+    }
+  ],
+  "resultLabelKey": "businessIntelligence.resultLabel",
+  "resultLabelFallback": "Resultado",
+  "progression": [
+    { "key": "businessIntelligence.progression.0", "fallback": "Localização" },
+    { "key": "businessIntelligence.progression.1", "fallback": "Informação" },
+    { "key": "businessIntelligence.progression.2", "fallback": "Decisão" }
+  ]
+}

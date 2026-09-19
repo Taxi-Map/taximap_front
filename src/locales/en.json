@@ -378,6 +378,13 @@
             "desc": "Large corporate fleets and public institutions."
           }
         }
+      },
+      "ctaFinal": {
+        "badge": "Pilot programme",
+        "title": "If your fleet moves, we want to know it.",
+        "subtitle": "We're selecting transport companies in Luanda to take part in the first phase of Táxi Map Empresas. Help us build a fleet management platform designed for the reality of Angola — and be one of the first companies to use it.",
+        "ctaPilot": "Apply my company",
+        "ctaTalk": "Talk to the team"
       }
     },
     "waitlistModal": {
@@ -490,6 +497,60 @@
       "state": {
         "open": "Open",
         "design": "In design"
+      }
+    },
+    "faqBusiness": {
+      "title": "Frequently asked questions — Companies",
+      "subtitle": "What transport companies ask before applying to the pilot programme.",
+      "items": {
+        "0": {
+          "question": "Do I need to install a GPS tracker in every vehicle?",
+          "answer": "Not necessarily. In the pilot programme, Táxi Map can use the driver's smartphone as the location device. The aim is to let a company start following its operation without depending on installing dedicated hardware."
+        },
+        "1": {
+          "question": "Does location work without internet?",
+          "answer": "Location depends on the connectivity available on the device. When there is an internet connection, the data can be sent to the platform and shown on the company's dashboard."
+        },
+        "2": {
+          "question": "What vehicles can I add?",
+          "answer": "Táxi Map was designed for different types of transport operation. During the pilot programme we will work with the company to configure the fleet and vehicles according to its operation."
+        },
+        "3": {
+          "question": "Can I follow vehicles in real time?",
+          "answer": "Yes. The dashboard lets you see active vehicles on the map and follow their operation as location data comes in."
+        },
+        "4": {
+          "question": "Do my drivers need to use their own phone?",
+          "answer": "During the pilot programme, the smartphone can be used as the location device. The implementation will be defined according to the company's operation and needs."
+        },
+        "5": {
+          "question": "Can I look up past trips?",
+          "answer": "Yes. The platform is prepared to work with trip history, allowing you to analyse routes and fleet activity."
+        },
+        "6": {
+          "question": "Is Táxi Map just a GPS?",
+          "answer": "No. GPS is only one of the data sources. The aim of Táxi Map is to grow into a complete management and operational intelligence platform for transport companies."
+        }
+      }
+    },
+    "businessIntelligence": {
+      "badge": "Fleet Intelligence",
+      "title": "We don't just want to show you your fleet. We want to help you understand it.",
+      "lede": "Every trip generates information. Every vehicle generates data. Every operation tells a story.",
+      "intro": "Táxi Map organises that data so the company can better understand:",
+      "items": {
+        "0": "the vehicles operate",
+        "1": "the routes are used",
+        "2": "demand rises",
+        "3": "the fleet is being used",
+        "4": "there are opportunities to improve",
+        "5": "operations need attention"
+      },
+      "resultLabel": "Result",
+      "progression": {
+        "0": "Location",
+        "1": "Information",
+        "2": "Decision"
       }
     }
   }

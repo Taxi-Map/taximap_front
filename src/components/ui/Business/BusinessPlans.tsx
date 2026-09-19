@@ -11,6 +11,10 @@ interface BusinessPlansProps {
 export function BusinessPlans({ onOpenWaitlist }: BusinessPlansProps) {
 	const { t } = useTranslation();
 
+	const badge = t(
+		businessContent.ctaFinal.badgeKey,
+		businessContent.ctaFinal.badgeFallback
+	);
 	const title = t(
 		businessContent.ctaFinal.titleKey,
 		businessContent.ctaFinal.titleFallback
@@ -52,6 +56,8 @@ export function BusinessPlans({ onOpenWaitlist }: BusinessPlansProps) {
 						boxShadow: "0 25px 50px -12px rgba(109, 183, 226, 0.25)",
 					}}
 				>
+					<span className="data-label cta-final-badge">{badge}</span>
+
 					<h2
 						className="business-title"
 						style={{ color: "var(--color-white)", maxWidth: "800px" }}

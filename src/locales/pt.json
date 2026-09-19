@@ -391,10 +391,11 @@
         }
       },
       "ctaFinal": {
-        "title": "Queres ser uma das primeiras empresas a testar o Táxi Map?",
-        "subtitle": "Estamos a selecionar um pequeno grupo de empresas de táxi em Luanda para o programa piloto do Táxi Map Empresas. Junta-te à equipa que está a construir a ferramenta que a tua operação precisa — e ajuda a desenhá-la.",
-        "ctaPilot": "Candidatar a empresa piloto",
-        "ctaTalk": "Falar com a equipa"
+        "title": "Se a sua frota se move, queremos conhecê-la.",
+        "subtitle": "Estamos a selecionar empresas de transporte em Luanda para participar na primeira fase do Táxi Map Empresas. Ajude-nos a construir uma plataforma de gestão de frotas pensada para a realidade de Angola — e seja uma das primeiras empresas a utilizá-la.",
+        "ctaPilot": "Candidatar a minha empresa",
+        "ctaTalk": "Falar com a equipa",
+        "badge": "Programa piloto"
       }
     },
     "waitlistModal": {
@@ -525,6 +526,60 @@
       "state": {
         "open": "Aberto",
         "design": "Em desenho"
+      }
+    },
+    "faqBusiness": {
+      "title": "Perguntas frequentes — Empresas",
+      "subtitle": "O que as empresas de transporte perguntam antes de se candidatarem ao programa piloto.",
+      "items": {
+        "0": {
+          "question": "Preciso instalar um rastreador GPS em cada veículo?",
+          "answer": "Não necessariamente. No programa piloto, o Táxi Map pode utilizar o smartphone do motorista como dispositivo de localização. O objetivo é permitir que a empresa comece a acompanhar a operação sem depender da instalação de hardware dedicado."
+        },
+        "1": {
+          "question": "A localização funciona sem internet?",
+          "answer": "A localização depende da conectividade disponível no dispositivo. Quando existe ligação à internet, os dados podem ser enviados para a plataforma e apresentados no painel da empresa."
+        },
+        "2": {
+          "question": "Que veículos posso adicionar?",
+          "answer": "O Táxi Map foi pensado para diferentes tipos de operações de transporte. Durante o programa piloto, trabalharemos com a empresa para configurar a frota e os veículos de acordo com a sua operação."
+        },
+        "3": {
+          "question": "Posso acompanhar os veículos em tempo real?",
+          "answer": "Sim. O painel permite visualizar os veículos ativos no mapa e acompanhar a sua operação conforme os dados de localização são recebidos."
+        },
+        "4": {
+          "question": "Os meus motoristas precisam utilizar o próprio telemóvel?",
+          "answer": "Durante o programa piloto, o smartphone pode ser utilizado como dispositivo de localização. A implementação será definida de acordo com a operação e as necessidades da empresa."
+        },
+        "5": {
+          "question": "Posso consultar viagens anteriores?",
+          "answer": "Sim. A plataforma está preparada para trabalhar com histórico de viagens, permitindo analisar percursos e atividade da frota."
+        },
+        "6": {
+          "question": "O Táxi Map é apenas um GPS?",
+          "answer": "Não. O GPS é apenas uma das fontes de dados. O objetivo do Táxi Map é evoluir para uma plataforma completa de gestão e inteligência operacional para empresas de transporte."
+        }
+      }
+    },
+    "businessIntelligence": {
+      "badge": "Fleet Intelligence",
+      "title": "Não queremos apenas mostrar a sua frota. Queremos ajudá-lo a entendê-la.",
+      "lede": "Cada viagem gera informação. Cada veículo gera dados. Cada operação conta uma história.",
+      "intro": "O Táxi Map organiza esses dados para que a empresa possa compreender melhor:",
+      "items": {
+        "0": "os veículos operam",
+        "1": "as rotas são utilizadas",
+        "2": "a procura aumenta",
+        "3": "a frota está a ser utilizada",
+        "4": "existem oportunidades de melhoria",
+        "5": "operações precisam de atenção"
+      },
+      "resultLabel": "Resultado",
+      "progression": {
+        "0": "Localização",
+        "1": "Informação",
+        "2": "Decisão"
       }
     }
   }

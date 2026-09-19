@@ -19,3 +19,14 @@
 .nightmap-container .routemap {
 	opacity: 0.85;
 }
+
+/* Badge do CTA final. Diz em que fase está o programa antes de se ler o convite. */
+.cta-final-badge {
+	display: inline-flex;
+	align-items: center;
+	color: var(--color-primary);
+	background: rgba(109, 183, 226, 0.14);
+	border: 1px solid rgba(109, 183, 226, 0.35);
+	border-radius: var(--border-radius-full);
+	padding: 5px 14px;
+}

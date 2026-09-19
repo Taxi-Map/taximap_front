@@ -1,0 +1,143 @@
+/*
+  Fleet Intelligence.
+
+  Fundo branco entre a grelha cinzenta das ferramentas e a faixa escura do CTA
+  — a alternância dá ritmo à página sem precisar de mais um kit de cartões.
+*/
+
+.fleet-int {
+	background: var(--color-white);
+}
+
+/*
+  Sobe a especificidade de propósito. O .business-header da página centra tudo
+  por omissão, e uma classe única não ganha por ordem de importação — a secção
+  saía com o cabeçalho centrado e a lista alinhada à esquerda.
+*/
+.fleet-int .business-header.fleet-int-header {
+	text-align: left;
+	align-items: flex-start;
+	max-width: 70ch;
+	margin-left: 0;
+	margin-right: 0;
+	margin-bottom: var(--spacing-10);
+}
+
+.fleet-int .business-title.fleet-int-title {
+	text-align: left;
+	margin-left: 0;
+	margin-right: 0;
+	max-width: 24ch;
+	text-wrap: balance;
+}
+
+.fleet-int .business-subtitle.fleet-int-lede {
+	text-align: left;
+	margin-left: 0;
+	margin-right: 0;
+	max-width: 62ch;
+}
+
+.fleet-int-intro {
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-semibold);
+	color: var(--color-black);
+	margin: 0 0 var(--spacing-6);
+}
+
+/* --- As seis perguntas --- */
+.fleet-int-list {
+	list-style: none;
+	margin: 0 0 var(--spacing-16);
+	padding: 0;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0;
+	border-top: 1px solid var(--color-gray-200);
+}
+
+.fleet-int-item {
+	display: flex;
+	align-items: baseline;
+	gap: var(--spacing-3);
+	padding: var(--spacing-4) 0;
+	border-bottom: 1px solid var(--color-gray-200);
+	font-size: var(--font-size-lg);
+	line-height: 1.4;
+}
+
+/* O interrogativo leva o peso: é ele que diz que isto são perguntas de quem
+   opera a frota, não uma lista de funcionalidades. */
+.fleet-int-lead {
+	font-weight: var(--font-weight-bold);
+	color: var(--color-primary-dark);
+	flex-shrink: 0;
+}
+
+.fleet-int-rest {
+	color: var(--color-gray-800);
+}
+
+/* --- O resultado --- */
+.fleet-int-result {
+	background: var(--color-gray-50);
+	border-left: 3px solid var(--color-primary);
+	padding: var(--spacing-8);
+	border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+}
+
+.fleet-int-result-label {
+	display: block;
+	color: var(--color-primary-dark);
+	margin-bottom: var(--spacing-5);
+}
+
+.fleet-int-progression {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--spacing-3);
+}
+
+.fleet-int-step {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--spacing-3);
+}
+
+.fleet-int-step-text {
+	font-family: var(--font-family-display), system-ui, sans-serif;
+	font-size: var(--font-size-2xl);
+	font-weight: var(--font-weight-bold);
+	letter-spacing: -0.02em;
+	color: var(--color-black);
+	line-height: 1.1;
+}
+
+/* O último passo é onde a progressão chega: destaca-se. */
+.fleet-int-step:last-child .fleet-int-step-text {
+	color: var(--color-primary-dark);
+}
+
+.fleet-int-arrow {
+	color: var(--color-gray-300);
+	flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+	.fleet-int-list {
+		grid-template-columns: 1fr 1fr;
+		column-gap: var(--spacing-12);
+	}
+
+	.fleet-int-step-text {
+		font-size: var(--font-size-3xl);
+	}
+
+	.fleet-int-result {
+		padding: var(--spacing-10) var(--spacing-12);
+	}
+}
