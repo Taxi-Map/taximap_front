@@ -21,7 +21,7 @@ export function NewsPage() {
 					</div>
 
 					<div className="flex justify-center items-center h-64 bg-slate-50 rounded-2xl border border-slate-200">
-                        <p className="text-slate-500 font-medium">Em breve, novas publicações serão adicionadas aqui.</p>
+                        <p className="text-slate-500 font-medium">{t("news.empty", "Em breve, novas publicações serão adicionadas aqui.")}</p>
 					</div>
 				</div>
 			</section>

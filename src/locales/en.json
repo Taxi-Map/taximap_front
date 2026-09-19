@@ -28,9 +28,21 @@
       "advertising": "Advertising"
     },
     "hero": {
-      "title": "Smart Mobility in Angola",
-      "description": "Track taxis (candongueiros) in real time and plan your trips with ease.",
-      "cta": "Get started"
+      "particular": {
+        "status": "App not yet launched",
+        "eyebrow": "Urban mobility",
+        "title": "Knowing where you're going changes everything.",
+        "description": "Táxi Map: an app that shows where the taxis already running the streets are, which stops are near you, the routes, and how long until the next one passes. On Táxi Map you don't call a taxi — you follow what's already on the road.",
+        "cta": "Join the waiting list"
+      },
+      "empresa": {
+        "status": "Platform in build · applications open",
+        "eyebrow": "FLEET MANAGEMENT FOR TRANSPORT IN ANGOLA",
+        "title": "Keep your fleet under control, at all times.",
+        "description": "Follow vehicles, drivers and operations in one place. Táxi Map turns your fleet's data into information you can act on — to cut costs, improve the operation and make better decisions.",
+        "cta": "Apply as a pilot company"
+      },
+      "mapCaption": "Demonstration route"
     },
     "appShowcase": {
       "title": "Get where you're going in Luanda without guessing",
@@ -105,7 +117,10 @@
           "timeAgo": "18 mins ago"
         }
       },
-      "benefitsHeading": "People on the road warn the ones about to leave."
+      "benefitsHeading": "People on the road warn the ones about to leave.",
+      "statsHeader": {
+        "badge": "Year one targets in Luanda"
+      }
     },
     "faqSection": {
       "title": "Frequently Asked Questions (FAQ)",
@@ -315,26 +330,9 @@
         "badge": "Táxi Map for Business",
         "title": "Smart Corporate Mobility & Fleet Management in Angola",
         "subtitle": "Optimize daily commute for your employees, reduce delays, and monitor corporate buses or taxis in real time on a single platform.",
-        "ctaDemo": "Schedule Demo",
-        "ctaPlans": "View Business Plans"
-      },
-      "solution": {
-        "title": "The Ideal Employee Transportation Solution",
-        "subtitle": "Provide safe, punctual, and predictable commutes for your workforce powered by Táxi Map technology.",
-        "items": {
-          "0": {
-            "title": "Corporate Route Tracking",
-            "desc": "Track in real time the exact location of company buses and private employee transit fleets."
-          },
-          "1": {
-            "title": "Delay Reduction & Productivity Boost",
-            "desc": "Avoid rush-hour traffic jams with community alerts and automatic rerouting for your staff."
-          },
-          "2": {
-            "title": "Cost Control & Route Optimization",
-            "desc": "Detailed reporting on attendance, travel times, and corporate transit efficiency."
-          }
-        }
+        "pilotNote": "We're building Táxi Map for companies together with Luanda's first taxi companies, through a pilot programme. If your fleet is ready to take the step, we want to talk to you.",
+        "ctaPilot": "Apply as a pilot company",
+        "ctaTalk": "Book a call with the team"
       },
       "features": {
         "title": "Features Built for Your Enterprise",
@@ -355,27 +353,14 @@
           "3": {
             "title": "Road Incidents & Safety Alerts",
             "desc": "Instant notifications regarding congestion, closed roads, or road hazards across the network."
-          }
-        }
-      },
-      "plans": {
-        "title": "Flexible Corporate Plans",
-        "subtitle": "Choose the solution that best fits your team size and fleet volume.",
-        "cards": {
-          "0": {
-            "name": "Starter",
-            "price": "Custom Quote",
-            "desc": "Ideal for small teams up to 50 employees."
           },
-          "1": {
-            "name": "Pro Corporate",
-            "price": "Custom Quote",
-            "desc": "For mid-size enterprises up to 250 employees."
+          "4": {
+            "title": "Incident alerts on the road",
+            "desc": "Warnings about traffic jams, closed roads or incidents reported by the platform's own community of users."
           },
-          "2": {
-            "name": "Enterprise Custom",
-            "price": "Tailored",
-            "desc": "Large corporate fleets and public institutions."
+          "5": {
+            "title": "Trip history and data export",
+            "desc": "A full record of every route taken, with simple export to Excel or PDF for financial control and fleet audits."
           }
         }
       },
@@ -385,23 +370,79 @@
         "subtitle": "We're selecting transport companies in Luanda to take part in the first phase of Táxi Map Empresas. Help us build a fleet management platform designed for the reality of Angola — and be one of the first companies to use it.",
         "ctaPilot": "Apply my company",
         "ctaTalk": "Talk to the team"
+      },
+      "audience": {
+        "title": "A platform for those who move people and business",
+        "subtitle": "Táxi Map for companies was built for transport operators who need more visibility over their fleet and more control over daily operations.",
+        "items": {
+          "0": {
+            "badge": "Pilot applications open",
+            "title": "Taxi companies and fleet operators",
+            "desc": "Follow your vehicles, drivers and operations in real time — and get the data you need to run the fleet more efficiently."
+          },
+          "1": {
+            "badge": "In design, coming soon",
+            "title": "Companies transporting their staff",
+            "desc": "Get more visibility over the vehicles carrying your team, follow their routes and keep the operation's information in one place."
+          }
+        }
+      },
+      "reasons": {
+        "title": "WHY TÁXI MAP",
+        "subtitle": "More visibility. More control. Better decisions.",
+        "items": {
+          "0": {
+            "title": "Built for the reality of Angola",
+            "desc": "Táxi Map was born to understand what is particular about our cities, routes, operators and ways of moving around — starting with Luanda."
+          },
+          "1": {
+            "title": "Start with what you already have, no dedicated GPS needed",
+            "desc": "In the pilot programme you can use a smartphone as the location device and start following your operation without the upfront cost of fitting trackers across the fleet."
+          },
+          "2": {
+            "title": "Your data works for you",
+            "desc": "We want to turn your operational data into insight about routes, fleet usage, performance and movement patterns."
+          },
+          "3": {
+            "title": "Grow without changing platform",
+            "desc": "As your operation grows, Táxi Map grows with it, adding tools for management, analysis and integration."
+          }
+        }
       }
     },
     "waitlistModal": {
-      "badge": "Coming Soon",
-      "title": "The app is currently in development",
-      "subtitle": "Join the exclusive waitlist to get early access and try the Beta version first!",
-      "nameLabel": "Full Name",
-      "namePlaceholder": "Enter your name",
-      "emailLabel": "Email Address",
-      "emailPlaceholder": "your.email@example.com",
-      "profileLabel": "I am a:",
-      "passengerRole": "Passenger",
-      "driverRole": "Taxi Driver / Partner",
-      "submitButton": "Secure Early Access",
-      "successTitle": "Registration Confirmed!",
-      "successMessage": "Thank you for joining our waitlist. We will send an exclusive invite to your email as soon as the beta version is ready.",
-      "closeButton": "Done"
+      "particular": {
+        "badge": "Early access",
+        "title": "Waiting list — Táxi Map for passengers",
+        "subtitle": "The passenger app isn't available yet. Enter your name and email to secure early access and get Táxi Map first.",
+        "nameLabel": "Full name",
+        "namePlaceholder": "Enter your name",
+        "emailLabel": "Email address",
+        "emailPlaceholder": "your.email@example.com",
+        "profileLabel": "I am:",
+        "role1": "A passenger (waiting list)",
+        "role2": "A candongueiro driver",
+        "submitButton": "Secure early access",
+        "successTitle": "You're on the list",
+        "successMessage": "Thank you for joining the Táxi Map waiting list. We'll send an invitation to your email as soon as the beta is ready to download.",
+        "closeButton": "Done"
+      },
+      "empresa": {
+        "badge": "Pilot programme",
+        "title": "Apply to the pilot programme — Táxi Map for companies",
+        "subtitle": "We're selecting the first taxi companies and fleet operators in Luanda to test and shape the fleet management platform first-hand.",
+        "nameLabel": "Full name / representative",
+        "namePlaceholder": "Enter your name or the company's",
+        "emailLabel": "Company email address",
+        "emailPlaceholder": "your.email@company.com",
+        "profileLabel": "Your fleet or profile:",
+        "role1": "Taxi company / fleet operator",
+        "role2": "Corporate client / other",
+        "submitButton": "Submit pilot company application",
+        "successTitle": "Application received",
+        "successMessage": "Thank you for your interest. Our team will be in touch shortly to walk you through the Táxi Map pilot programme and set up access for your fleet.",
+        "closeButton": "Done"
+      }
     },
     "footer": {
       "contacts": "Contacts",
@@ -558,6 +599,25 @@
       "description": "The address you opened doesn't match any page on Táxi Map. It may have moved, or the link may be incomplete.",
       "cta": "Back to the start",
       "suggestions": "Useful destinations"
+    },
+    "common": {
+      "altLogo": "Official logo of the Táxi Map Angola platform",
+      "altGooglePlay": "Google Play Store logo to download the Táxi Map app",
+      "altAppStore": "Apple App Store logo to download the Táxi Map app",
+      "homeLink": "Táxi Map — Home"
+    },
+    "news": {
+      "empty": "New posts will be added here soon."
+    },
+    "history": {
+      "steps": {
+        "0": {
+          "title": "Where the idea started"
+        },
+        "2": {
+          "title": "Launch and expansion"
+        }
+      }
     }
   }
 }

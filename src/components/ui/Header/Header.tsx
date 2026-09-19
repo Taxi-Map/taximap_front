@@ -116,7 +116,7 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
             <a href="/" className="flex items-center">
               <img
                 src="/logo.png"
-                alt="Logótipo oficial da plataforma Táxi Map Angola"
+                alt={t("common.altLogo", "Logótipo oficial da plataforma Táxi Map Angola") as string}
                 className="h-20 w-auto -mt-6 relative z-50 drop-shadow-md"
               />
             </a>

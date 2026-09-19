@@ -23,7 +23,7 @@ export function HistoryPage() {
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 						<div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col gap-4">
 							<span className="text-3xl font-extrabold text-[#6DB7E2]">2024</span>
-							<h3 className="text-xl font-bold text-slate-900">O Início da Ideia</h3>
+							<h3 className="text-xl font-bold text-slate-900">{t("history.steps.0.title", "O início da ideia")}</h3>
 							<p className="text-slate-600 text-sm leading-relaxed">
 								Mapeamento inicial dos nós de trânsito e principais rotas dos candongueiros em Luanda.
 							</p>
@@ -39,7 +39,7 @@ export function HistoryPage() {
 
 						<div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col gap-4">
 							<span className="text-3xl font-extrabold text-[#6DB7E2]">2026</span>
-							<h3 className="text-xl font-bold text-slate-900">Lançamento & Expansão</h3>
+							<h3 className="text-xl font-bold text-slate-900">{t("history.steps.2.title", "Lançamento e expansão")}</h3>
 							<p className="text-slate-600 text-sm leading-relaxed">
 								Expansão para frotas corporativas, parceiros institucionais e cobertura nacional.
 							</p>

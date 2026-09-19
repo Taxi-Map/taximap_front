@@ -75,10 +75,10 @@ export function Footer({ className = '' }: FooterProps) {
 
       {/* ── Logo Bar ──────────────────────────────────── */}
       <div className="footer-logo-bar">
-        <a href="/" aria-label="Táxi Map — Início">
+        <a href="/" aria-label={t("common.homeLink", "Táxi Map — Início") as string}>
           <img
             src="/logo.png"
-            alt="Logótipo oficial da plataforma Táxi Map Angola"
+            alt={t("common.altLogo", "Logótipo oficial da plataforma Táxi Map Angola") as string}
             style={{ height: '7rem', width: 'auto', objectFit: 'contain' }}
           />
         </a>

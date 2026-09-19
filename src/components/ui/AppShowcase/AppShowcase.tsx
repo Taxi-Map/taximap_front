@@ -138,7 +138,7 @@ export function AppShowcase({ data, isLoading: externalLoading }: AppShowcasePro
 						>
 							<img
 								src={googlePlayIcon}
-								alt="Logótipo do Google Play Store para download da aplicação Táxi Map"
+								alt={t("common.altGooglePlay", "Logótipo do Google Play Store para descarregar a aplicação Táxi Map") as string}
 								className="w-6 h-6 sm:w-7 sm:h-7 object-contain opacity-90 shrink-0"
 							/>
 							<div className="flex flex-col text-left leading-tight min-w-0">
@@ -158,7 +158,7 @@ export function AppShowcase({ data, isLoading: externalLoading }: AppShowcasePro
 						>
 							<img
 								src={appleIcon}
-								alt="Logótipo da Apple App Store para download da aplicação Táxi Map"
+								alt={t("common.altAppStore", "Logótipo da Apple App Store para descarregar a aplicação Táxi Map") as string}
 								className="w-6 h-6 sm:w-7 sm:h-7 object-contain opacity-90 shrink-0"
 							/>
 							<div className="flex flex-col text-left leading-tight min-w-0">

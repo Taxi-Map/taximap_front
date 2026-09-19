@@ -587,6 +587,25 @@
       "description": "O endereço que abriu não corresponde a nenhuma página do Táxi Map. Pode ter sido movida, ou o link estar incompleto.",
       "cta": "Voltar ao início",
       "suggestions": "Destinos úteis"
+    },
+    "common": {
+      "altLogo": "Logótipo oficial da plataforma Táxi Map Angola",
+      "altGooglePlay": "Logótipo do Google Play Store para descarregar a aplicação Táxi Map",
+      "altAppStore": "Logótipo da Apple App Store para descarregar a aplicação Táxi Map",
+      "homeLink": "Táxi Map — Início"
+    },
+    "news": {
+      "empty": "Em breve, novas publicações serão adicionadas aqui."
+    },
+    "history": {
+      "steps": {
+        "0": {
+          "title": "O início da ideia"
+        },
+        "2": {
+          "title": "Lançamento e expansão"
+        }
+      }
     }
   }
 }
