@@ -1,4 +1,17 @@
 {
+	/*
+	  Ficheiro de solução: o `tsc -b` local constrói os três projetos
+	  referenciados abaixo, cada um com as suas opções.
+
+	  O `compilerOptions` aqui não é usado pelo build local — com `files: []`
+	  não há nada para compilar neste nível. Existe para a Vercel: o compilador
+	  dela lê o tsconfig.json da raiz ao verificar as funções em api/, e sem
+	  `types: ["node"]` não conhece o `process`, dando TS2591.
+	*/
+	"compilerOptions": {
+		"types": ["node"],
+		"skipLibCheck": true
+	},
 	"files": [],
 	"references": [
 		{ "path": "./tsconfig.app.json" },
