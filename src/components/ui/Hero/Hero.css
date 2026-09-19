@@ -161,8 +161,10 @@
 */
 .hero-taxi {
 	position: absolute;
-	top: var(--spacing-6);
-	right: var(--spacing-4);
+	/* Encostado ao canto, sem folga: a secção tem overflow hidden, por isso a
+	   imagem entra em cena pelo vértice em vez de flutuar a meio do fundo. */
+	top: 0;
+	right: 0;
 	z-index: 1;
 	width: clamp(120px, 26vw, 300px);
 	height: auto;
@@ -172,7 +174,7 @@
 
 @media (min-width: 900px) {
 	.hero-taxi {
-		top: var(--spacing-8);
-		right: var(--spacing-10);
+		top: 0;
+		right: 0;
 	}
 }
