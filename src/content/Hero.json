@@ -40,7 +40,7 @@
     },
     "cta": {
       "key": "hero.empresa.cta",
-      "fallback": "Candidatar a empresa piloto"
+      "fallback": "Candidatar a minha empresa"
     }
   },
   "mapCaption": {

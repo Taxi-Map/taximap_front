@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowRight, MessageSquare } from "lucide-react";
 import { RouteMap } from "../RouteMap";
 import businessContent from "../../../content/Business.json";
+import { APP_EMPRESAS_URL } from "../../../lib/appLinks";
 import "./NightMap.css";
 
 interface BusinessPlansProps {
@@ -74,9 +75,8 @@ export function BusinessPlans({ onOpenWaitlist }: BusinessPlansProps) {
 
 					{/* Symmetrical Action Buttons without line wraps */}
 					<div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4 w-full sm:w-auto">
-						<button
-							type="button"
-							onClick={onOpenWaitlist}
+						<a
+							href={APP_EMPRESAS_URL}
 							className="business-plan-btn btn-primary-action"
 							style={{
 								height: "56px",
@@ -96,11 +96,12 @@ export function BusinessPlans({ onOpenWaitlist }: BusinessPlansProps) {
 								border: "none",
 								cursor: "pointer",
 								width: "auto",
+								textDecoration: "none",
 							}}
 						>
 							<span>{ctaPilot}</span>
 							<ArrowRight size={20} />
-						</button>
+						</a>
 
 						<button
 							type="button"

@@ -91,6 +91,13 @@ export function Header({ activeTab, setActiveTab, onOpenWaitlist }: HeaderProps)
     url: string,
     isAction?: boolean
   ) => {
+    // Links para fora do site (ex.: "Entrar" em Empresas → app.taximap.ao)
+    // seguem o href normal em vez de abrir o modal de acesso antecipado.
+    if (/^https?:\/\//.test(url)) {
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     if (isAction || url === '#login' || url === '#contact') {
       e.preventDefault();
       const modalMode = activeTab === 1 ? "empresa" : "particular";

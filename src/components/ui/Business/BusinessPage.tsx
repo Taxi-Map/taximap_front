@@ -4,6 +4,7 @@ import { BusinessFeatures } from "./BusinessFeatures";
 import { BusinessIntelligence } from "./BusinessIntelligence";
 import { BusinessPlans } from "./BusinessPlans";
 import { BusinessFaq } from "./BusinessFaq";
+import { APP_EMPRESAS_URL } from "../../../lib/appLinks";
 import "./Business.css";
 
 interface BusinessPageProps {
@@ -13,7 +14,7 @@ interface BusinessPageProps {
 export function BusinessPage({ onOpenWaitlist }: BusinessPageProps) {
 	return (
 		<div className="business-page flex flex-col w-full">
-			<Hero audience="empresa" onCtaClick={onOpenWaitlist} />
+			<Hero audience="empresa" ctaHref={APP_EMPRESAS_URL} />
 			<BusinessSolution onOpenWaitlist={onOpenWaitlist} />
 			<BusinessFeatures />
 			<BusinessIntelligence />

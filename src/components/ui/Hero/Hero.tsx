@@ -10,9 +10,11 @@ interface HeroProps {
 	/** Define o copy por omissão. A página Empresas fala a um público diferente. */
 	audience?: "particular" | "empresa";
 	onCtaClick?: () => void;
+	/** Destino do CTA quando é um link (ex.: a app de Empresas). Tem prioridade sobre onCtaClick. */
+	ctaHref?: string;
 }
 
-export function Hero({ audience = "particular", onCtaClick }: HeroProps) {
+export function Hero({ audience = "particular", onCtaClick, ctaHref }: HeroProps) {
 	const { t } = useTranslation();
 	const [mapReady, setMapReady] = useState(false);
 
@@ -81,7 +83,9 @@ export function Hero({ audience = "particular", onCtaClick }: HeroProps) {
 					<h1 className="hero-title">{title}</h1>
 					<p className="hero-description">{description}</p>
 					<div className="hero-actions">
-						{onCtaClick ? (
+						{ctaHref ? (
+							<Button href={ctaHref}>{ctaLabel}</Button>
+						) : onCtaClick ? (
 							<Button onClick={onCtaClick}>{ctaLabel}</Button>
 						) : (
 							<Button href="#app">{ctaLabel}</Button>

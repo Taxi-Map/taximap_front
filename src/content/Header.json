@@ -17,7 +17,7 @@
         { "labelKey": "nav.features", "fallback": "Funcionalidades", "url": "#features" },
         { "labelKey": "nav.plans", "fallback": "Planos", "url": "#plans" },
         { "labelKey": "nav.faq", "fallback": "FAQ", "url": "#faq" },
-        { "labelKey": "nav.login", "fallback": "Entrar", "url": "#login", "isAction": true }
+        { "labelKey": "nav.login", "fallback": "Entrar", "url": "https://app.taximap.ao/", "isAction": true }
       ]
     },
     {
